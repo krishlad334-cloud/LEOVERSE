@@ -1,57 +1,94 @@
 import React from 'react';
-
-export const DEFAULT_WHATSAPP_PHONE = '919408982003';
-export const DEFAULT_WHATSAPP_MESSAGE = 'Hello LEOVERSE! I visited your website and would like to know more about your clothing collections.';
-export const DEFAULT_WHATSAPP_URL = 'https://wa.me/919408982003?text=Hello%20LEOVERSE%21%20I%20visited%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20clothing%20collections.';
+import {
+  OFFICIAL_WHATSAPP_PHONE,
+  OFFICIAL_WEBSITE_URL,
+  OFFICIAL_WEBSITE_IMAGE_URL,
+  getWhatsAppUrl,
+} from '../../utils/whatsapp';
 
 /**
  * WhatsApp floating contact button for direct chat integration.
- * Connects visitors directly to the official LEOVERSE WhatsApp concierge.
+ * Connects visitors directly to the official LEOVERSE WhatsApp concierge with a
+ * pre-filled proper message and LEOVERSE website image preview.
  *
  * @param {Object} props
- * @param {string} [props.phoneNumber='919408982003'] - Official WhatsApp number in international format without '+' or special characters.
- * @param {string} [props.message='Hello LEOVERSE! I visited your website and would like to know more about your clothing collections.'] - Pre-filled initial inquiry message.
- * @param {string} [props.className=''] - Additional custom wrapper CSS classes.
+ * @param {string} [props.phoneNumber='919408982003'] - Official WhatsApp number in international format.
+ * @param {string} [props.message] - Custom pre-filled message; defaults to structured message with website & image.
+ * @param {string} [props.websiteUrl] - Website link included in message.
+ * @param {string} [props.imageUrl] - Image link included in message.
+ * @param {string} [props.className=''] - Additional wrapper CSS classes.
  */
 export const WhatsAppButton = ({
-  phoneNumber = DEFAULT_WHATSAPP_PHONE,
-  message = DEFAULT_WHATSAPP_MESSAGE,
+  phoneNumber = OFFICIAL_WHATSAPP_PHONE,
+  message,
+  websiteUrl = OFFICIAL_WEBSITE_URL,
+  imageUrl = OFFICIAL_WEBSITE_IMAGE_URL,
   className = '',
 }) => {
-  // Use official exact pre-compiled URL for default values, or dynamically format if custom props provided
-  let whatsappUrl = DEFAULT_WHATSAPP_URL;
-
-  if (phoneNumber !== DEFAULT_WHATSAPP_PHONE || message !== DEFAULT_WHATSAPP_MESSAGE) {
-    const cleanPhone = String(phoneNumber).replace(/[^0-9]/g, '');
-    const encodedMessage = message
-      ? encodeURIComponent(message).replace(/!/g, '%21')
-      : '';
-    whatsappUrl = encodedMessage
-      ? `https://wa.me/${cleanPhone}?text=${encodedMessage}`
-      : `https://wa.me/${cleanPhone}`;
-  }
+  const whatsappUrl = getWhatsAppUrl({
+    phoneNumber,
+    message,
+    websiteUrl,
+    imageUrl,
+  });
 
   return (
     <aside
       aria-label="WhatsApp Concierge"
-      className={`fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2.5 group pointer-events-auto ${className}`}
+      className={`fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 flex items-center group pointer-events-auto ${className}`}
     >
-      {/* Desktop hover tooltip pill */}
-      <span
-        id="whatsapp-tooltip"
+      {/* Desktop hover card with LEOVERSE website image & concierge details */}
+      <div
+        id="whatsapp-card-preview"
         role="tooltip"
-        className="hidden md:inline-flex items-center px-3.5 py-1.5 bg-[#252522] text-[#FAF9F6] text-[11px] font-medium tracking-wider uppercase rounded-full shadow-lg border border-[#383733] opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 pointer-events-none select-none"
+        className="hidden md:flex flex-col w-72 bg-[#FAF9F6] border border-[#D8D2C8] rounded-xl shadow-2xl overflow-hidden opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-none select-none absolute bottom-full right-0 mb-3"
       >
-        Chat with us
-      </span>
+        {/* LEOVERSE Website Hero/Lookbook Image */}
+        <div className="relative h-28 w-full overflow-hidden bg-[#242321]">
+          <img
+            src={imageUrl}
+            alt="LEOVERSE Menswear Collection"
+            className="w-full h-full object-cover object-[center_30%]"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex flex-col justify-end p-3">
+            <span className="text-[10px] font-bold tracking-[0.22em] text-[#FAF9F6] uppercase">
+              LEOVERSE Menswear
+            </span>
+            <span className="text-xs text-[#EAE5DC] font-medium tracking-wide">
+              Everyday Essentials. Elevated.
+            </span>
+          </div>
+        </div>
+
+        {/* Card Body */}
+        <div className="p-3.5 space-y-2 text-left bg-[#FAF9F6]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold tracking-wider uppercase text-[#242321]">
+              WhatsApp Concierge
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-[10px] text-emerald-700 font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#25D366] animate-pulse" />
+              Online
+            </span>
+          </div>
+          <p className="text-[11px] text-[#77746E] leading-relaxed">
+            Click to chat directly with our client care team regarding sizing, pieces, and orders.
+          </p>
+          <div className="pt-1 flex items-center justify-between border-t border-[#D8D2C8]/60 text-[10px] text-[#77746E]">
+            <span>+91 9408982003</span>
+            <span className="text-[#25D366] font-semibold">Includes Image & Inquiry &rarr;</span>
+          </div>
+        </div>
+      </div>
 
       {/* Floating circular WhatsApp button */}
       <a
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Chat with us on WhatsApp"
-        aria-describedby="whatsapp-tooltip"
+        aria-label="Chat with us on WhatsApp (+91 9408982003)"
+        aria-describedby="whatsapp-card-preview"
         className="relative flex items-center justify-center w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#25D366] text-white shadow-[0_4px_16px_rgba(0,0,0,0.2)] hover:bg-[#20ba5a] hover:shadow-[0_6px_22px_rgba(37,211,102,0.45)] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/40 focus-visible:ring-offset-2"
       >
         {/* Official WhatsApp Brand Icon */}

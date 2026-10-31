@@ -3,6 +3,7 @@ import { Mail, Phone, MessageCircle, CheckCircle, Clock } from 'lucide-react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Breadcrumb from '../components/common/Breadcrumb';
+import { getWhatsAppUrl, OFFICIAL_WHATSAPP_PHONE } from '../utils/whatsapp';
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -135,11 +136,11 @@ export const Contact = () => {
                 </div>
               </div>
               <a
-                href="https://wa.me/919408982003?text=Hello%20LEOVERSE%21%20I%20visited%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20clothing%20collections."
+                href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-start gap-3 group text-inherit hover:text-[#242321] transition-colors"
-                aria-label="Direct WhatsApp Concierge: +91 9408982003"
+                aria-label={`Direct WhatsApp Concierge: +91 ${OFFICIAL_WHATSAPP_PHONE}`}
               >
                 <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0 mt-0.5" />
                 <div>
