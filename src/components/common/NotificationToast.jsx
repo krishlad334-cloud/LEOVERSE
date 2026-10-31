@@ -10,7 +10,7 @@ export const NotificationToast = () => {
   if (!cartNotification && !wishlistNotification) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none animate-fadeIn">
+    <div className="fixed bottom-22 right-5 sm:bottom-24 sm:right-6 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none animate-fadeIn">
       {cartNotification && (
         <div className="bg-[#252522] text-[#FAF9F6] border border-[#383733] shadow-xl p-4 flex items-center gap-3 pointer-events-auto">
           <CheckCircle2 className="w-5 h-5 text-[#EAE5DC] shrink-0" />

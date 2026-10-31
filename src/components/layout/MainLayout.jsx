@@ -4,6 +4,7 @@ import AnnouncementBar from './AnnouncementBar';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import NotificationToast from '../common/NotificationToast';
+import WhatsAppButton from '../common/WhatsAppButton';
 
 export const MainLayout = () => {
   const { pathname } = useLocation();
@@ -20,6 +21,7 @@ export const MainLayout = () => {
         <Outlet />
       </main>
       <Footer />
+      <WhatsAppButton />
       <NotificationToast />
     </div>
   );

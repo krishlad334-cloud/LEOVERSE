@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, CheckCircle, Clock } from 'lucide-react';
+import { Mail, Phone, MessageCircle, CheckCircle, Clock } from 'lucide-react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Breadcrumb from '../components/common/Breadcrumb';
@@ -134,6 +134,21 @@ export const Contact = () => {
                   <span>+91 (022) 4890-3300 (Mon–Sat, 10am–7pm IST)</span>
                 </div>
               </div>
+              <a
+                href="https://wa.me/919408982003?text=Hello%20LEOVERSE%21%20I%20visited%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20clothing%20collections."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 group text-inherit hover:text-[#242321] transition-colors"
+                aria-label="Direct WhatsApp Concierge: +91 9408982003"
+              >
+                <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0 mt-0.5" />
+                <div>
+                  <span className="block text-[#242321] font-medium group-hover:underline underline-offset-2">
+                    WhatsApp Concierge
+                  </span>
+                  <span>+91 9408982003 (Direct Chat)</span>
+                </div>
+              </a>
               <div className="flex items-start gap-3">
                 <Clock className="w-4 h-4 text-[#242321] shrink-0 mt-0.5" />
                 <div>
