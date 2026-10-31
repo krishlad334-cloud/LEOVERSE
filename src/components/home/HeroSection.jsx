@@ -82,11 +82,11 @@ export const HeroSection = () => {
           {/* LEOVERSE Brand Name & Main Campaign Headline */}
           <div className="space-y-2">
             <span className="text-xs sm:text-sm font-semibold tracking-[0.35em] uppercase text-[#DCD5CA] block">
-              LEOVERSE
+              LEOVERSE ATELIER
             </span>
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-bold tracking-[0.03em] uppercase leading-[0.94] drop-shadow-lg text-[#FAF9F6]">
-              OFF HOURS. <br />
-              ON PURPOSE.
+              STEP INTO <br />
+              THE LEOVERSE.
             </h1>
           </div>
 
