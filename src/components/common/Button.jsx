@@ -24,11 +24,11 @@ export const Button = ({
   };
 
   const variantStyles = {
-    primary: 'bg-[#252522] text-[#FAF9F6] hover:bg-[#383733] active:bg-[#1a1a18]',
-    secondary: 'bg-[#EAE5DC] text-[#242321] hover:bg-[#DCD5CA] active:bg-[#cfc7b9]',
-    outline: 'bg-transparent text-[#242321] border border-[#242321] hover:bg-[#242321] hover:text-[#FAF9F6]',
+    primary: 'bg-[#252522] text-[#FAF9F6] hover:bg-[#383733] active:bg-[#1a1a18] dark:bg-[#C5A880] dark:text-black dark:hover:bg-[#d8c09a]',
+    secondary: 'bg-[#EAE5DC] text-[#242321] hover:bg-[#DCD5CA] active:bg-[#cfc7b9] dark:bg-[#27272A] dark:text-white dark:hover:bg-[#333338]',
+    outline: 'bg-transparent text-[#242321] border border-[#242321] hover:bg-[#242321] hover:text-[#FAF9F6] dark:text-[#F3EFE6] dark:border-[#C5A880]/60 dark:hover:bg-[#C5A880] dark:hover:text-black',
     lightOutline: 'bg-transparent text-[#FAF9F6] border border-[#FAF9F6] hover:bg-[#FAF9F6] hover:text-[#252522]',
-    ghost: 'bg-transparent text-[#242321] hover:text-[#77746E] p-0 tracking-[0.1em]',
+    ghost: 'bg-transparent text-[#242321] hover:text-[#77746E] p-0 tracking-[0.1em] dark:text-[#F3EFE6] dark:hover:text-[#C5A880]',
     lightGhost: 'bg-transparent text-[#FAF9F6] hover:text-[#EAE5DC] p-0 tracking-[0.1em]',
   };
 

@@ -32,17 +32,17 @@ export const Modal = ({
 
       {/* Modal Dialog */}
       <div
-        className={`relative w-full ${maxWidth} bg-[#F7F5F0] border border-[#D8D2C8] shadow-2xl p-6 sm:p-8 z-10 transition-transform duration-200 transform scale-100 max-h-[90vh] overflow-y-auto`}
+        className={`relative w-full ${maxWidth} bg-[#F7F5F0] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] shadow-2xl p-6 sm:p-8 z-10 transition-transform duration-200 transform scale-100 max-h-[90vh] overflow-y-auto`}
         role="dialog"
         aria-modal="true"
       >
-        <div className="flex items-center justify-between pb-4 border-b border-[#D8D2C8] mb-6">
-          <h3 className="text-lg font-medium tracking-tight text-[#242321] uppercase">
+        <div className="flex items-center justify-between pb-4 border-b border-[#D8D2C8] dark:border-[#27272A] mb-6">
+          <h3 className="text-lg font-medium tracking-tight text-[#242321] dark:text-white uppercase">
             {title}
           </h3>
           <button
             onClick={onClose}
-            className="p-1 text-[#77746E] hover:text-[#242321] transition-colors cursor-pointer"
+            className="p-1 text-[#77746E] dark:text-gray-400 hover:text-[#242321] dark:hover:text-white transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />

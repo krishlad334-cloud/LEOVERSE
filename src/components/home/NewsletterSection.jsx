@@ -14,26 +14,26 @@ export const NewsletterSection = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-[#FAF9F6] border-t border-b border-[#D8D2C8] select-none">
+    <section className="py-16 md:py-24 bg-[#FAF9F6] dark:bg-[#151518] border-t border-b border-[#D8D2C8] dark:border-[#27272A] select-none transition-colors">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#EAE5DC] text-[#242321] text-[10px] font-bold tracking-[0.24em] uppercase">
-          <Mail className="w-3 h-3 text-[#77746E]" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#EAE5DC] dark:bg-[#202026] text-[#242321] dark:text-[#C5A880] text-[10px] font-bold tracking-[0.24em] uppercase rounded">
+          <Mail className="w-3 h-3 text-[#77746E] dark:text-[#C5A880]" />
           LEOVERSE Gentlemen's Dispatch
         </div>
 
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#242321] leading-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#242321] dark:text-white leading-tight">
           Privilege Access. First Look.
         </h2>
 
-        <p className="font-serif italic text-base sm:text-lg text-[#77746E] max-w-xl mx-auto">
+        <p className="font-serif italic text-base sm:text-lg text-[#77746E] dark:text-[#D1C9BE] max-w-xl mx-auto">
           Subscribe to receive private invitations to small-batch capsule drops, tailoring appointments, and 10% off your first purchase.
         </p>
 
         {/* Subscription Form */}
         <div className="max-w-md mx-auto pt-2">
           {subscribed ? (
-            <div className="flex items-center justify-center gap-2 p-4 bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold tracking-wider uppercase">
-              <Check className="w-4 h-4 text-emerald-700" />
+            <div className="flex items-center justify-center gap-2 p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300 text-xs font-semibold tracking-wider uppercase rounded-xl">
+              <Check className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
               <span>Welcome to LEOVERSE. Check your inbox for your code.</span>
             </div>
           ) : (
@@ -44,11 +44,11 @@ export const NewsletterSection = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address..."
                 required
-                className="flex-1 px-4 py-3 bg-[#FAF9F6] border border-[#D8D2C8] text-xs text-[#242321] placeholder-[#77746E] focus:outline-none focus:border-[#242321] transition-colors"
+                className="flex-1 px-4 py-3 bg-[#FAF9F6] dark:bg-[#1C1C22] border border-[#D8D2C8] dark:border-[#2E2E36] text-xs text-[#242321] dark:text-white placeholder-[#77746E] dark:placeholder-gray-500 focus:outline-none focus:border-[#242321] dark:focus:border-[#C5A880] rounded-xl transition-colors"
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-[#252522] hover:bg-black text-[#FAF9F6] text-xs uppercase tracking-[0.14em] font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="px-6 py-3 bg-[#252522] dark:bg-[#C5A880] hover:bg-black dark:hover:bg-[#d8c09a] text-[#FAF9F6] dark:text-black text-xs uppercase tracking-[0.14em] font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md rounded-xl"
               >
                 <span>Subscribe</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -56,8 +56,8 @@ export const NewsletterSection = () => {
             </form>
           )}
 
-          <div className="flex items-center justify-center gap-2 text-[11px] text-[#77746E] pt-3">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-800" />
+          <div className="flex items-center justify-center gap-2 text-[11px] text-[#77746E] dark:text-gray-400 pt-3">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#A68962] dark:text-[#C5A880]" />
             <span>Strict privacy. No spam. Unsubscribe at any time.</span>
           </div>
         </div>

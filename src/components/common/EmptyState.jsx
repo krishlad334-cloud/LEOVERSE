@@ -12,15 +12,15 @@ export const EmptyState = ({
   return (
     <div className="flex flex-col items-center justify-center text-center py-16 px-4 max-w-md mx-auto">
       {Icon && (
-        <div className="w-16 h-16 rounded-full bg-[#EAE5DC] flex items-center justify-center text-[#242321] mb-6">
+        <div className="w-16 h-16 rounded-full bg-[#EAE5DC] dark:bg-[#202026] flex items-center justify-center text-[#242321] dark:text-white mb-6">
           <Icon className="w-8 h-8 stroke-[1.25]" />
         </div>
       )}
-      <h3 className="text-xl font-medium tracking-tight text-[#242321] mb-2">
+      <h3 className="text-xl font-medium tracking-tight text-[#242321] dark:text-white mb-2">
         {title}
       </h3>
       {description && (
-        <p className="text-sm text-[#77746E] leading-relaxed mb-8">
+        <p className="text-sm text-[#77746E] dark:text-gray-400 leading-relaxed mb-8">
           {description}
         </p>
       )}

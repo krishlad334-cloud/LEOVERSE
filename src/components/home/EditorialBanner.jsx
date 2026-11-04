@@ -43,20 +43,20 @@ export const EditorialBanner = () => {
 
           <div className="pt-4 flex flex-col sm:flex-row gap-3">
             <Button
-              to="/product/leo-002"
+              to="/product/prod-men-03"
               variant="lightOutline"
               size="md"
               icon={ArrowRight}
               iconPosition="right"
-              className="bg-[#FAF9F6] text-[#242321] hover:bg-[#FAF9F6]/90 border-transparent shadow-md"
+              className="bg-[#FAF9F6] dark:bg-[#C5A880] text-[#242321] dark:text-black hover:bg-[#FAF9F6]/90 dark:hover:bg-[#d8c09a] border-transparent shadow-md"
             >
               Shop The Street Hoodie
             </Button>
             <Button
-              to="/category/streetwear"
+              to="/shop?category=Streetwear"
               variant="lightOutline"
               size="md"
-              className="border-[#FAF9F6]/70 text-[#FAF9F6] hover:bg-[#FAF9F6] hover:text-[#242321]"
+              className="border-[#FAF9F6]/70 text-[#FAF9F6] hover:bg-[#FAF9F6] hover:text-[#242321] dark:hover:text-black dark:hover:bg-white"
             >
               Explore Streetwear
             </Button>

@@ -53,7 +53,15 @@ export const MobileMenu = ({ isOpen, onClose }) => {
         </div>
 
         {/* Quick Main Links */}
-        <div className="px-6 pt-4 pb-2 grid grid-cols-2 gap-2 text-xs uppercase tracking-wider font-semibold border-b border-[#D8D2C8]/60">
+        <div className="px-6 pt-4 pb-2 space-y-2 text-xs uppercase tracking-wider font-semibold border-b border-[#D8D2C8]/60">
+          <Link
+            to="/shop"
+            onClick={onClose}
+            className="block p-2.5 text-center bg-[#FAF9F6] border border-[#D8D2C8] text-[#242321] hover:bg-[#252522] hover:text-[#FAF9F6] transition-colors"
+          >
+            Explore All Menswear
+          </Link>
+          <div className="grid grid-cols-2 gap-2">
           <Link
             to="/new-arrivals"
             onClick={onClose}
@@ -68,6 +76,7 @@ export const MobileMenu = ({ isOpen, onClose }) => {
           >
             Sale & Offers
           </Link>
+          </div>
         </div>
 
         {/* Navigation links & 11 Categories */}

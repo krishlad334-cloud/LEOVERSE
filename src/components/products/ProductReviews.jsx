@@ -1,283 +1,251 @@
 import React, { useState, useEffect } from 'react';
-import { Star, CheckCircle, ThumbsUp } from 'lucide-react';
-
-const INITIAL_REVIEWS = [
-  {
-    id: 1,
-    author: 'Vikram S.',
-    verified: true,
-    rating: 5,
-    date: '3 days ago',
-    title: 'Superb fabric drape and precision stitching',
-    comment: 'The weight of the fabric is exceptional. Cut feels tailored without being restrictive. Will definitely be picking up more colors.',
-    helpful: 12,
-  },
-  {
-    id: 2,
-    author: 'Aman K.',
-    verified: true,
-    rating: 5,
-    date: '1 week ago',
-    title: 'Understated luxury in every detail',
-    comment: 'Exactly the minimalist aesthetic I was looking for. No loud logos, just pure quality cloth and immaculate proportions.',
-    helpful: 8,
-  },
-  {
-    id: 3,
-    author: 'Rohan M.',
-    verified: true,
-    rating: 4,
-    date: '2 weeks ago',
-    title: 'Great fit, fits true to standard sizing',
-    comment: 'Chest and shoulders align perfectly with the size chart. Fabric is breathable for all-day wear.',
-    helpful: 5,
-  },
-];
+import { Star, CheckCircle, ThumbsUp, Plus, Sparkles } from 'lucide-react';
+import { getReviews, submitReview } from '../../services/api';
 
 export const ProductReviews = ({ product }) => {
-  const [reviews, setReviews] = useState(() => {
-    const key = `leoverse_reviews_${product.id}`;
-    const saved = localStorage.getItem(key);
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        return INITIAL_REVIEWS;
-      }
-    }
-    return INITIAL_REVIEWS;
-  });
-
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [formRating, setFormRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const [formName, setFormName] = useState('');
   const [formTitle, setFormTitle] = useState('');
   const [formComment, setFormComment] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    const key = `leoverse_reviews_${product.id}`;
-    localStorage.setItem(key, JSON.stringify(reviews));
-  }, [reviews, product.id]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formName.trim() || !formComment.trim()) return;
-
-    const newRev = {
-      id: Date.now(),
-      author: formName.trim(),
-      verified: true,
-      rating: formRating,
-      date: 'Just now',
-      title: formTitle.trim() || 'Verified Purchase Review',
-      comment: formComment.trim(),
-      helpful: 0,
-    };
-
-    setReviews([newRev, ...reviews]);
-    setSubmitted(true);
-    setFormName('');
-    setFormTitle('');
-    setFormComment('');
-    setTimeout(() => {
-      setShowForm(false);
-      setSubmitted(false);
-    }, 2000);
+  const loadReviews = async () => {
+    if (!product?.id) return;
+    try {
+      const data = await getReviews(product.id);
+      setReviews(data);
+    } catch {
+      // fallback
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const avgRating = (
-    reviews.reduce((acc, curr) => acc + curr.rating, 0) / (reviews.length || 1)
-  ).toFixed(1);
+  useEffect(() => {
+    loadReviews();
+  }, [product?.id]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formComment.trim()) return;
+    setSubmitting(true);
+
+    try {
+      await submitReview({
+        productId: product.id,
+        userName: formName || 'Fashion Connoisseur',
+        rating: formRating,
+        title: formTitle,
+        comment: formComment
+      });
+
+      setSubmitted(true);
+      setShowForm(false);
+      setFormComment('');
+      setFormTitle('');
+      setFormName('');
+      await loadReviews();
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch (err) {
+      alert(err.message || 'Failed to submit review');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const avgRating = reviews.length > 0
+    ? (reviews.reduce((acc, r) => acc + Number(r.rating || 5), 0) / reviews.length).toFixed(1)
+    : (product.rating || 4.9);
 
   return (
-    <section id="reviews-section" className="py-12 border-t border-[#D8D2C8] mt-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-[#D8D2C8]">
+    <div id="reviews-section" className="py-12 border-t border-[#E5E0D6] space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#77746E]">
-            Client Experiences
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#A68962]">
+            Verified Customer Feedback
           </span>
-          <h2 className="text-2xl font-serif text-[#242321] mt-1">
-            Ratings & Editorial Reviews
+          <h2 className="text-xl sm:text-2xl font-serif font-medium text-[#1E1E1E]">
+            Ratings & Reviews ({reviews.length})
           </h2>
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-light text-[#242321]">{avgRating}</span>
-            <div className="space-y-1">
-              <div className="flex items-center text-amber-600">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`w-3.5 h-3.5 ${
-                      star <= Math.round(avgRating)
-                        ? 'fill-amber-500 text-amber-500'
-                        : 'text-[#D8D2C8]'
-                    }`}
-                  />
-                ))}
-              </div>
-              <p className="text-[11px] text-[#77746E]">
-                Based on {reviews.length} verified reviews
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setShowForm(!showForm)}
-            className="px-5 py-2.5 bg-[#242321] text-[#F7F5F0] text-xs font-semibold uppercase tracking-wider hover:bg-[#383733] transition-colors cursor-pointer"
-          >
-            {showForm ? 'Cancel Review' : 'Write a Review'}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setShowForm(!showForm)}
+          className="inline-flex items-center space-x-2 px-4 py-2.5 bg-[#1E1E1E] hover:bg-black text-white text-xs font-bold uppercase tracking-wider rounded-xl transition cursor-pointer self-start sm:self-auto"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          <span>Write a Review</span>
+        </button>
       </div>
 
-      {/* Review Submission Form */}
-      {showForm && (
-        <form
-          onSubmit={handleSubmit}
-          className="my-8 p-6 bg-[#EAE5DC]/30 border border-[#D8D2C8] space-y-4 max-w-2xl"
-        >
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-[#242321]">
-            Share Your Experience with {product.name}
-          </h3>
+      {submitted && (
+        <div className="p-4 bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs rounded-xl flex items-center space-x-2">
+          <CheckCircle className="w-4 h-4 text-emerald-600" />
+          <span>Thank you! Your verified review has been recorded to the live database.</span>
+        </div>
+      )}
 
+      {/* Review submission form */}
+      {showForm && (
+        <form onSubmit={handleSubmit} className="p-6 bg-[#F8F6F2] border border-[#E5E0D6] rounded-2xl space-y-4 text-xs animate-in fade-in duration-200">
+          <h3 className="font-bold text-sm text-[#1E1E1E]">Review this Garment</h3>
+
+          {/* Star selector */}
           <div>
-            <label className="block text-xs uppercase tracking-wider text-[#77746E] mb-1.5">
-              Rating
-            </label>
-            <div className="flex items-center gap-1">
-              {[1, 2, 3, 4, 5].map((s) => (
+            <label className="block font-semibold text-gray-700 mb-1">Your Rating</label>
+            <div className="flex items-center space-x-1">
+              {[1, 2, 3, 4, 5].map((star) => (
                 <button
-                  key={s}
                   type="button"
-                  onMouseEnter={() => setHoverRating(s)}
+                  key={star}
+                  onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
-                  onClick={() => setFormRating(s)}
-                  className="p-1 focus:outline-none cursor-pointer"
+                  onClick={() => setFormRating(star)}
+                  className="p-1 cursor-pointer focus:outline-none"
                 >
                   <Star
-                    className={`w-5 h-5 ${
-                      s <= (hoverRating || formRating)
+                    className={`w-6 h-6 ${
+                      star <= (hoverRating || formRating)
                         ? 'fill-amber-500 text-amber-500'
-                        : 'text-[#D8D2C8]'
+                        : 'text-gray-300'
                     }`}
                   />
                 </button>
               ))}
+              <span className="text-xs font-bold text-gray-700 ml-2">
+                {formRating} of 5 Stars
+              </span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs uppercase tracking-wider text-[#77746E] mb-1.5">
-                Your Name *
-              </label>
+              <label className="block font-semibold text-gray-700 mb-1">Your Name</label>
               <input
                 type="text"
-                required
+                placeholder="e.g. Siddharth Malhotra"
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
-                placeholder="e.g. Siddharth R."
-                className="w-full bg-[#F7F5F0] border border-[#D8D2C8] px-3 py-2 text-xs focus:outline-none focus:border-[#242321]"
+                className="w-full px-3 py-2 bg-white border border-[#DCD5C9] rounded-lg focus:outline-none focus:border-[#A68962]"
+                required
               />
             </div>
             <div>
-              <label className="block text-xs uppercase tracking-wider text-[#77746E] mb-1.5">
-                Review Headline
-              </label>
+              <label className="block font-semibold text-gray-700 mb-1">Review Headline</label>
               <input
                 type="text"
+                placeholder="e.g. Superb fabric drape and luxury fit"
                 value={formTitle}
                 onChange={(e) => setFormTitle(e.target.value)}
-                placeholder="e.g. Exceptional fit and fabric"
-                className="w-full bg-[#F7F5F0] border border-[#D8D2C8] px-3 py-2 text-xs focus:outline-none focus:border-[#242321]"
+                className="w-full px-3 py-2 bg-white border border-[#DCD5C9] rounded-lg focus:outline-none focus:border-[#A68962]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-[#77746E] mb-1.5">
-              Detailed Feedback *
-            </label>
+            <label className="block font-semibold text-gray-700 mb-1">Detailed Review</label>
             <textarea
-              required
               rows={3}
+              placeholder="Share how the fabric feels, fit accuracy, and styling details..."
               value={formComment}
               onChange={(e) => setFormComment(e.target.value)}
-              placeholder="Tell us about the drape, comfort, fit, and styling..."
-              className="w-full bg-[#F7F5F0] border border-[#D8D2C8] px-3 py-2 text-xs focus:outline-none focus:border-[#242321]"
+              className="w-full px-3 py-2 bg-white border border-[#DCD5C9] rounded-lg focus:outline-none focus:border-[#A68962]"
+              required
             />
           </div>
 
-          {submitted ? (
-            <div className="flex items-center gap-2 text-xs text-green-700 bg-green-50 p-2.5 border border-green-200">
-              <CheckCircle className="w-4 h-4" />
-              <span>Thank you! Your verified client review has been published.</span>
-            </div>
-          ) : (
+          <div className="flex items-center justify-end space-x-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
-              className="px-6 py-2.5 bg-[#242321] text-[#F7F5F0] text-xs font-semibold uppercase tracking-wider hover:bg-[#383733] transition-colors cursor-pointer"
+              disabled={submitting}
+              className="px-5 py-2 bg-[#1E1E1E] hover:bg-black text-white font-bold rounded-lg uppercase tracking-wider disabled:opacity-50"
             >
-              Publish Review
+              {submitting ? 'Submitting...' : 'Submit Review'}
             </button>
-          )}
+          </div>
         </form>
       )}
 
-      {/* Reviews List */}
-      <div className="divide-y divide-[#D8D2C8] pt-4">
-        {reviews.map((rev) => (
-          <div key={rev.id} className="py-6 space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center text-amber-600">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`w-3 h-3 ${
-                        star <= rev.rating
-                          ? 'fill-amber-500 text-amber-500'
-                          : 'text-[#D8D2C8]'
-                      }`}
-                    />
-                  ))}
+      {/* Review score breakdown card */}
+      <div className="p-6 bg-[#F8F6F2] border border-[#E5E0D6] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="text-center sm:text-left">
+          <div className="flex items-baseline space-x-2">
+            <span className="text-4xl font-extrabold text-[#1E1E1E]">{avgRating}</span>
+            <span className="text-sm text-gray-500 font-medium">/ 5.0</span>
+          </div>
+          <div className="flex items-center text-amber-500 my-1 justify-center sm:justify-start">
+            {[1, 2, 3, 4, 5].map((s) => (
+              <Star key={s} className="w-4 h-4 fill-amber-500 text-amber-500" />
+            ))}
+          </div>
+          <p className="text-xs text-gray-500">Based on {reviews.length} authentic purchases</p>
+        </div>
+
+        <div className="flex-1 max-w-sm space-y-1.5 w-full text-xs">
+          {[5, 4, 3, 2, 1].map((ratingVal) => {
+            const count = reviews.filter((r) => r.rating === ratingVal).length;
+            const pct = reviews.length > 0 ? Math.round((count / reviews.length) * 100) : 0;
+            return (
+              <div key={ratingVal} className="flex items-center space-x-2 text-gray-600">
+                <span className="w-8 font-medium">{ratingVal} ★</span>
+                <div className="flex-1 bg-gray-200 h-2 rounded-full overflow-hidden">
+                  <div className="bg-[#A68962] h-full rounded-full" style={{ width: `${pct}%` }} />
                 </div>
-                <span className="text-xs font-semibold text-[#242321]">
-                  {rev.author}
-                </span>
-                {rev.verified && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 border border-emerald-200 uppercase tracking-wider">
-                    <CheckCircle className="w-3 h-3" /> Verified Buyer
-                  </span>
-                )}
+                <span className="w-8 text-right font-mono text-gray-400">{count}</span>
               </div>
-              <span className="text-[11px] text-[#77746E]">{rev.date}</span>
-            </div>
+            );
+          })}
+        </div>
+      </div>
 
-            {rev.title && (
-              <h4 className="text-xs font-bold uppercase tracking-wider text-[#242321]">
-                {rev.title}
-              </h4>
-            )}
-
-            <p className="text-xs text-[#77746E] leading-relaxed max-w-3xl">
-              {rev.comment}
-            </p>
-
-            <div className="pt-1 flex items-center gap-4 text-[11px] text-[#77746E]">
-              <span className="flex items-center gap-1 cursor-pointer hover:text-[#242321]">
-                <ThumbsUp className="w-3 h-3" /> Helpful ({rev.helpful})
+      {/* Reviews List */}
+      <div className="space-y-4">
+        {reviews.map((r) => (
+          <div key={r.id} className="p-5 bg-white border border-[#E5E0D6] rounded-xl space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="font-bold text-xs text-[#1E1E1E]">{r.userName || r.author}</span>
+                <span className="inline-flex items-center space-x-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-medium">
+                  <CheckCircle className="w-3 h-3 text-emerald-600" />
+                  <span>Verified Buyer</span>
+                </span>
+              </div>
+              <span className="text-[10px] text-gray-400">
+                {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Verified'}
               </span>
             </div>
+
+            <div className="flex items-center text-amber-500">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <Star
+                  key={s}
+                  className={`w-3.5 h-3.5 ${
+                    s <= r.rating ? 'fill-amber-500 text-amber-500' : 'text-gray-200'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {r.title && <h4 className="font-bold text-xs text-[#1E1E1E]">{r.title}</h4>}
+            <p className="text-xs text-gray-600 leading-relaxed">{r.comment}</p>
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 };
 

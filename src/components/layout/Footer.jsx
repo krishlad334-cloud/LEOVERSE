@@ -16,10 +16,10 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#252522] text-[#F7F5F0] pt-16 md:pt-24 pb-12 border-t border-[#383733]">
+    <footer className="bg-[#252522] dark:bg-[#0E0E10] text-[#F7F5F0] pt-16 md:pt-24 pb-12 border-t border-[#383733] dark:border-[#222226] transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Section: Newsletter & Brand intro */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-[#383733]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-[#383733] dark:border-[#222226]">
           <div className="lg:col-span-6 space-y-4">
             <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-[#FAF9F6]">
               Good things. <br className="hidden sm:inline" />
@@ -125,7 +125,7 @@ export const Footer = () => {
         </div>
 
         {/* Massive LEOVERSE Wordmark Banner */}
-        <div className="pt-12 pb-8 flex flex-col md:flex-row items-baseline justify-between gap-4 border-b border-[#383733]">
+        <div className="pt-12 pb-8 flex flex-col md:flex-row items-baseline justify-between gap-4 border-b border-[#383733] dark:border-[#222226]">
           <span className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-[0.18em] text-[#FAF9F6] select-none uppercase">
             LEOVERSE
           </span>

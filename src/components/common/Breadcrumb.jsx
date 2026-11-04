@@ -5,9 +5,9 @@ import { ChevronRight } from 'lucide-react';
 export const Breadcrumb = ({ items = [] }) => {
   return (
     <nav aria-label="Breadcrumb" className="py-4">
-      <ol className="flex items-center flex-wrap gap-1.5 text-xs tracking-wider text-[#77746E]">
+      <ol className="flex items-center flex-wrap gap-1.5 text-xs tracking-wider text-[#77746E] dark:text-gray-400">
         <li>
-          <Link to="/" className="hover:text-[#242321] transition-colors">
+          <Link to="/" className="hover:text-[#242321] dark:hover:text-white transition-colors">
             Home
           </Link>
         </li>
@@ -16,15 +16,15 @@ export const Breadcrumb = ({ items = [] }) => {
           return (
             <React.Fragment key={index}>
               <li className="flex items-center">
-                <ChevronRight className="w-3.5 h-3.5 text-[#D8D2C8] mx-1" />
+                <ChevronRight className="w-3.5 h-3.5 text-[#D8D2C8] dark:text-gray-600 mx-1" />
               </li>
               <li>
                 {isLast || !item.to ? (
-                  <span className="text-[#242321] font-medium" aria-current={isLast ? 'page' : undefined}>
+                  <span className="text-[#242321] dark:text-white font-medium" aria-current={isLast ? 'page' : undefined}>
                     {item.label}
                   </span>
                 ) : (
-                  <Link to={item.to} className="hover:text-[#242321] transition-colors">
+                  <Link to={item.to} className="hover:text-[#242321] dark:hover:text-white transition-colors">
                     {item.label}
                   </Link>
                 )}

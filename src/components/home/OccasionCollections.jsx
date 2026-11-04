@@ -56,20 +56,20 @@ export const OccasionCollections = () => {
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12">
         <div>
-          <span className="text-[11px] font-bold tracking-[0.24em] uppercase text-[#77746E] block mb-1">
+          <span className="text-[11px] font-bold tracking-[0.24em] uppercase text-[#77746E] dark:text-[#C5A880] block mb-1">
             Curated By Event & Life Rhythm
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#242321]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#242321] dark:text-white">
             Occasion Collections.
           </h2>
-          <p className="font-serif italic text-base sm:text-lg text-[#77746E] mt-1">
+          <p className="font-serif italic text-base sm:text-lg text-[#77746E] dark:text-[#D1C9BE] mt-1">
             Never underdressed, never over-formalized. Exactly right for the room.
           </p>
         </div>
 
         <Link
           to="/shop"
-          className="group flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-semibold text-[#242321] hover:text-[#77746E] transition-colors"
+          className="group flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-semibold text-[#242321] dark:text-white hover:text-[#77746E] dark:hover:text-[#C5A880] transition-colors"
         >
           <span>Explore All Outfits</span>
           <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
@@ -84,7 +84,7 @@ export const OccasionCollections = () => {
             <Link
               key={occ.id}
               to={occ.link}
-              className="group relative flex flex-col bg-[#FAF9F6] border border-[#D8D2C8] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300"
+              className="group relative flex flex-col bg-[#FAF9F6] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300"
             >
               {/* Photo */}
               <div className="relative aspect-[3/4] bg-[#242321] overflow-hidden">
@@ -97,13 +97,13 @@ export const OccasionCollections = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
 
                 {/* Top Badge */}
-                <div className="absolute top-2.5 left-2.5 bg-black/75 backdrop-blur-xs text-[#FAF9F6] p-1.5 border border-white/10">
-                  <Icon className="w-3.5 h-3.5 text-[#DCD5CA]" />
+                <div className="absolute top-2.5 left-2.5 bg-black/75 backdrop-blur-xs text-[#FAF9F6] p-1.5 border border-white/10 rounded-md">
+                  <Icon className="w-3.5 h-3.5 text-[#C5A880]" />
                 </div>
 
                 {/* Text Content */}
                 <div className="absolute bottom-3 left-3 right-3 text-[#FAF9F6] space-y-1">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#DCD5CA] block">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A880] block">
                     {occ.headline}
                   </span>
                   <h3 className="text-base font-bold uppercase tracking-wider text-[#FAF9F6]">
@@ -116,7 +116,7 @@ export const OccasionCollections = () => {
               </div>
 
               {/* Bottom bar */}
-              <div className="p-2.5 bg-[#FAF9F6] border-t border-[#D8D2C8] flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#242321] group-hover:bg-[#252522] group-hover:text-[#FAF9F6] transition-colors">
+              <div className="p-2.5 bg-[#FAF9F6] dark:bg-[#18181C] border-t border-[#D8D2C8] dark:border-[#27272A] flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#242321] dark:text-white group-hover:bg-[#252522] group-hover:text-[#FAF9F6] dark:group-hover:bg-[#C5A880] dark:group-hover:text-black transition-colors">
                 <span>View Outfits</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>

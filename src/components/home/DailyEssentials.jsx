@@ -13,16 +13,16 @@ export const DailyEssentials = () => {
       {/* Header */}
       <div className="flex items-baseline justify-between mb-8 sm:mb-12">
         <div>
-          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#77746E] block mb-1">
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#77746E] dark:text-[#C5A880] block mb-1">
             Foundation Menswear
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#242321]">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#242321] dark:text-white">
             The daily rotation.
           </h2>
         </div>
         <Link
           to="/shop?collection=daily-essentials"
-          className="group flex items-center gap-1.5 text-xs uppercase tracking-[0.12em] font-medium text-[#242321] hover:text-[#77746E] transition-colors"
+          className="group flex items-center gap-1.5 text-xs uppercase tracking-[0.12em] font-medium text-[#242321] dark:text-white hover:text-[#77746E] dark:hover:text-[#C5A880] transition-colors"
         >
           <span>Shop Essentials</span>
           <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />

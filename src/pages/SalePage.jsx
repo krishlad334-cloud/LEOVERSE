@@ -46,31 +46,31 @@ export const SalePage = () => {
       <Breadcrumb items={breadcrumbs} />
 
       {/* Header Banner */}
-      <div className="bg-[#252522] text-[#FAF9F6] p-6 sm:p-10 border border-[#D8D2C8] mb-8 space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#FAF9F6]/15 text-[#DCD5CA] text-[10px] font-bold tracking-[0.24em] uppercase">
-          <Clock className="w-3 h-3 text-[#DCD5CA]" />
+      <div className="bg-[#252522] dark:bg-[#18181C] text-[#FAF9F6] p-6 sm:p-10 border border-[#D8D2C8] dark:border-[#27272A] rounded-2xl mb-8 space-y-2">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#FAF9F6]/15 dark:bg-[#202026] text-[#DCD5CA] dark:text-[#C5A880] text-[10px] font-bold tracking-[0.24em] uppercase rounded">
+          <Clock className="w-3 h-3 text-[#DCD5CA] dark:text-[#C5A880]" />
           Special Offers & Seasonal Markdowns
         </div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#FAF9F6]">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#FAF9F6] dark:text-white">
           Sale & Seasonal Offers
         </h1>
-        <p className="font-serif italic text-base sm:text-lg text-[#DCD5CA]/90">
+        <p className="font-serif italic text-base sm:text-lg text-[#DCD5CA]/90 dark:text-[#D1C9BE]">
           Up to 30% off selected tailoring, linen summer shirts, and heavyweight fleece.
         </p>
       </div>
 
       {/* Controls Bar */}
-      <div className="flex items-center justify-between pb-6 border-b border-[#D8D2C8] mb-8">
+      <div className="flex items-center justify-between pb-6 border-b border-[#D8D2C8] dark:border-[#27272A] mb-8">
         <button
           type="button"
           onClick={() => setMobileFilterOpen(true)}
-          className="lg:hidden flex items-center gap-2 text-xs uppercase tracking-wider font-bold text-[#242321] px-3 py-2 border border-[#D8D2C8] bg-[#FAF9F6]"
+          className="lg:hidden flex items-center gap-2 text-xs uppercase tracking-wider font-bold text-[#242321] dark:text-white px-3 py-2 border border-[#D8D2C8] dark:border-[#27272A] bg-[#FAF9F6] dark:bg-[#18181C] rounded-lg"
         >
           <SlidersHorizontal className="w-4 h-4" />
           <span>Filters</span>
         </button>
 
-        <span className="text-xs uppercase tracking-wider text-[#77746E] font-medium hidden sm:inline">
+        <span className="text-xs uppercase tracking-wider text-[#77746E] dark:text-gray-400 font-medium hidden sm:inline">
           Showing {processedProducts.length} discounted pieces
         </span>
 

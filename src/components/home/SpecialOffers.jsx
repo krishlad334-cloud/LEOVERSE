@@ -19,41 +19,41 @@ export const SpecialOffers = () => {
   return (
     <section className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 select-none">
       {/* Editorial Promo Banner Box */}
-      <div className="bg-[#EAE5DC] border border-[#D8D2C8] p-6 sm:p-10 lg:p-12 mb-12 sm:mb-16">
+      <div className="bg-[#EAE5DC] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] rounded-2xl p-6 sm:p-10 lg:p-12 mb-12 sm:mb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 space-y-4">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#252522] text-[#FAF9F6] text-[10px] font-bold tracking-[0.24em] uppercase">
-              <Clock className="w-3 h-3 text-[#DCD5CA]" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#252522] dark:bg-[#202026] text-[#FAF9F6] dark:text-[#C5A880] text-[10px] font-bold tracking-[0.24em] uppercase rounded">
+              <Clock className="w-3 h-3 text-[#DCD5CA] dark:text-[#C5A880]" />
               Limited-Time Seasonal Event
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#242321] leading-[1.05]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#242321] dark:text-white leading-[1.05]">
               Privilege Pricing on Archival Men's Clothing.
             </h2>
-            <p className="text-sm text-[#77746E] leading-relaxed max-w-xl">
+            <p className="text-sm text-[#77746E] dark:text-[#D1C9BE] leading-relaxed max-w-xl">
               Enjoy complimentary seasonal discounts on selected tailoring, pure French linen summer wear, and heavyweight loopback fleece hoodies. No discount codes required at checkout for marked-down garments.
             </p>
           </div>
 
           {/* Coupon codes box */}
-          <div className="lg:col-span-5 bg-[#FAF9F6] border border-[#D8D2C8] p-5 sm:p-6 space-y-3.5 shadow-sm">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#77746E] block">
+          <div className="lg:col-span-5 bg-[#FAF9F6] dark:bg-[#151518] border border-[#D8D2C8] dark:border-[#27272A] rounded-xl p-5 sm:p-6 space-y-3.5 shadow-sm">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#77746E] dark:text-[#C5A880] block">
               Active Privilege Promo Codes
             </span>
 
             {/* Code 1 */}
-            <div className="flex items-center justify-between p-3 bg-[#EAE5DC]/60 border border-[#D8D2C8]">
+            <div className="flex items-center justify-between p-3 bg-[#EAE5DC]/60 dark:bg-[#1E1E24] border border-[#D8D2C8] dark:border-[#2E2E36] rounded-lg">
               <div>
-                <span className="font-mono text-sm font-bold text-[#242321] block tracking-wider">
+                <span className="font-mono text-sm font-bold text-[#242321] dark:text-white block tracking-wider">
                   LEO10
                 </span>
-                <span className="text-[11px] text-[#77746E]">
+                <span className="text-[11px] text-[#77746E] dark:text-gray-400">
                   10% Off your entire first order
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => copyCode('LEO10')}
-                className="px-2.5 py-1 text-[11px] uppercase tracking-wider font-bold bg-[#252522] text-[#FAF9F6] hover:bg-black transition-colors flex items-center gap-1 cursor-pointer"
+                className="px-2.5 py-1 text-[11px] uppercase tracking-wider font-bold bg-[#252522] dark:bg-[#C5A880] text-[#FAF9F6] dark:text-black hover:bg-black dark:hover:bg-[#d8c09a] rounded transition-colors flex items-center gap-1 cursor-pointer"
               >
                 {copiedCode === 'LEO10' ? (
                   <>
@@ -68,19 +68,19 @@ export const SpecialOffers = () => {
             </div>
 
             {/* Code 2 */}
-            <div className="flex items-center justify-between p-3 bg-[#EAE5DC]/60 border border-[#D8D2C8]">
+            <div className="flex items-center justify-between p-3 bg-[#EAE5DC]/60 dark:bg-[#1E1E24] border border-[#D8D2C8] dark:border-[#2E2E36] rounded-lg">
               <div>
-                <span className="font-mono text-sm font-bold text-[#242321] block tracking-wider">
+                <span className="font-mono text-sm font-bold text-[#242321] dark:text-white block tracking-wider">
                   ELEVATED
                 </span>
-                <span className="text-[11px] text-[#77746E]">
+                <span className="text-[11px] text-[#77746E] dark:text-gray-400">
                   ₹500 Flat Discount over ₹3,999
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => copyCode('ELEVATED')}
-                className="px-2.5 py-1 text-[11px] uppercase tracking-wider font-bold bg-[#252522] text-[#FAF9F6] hover:bg-black transition-colors flex items-center gap-1 cursor-pointer"
+                className="px-2.5 py-1 text-[11px] uppercase tracking-wider font-bold bg-[#252522] dark:bg-[#C5A880] text-[#FAF9F6] dark:text-black hover:bg-black dark:hover:bg-[#d8c09a] rounded transition-colors flex items-center gap-1 cursor-pointer"
               >
                 {copiedCode === 'ELEVATED' ? (
                   <>
@@ -99,19 +99,19 @@ export const SpecialOffers = () => {
 
       {/* Sale Garments Grid */}
       <div className="space-y-8">
-        <div className="flex items-baseline justify-between border-b border-[#D8D2C8] pb-4">
+        <div className="flex items-baseline justify-between border-b border-[#D8D2C8] dark:border-[#27272A] pb-4">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-800 block mb-1">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A68962] dark:text-[#C5A880] block mb-1">
               Seasonal Markdowns
             </span>
-            <h3 className="text-2xl sm:text-3xl font-bold text-[#242321]">
+            <h3 className="text-2xl sm:text-3xl font-bold text-[#242321] dark:text-white">
               Featured Sale Pieces
             </h3>
           </div>
 
           <Link
             to="/sale"
-            className="group flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-semibold text-[#242321] hover:text-[#77746E] transition-colors"
+            className="group flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-semibold text-[#242321] dark:text-white hover:text-[#77746E] dark:hover:text-[#C5A880] transition-colors"
           >
             <span>View All Sale ({products.filter((p) => p.salePrice).length})</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />

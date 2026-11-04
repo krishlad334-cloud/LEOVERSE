@@ -44,18 +44,18 @@ export const Cart = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
       <Breadcrumb items={breadcrumbs} />
 
-      <div className="pb-8 mb-8 border-b border-[#D8D2C8]">
-        <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-[#242321]">
+      <div className="pb-8 mb-8 border-b border-[#D8D2C8] dark:border-[#27272A]">
+        <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-[#242321] dark:text-white">
           Shopping Bag
         </h1>
-        <p className="text-xs text-[#77746E] mt-1">
-          Review your selected pieces and sizes before proceeding to checkout.
+        <p className="text-xs text-[#77746E] dark:text-gray-400 mt-1">
+          Review your selected menswear pieces and proceed to express checkout.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14">
         {/* Left: Cart Items List */}
-        <div className="lg:col-span-7 divide-y divide-[#D8D2C8] -mt-6">
+        <div className="lg:col-span-7 divide-y divide-[#D8D2C8] dark:divide-[#27272A] -mt-6">
           {cartItems.map((item) => (
             <CartItem
               key={item.cartItemId}
@@ -79,6 +79,7 @@ export const Cart = () => {
             onRemoveCoupon={removeCoupon}
             grandTotal={grandTotal}
             showCheckoutButton={true}
+            cartItems={cartItems}
           />
         </div>
       </div>

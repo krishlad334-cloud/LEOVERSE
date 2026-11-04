@@ -12,6 +12,8 @@ import SalePage from '../pages/SalePage';
 import ProductDetails from '../pages/ProductDetails';
 import Cart from '../pages/Cart';
 import Checkout from '../pages/Checkout';
+import Daily from '../pages/Daily';
+import Admin from '../pages/Admin';
 import Wishlist from '../pages/Wishlist';
 import Search from '../pages/Search';
 import Login from '../pages/Login';
@@ -35,6 +37,14 @@ import NotFound from '../pages/NotFound';
 export const AppRoutes = () => {
   return (
     <Routes>
+      {/* Standalone Authentication Pages (NO Navbar, NO Header, NO Footer) */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* Standalone Full-Screen Professional Admin Panel with Sidebar */}
+      <Route path="/admin" element={<Admin />} />
+
+      {/* Customer Website with Storefront Layout */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="shop" element={<Shop />} />
@@ -45,14 +55,13 @@ export const AppRoutes = () => {
         <Route path="product/:id" element={<ProductDetails />} />
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
+        <Route path="daily" element={<Daily />} />
         <Route path="wishlist" element={<Wishlist />} />
         <Route path="account" element={<Account />} />
         <Route path="order-history" element={<OrderHistory />} />
         <Route path="order-tracking" element={<OrderHistory />} />
         <Route path="faq" element={<FAQ />} />
         <Route path="search" element={<Search />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
         <Route path="collections" element={<Collections />} />

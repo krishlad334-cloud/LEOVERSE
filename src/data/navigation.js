@@ -21,6 +21,8 @@ export const footerLinks = {
     { label: "Sale & Offers", href: "/sale" },
   ],
   explore: [
+    { label: "Atelier Catalog", href: "/shop" },
+    { label: "Studio Desk", href: "/admin" },
     { label: "About LEOVERSE", href: "/about" },
     { label: "Capsule Collections", href: "/collections" },
     { label: "Editorial Journal", href: "/journal" },

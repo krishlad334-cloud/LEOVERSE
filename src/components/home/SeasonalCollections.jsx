@@ -43,17 +43,17 @@ export const SeasonalCollections = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-[#EAE5DC]/50 border-t border-b border-[#D8D2C8] select-none">
+    <section className="py-16 md:py-24 bg-[#EAE5DC]/50 dark:bg-[#151518] border-t border-b border-[#D8D2C8] dark:border-[#27272A] select-none transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14 space-y-2">
-          <span className="text-[11px] font-bold tracking-[0.24em] uppercase text-[#77746E] block">
+          <span className="text-[11px] font-bold tracking-[0.24em] uppercase text-[#77746E] dark:text-[#C5A880] block">
             Dressing For The Climate
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#242321]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#242321] dark:text-white">
             Seasonal Collections.
           </h2>
-          <p className="font-serif italic text-base sm:text-lg text-[#77746E]">
+          <p className="font-serif italic text-base sm:text-lg text-[#77746E] dark:text-[#D1C9BE]">
             Garments engineered to respond to temperature, humidity, and atmospheric transitions.
           </p>
         </div>
@@ -66,7 +66,7 @@ export const SeasonalCollections = () => {
               <Link
                 key={season.id}
                 to={season.link}
-                className="group relative flex flex-col bg-[#FAF9F6] border border-[#D8D2C8] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300"
+                className="group relative flex flex-col bg-[#FAF9F6] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300"
               >
                 {/* Image */}
                 <div className="relative aspect-[4/5] bg-[#242321] overflow-hidden">
@@ -79,8 +79,8 @@ export const SeasonalCollections = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                   {/* Corner icon pill */}
-                  <div className="absolute top-3 left-3 bg-[#FAF9F6]/90 backdrop-blur-xs text-[#242321] px-2.5 py-1 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 shadow-xs">
-                    <Icon className="w-3 h-3 text-[#242321]" />
+                  <div className="absolute top-3 left-3 bg-[#FAF9F6]/90 dark:bg-[#18181C]/90 backdrop-blur-xs text-[#242321] dark:text-[#C5A880] px-2.5 py-1 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 shadow-xs rounded-md">
+                    <Icon className="w-3 h-3 text-[#242321] dark:text-[#C5A880]" />
                     <span>{season.tag}</span>
                   </div>
 
@@ -96,7 +96,7 @@ export const SeasonalCollections = () => {
                 </div>
 
                 {/* Bottom CTA Bar */}
-                <div className="p-3.5 bg-[#FAF9F6] border-t border-[#D8D2C8] flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[#242321] group-hover:bg-[#252522] group-hover:text-[#FAF9F6] transition-colors">
+                <div className="p-3.5 bg-[#FAF9F6] dark:bg-[#18181C] border-t border-[#D8D2C8] dark:border-[#27272A] flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[#242321] dark:text-white group-hover:bg-[#252522] group-hover:text-[#FAF9F6] dark:group-hover:bg-[#C5A880] dark:group-hover:text-black transition-colors">
                   <span>Explore Collection</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </div>

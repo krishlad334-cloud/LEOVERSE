@@ -8,16 +8,16 @@ export const BrandStory = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <div className="lg:col-span-5 space-y-6">
-          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#77746E]">
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#77746E] dark:text-[#C5A880]">
             Our Design Philosophy
           </span>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-[#242321] leading-[1.08]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-[#242321] dark:text-white leading-[1.08]">
             Made to stay. <br />
             Not to stand still.
           </h2>
 
-          <div className="space-y-4 text-sm text-[#77746E] leading-relaxed font-light">
+          <div className="space-y-4 text-sm text-[#77746E] dark:text-[#D1C9BE] leading-relaxed font-light">
             <p>
               We don't subscribe to the disposable churn of trend cycles. Every LEOVERSE garment is engineered to become a permanent foundation of your wardrobe, softening and gaining character with every wear.
             </p>
@@ -40,7 +40,7 @@ export const BrandStory = () => {
         </div>
 
         {/* Right: Craftsmanship / Atelier Photography */}
-        <div className="lg:col-span-7 relative aspect-[4/3] sm:aspect-[16/10] bg-[#EAE5DC] overflow-hidden shadow-xs">
+        <div className="lg:col-span-7 relative aspect-[4/3] sm:aspect-[16/10] bg-[#EAE5DC] dark:bg-[#1E1E24] rounded-2xl overflow-hidden shadow-xs border border-transparent dark:border-[#27272A]">
           <img
             src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=1400&q=85"
             alt="LEOVERSE Atelier Tailoring Craftsmanship"
