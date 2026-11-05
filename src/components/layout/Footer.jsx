@@ -135,10 +135,14 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Sub-bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#77746E] gap-4">
-          <div className="flex items-center gap-6">
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-[#77746E] gap-4">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 sm:gap-6">
             <span>&copy; 2026 LEOVERSE Apparel. All rights reserved.</span>
-            <div className="flex items-center gap-1.5 text-[#DCD5CA]/80">
+            <span className="hidden sm:inline text-[#555]">•</span>
+            <span className="text-[#DCD5CA]/80">
+              Developed & Designed by <span className="text-[#D5A249] font-semibold tracking-wide">Krish Lad</span>
+            </span>
+            <div className="hidden lg:flex items-center gap-1.5 text-[#DCD5CA]/70">
               <Globe className="w-3.5 h-3.5" />
               <span>India (INR ₹)</span>
             </div>

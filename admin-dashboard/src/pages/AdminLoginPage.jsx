@@ -155,7 +155,7 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Footer Link to Storefront */}
-        <div className="p-3.5 bg-[#F5F5F5] border-t border-gray-200 text-center">
+        <div className="p-3.5 bg-[#F5F5F5] border-t border-gray-200 text-center space-y-1">
           <a
             href="http://localhost:5173"
             target="_blank"
@@ -165,6 +165,9 @@ export default function AdminLoginPage() {
             <span>Back to Customer Shopping Website</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
+          <div className="text-[10px] text-gray-400 pt-0.5">
+            Developed & Designed by <span className="text-[#D5A249] font-semibold">Krish Lad</span>
+          </div>
         </div>
       </div>
     </div>

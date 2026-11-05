@@ -187,6 +187,12 @@ export default function AdminNavbar({ onOpenAddProduct, onToggleSidebar, onSearc
                         </span>
                       </button>
                     </div>
+
+                    {/* Developer & Designer Signature */}
+                    <div className="pt-2 border-t border-white/10 text-center">
+                      <span className="text-[9px] text-white/40 block">Developed & Designed by</span>
+                      <span className="text-[11px] font-bold text-[#D5A249] tracking-wide">Krish Lad</span>
+                    </div>
                   </div>
                 </div>
               )}

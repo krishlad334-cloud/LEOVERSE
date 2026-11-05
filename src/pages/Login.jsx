@@ -256,8 +256,9 @@ export const Login = () => {
       </div>
 
       {/* Clean Minimalist Copyright Footer */}
-      <div className="py-2.5 sm:py-4 text-center text-[10px] sm:text-[11px] text-gray-500">
-        © 2026 LEOVERSE MENSWEAR ATELIER. All rights reserved.
+      <div className="py-2.5 sm:py-4 text-center text-[10px] sm:text-[11px] text-gray-500 space-y-0.5">
+        <div>© 2026 LEOVERSE MENSWEAR ATELIER. All rights reserved.</div>
+        <div className="text-[10px] text-gray-400">Developed & Designed by <span className="text-[#D5A249] font-medium">Krish Lad</span></div>
       </div>
     </div>
   );

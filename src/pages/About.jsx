@@ -89,6 +89,29 @@ export const About = () => {
           />
         </div>
       </div>
+
+      {/* Digital Atelier Architecture & Design Credit */}
+      <div className="mt-12 p-6 sm:p-8 bg-[#FAF9F6] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#A68962] dark:text-[#C5A880] block mb-1">
+            Digital Craftsmanship
+          </span>
+          <h3 className="text-lg font-serif font-bold text-[#242321] dark:text-white">
+            Engineered for Modern Menswear
+          </h3>
+          <p className="text-xs text-gray-500 mt-1 max-w-lg leading-relaxed">
+            From the real-time inventory management to the curated runway lookbook experience.
+          </p>
+        </div>
+        <div className="pt-2 sm:pt-0 border-t sm:border-t-0 border-[#EAE5DC] dark:border-[#2E2E36] sm:text-right">
+          <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block">
+            Creative Direction & Engineering
+          </span>
+          <span className="text-sm font-serif font-bold text-[#2C4152] dark:text-[#D5A249] tracking-wide">
+            Developed & Designed by Krish Lad
+          </span>
+        </div>
+      </div>
     </div>
   );
 };

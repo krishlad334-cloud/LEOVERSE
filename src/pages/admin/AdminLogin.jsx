@@ -161,8 +161,9 @@ export const AdminLogin = ({ onLoginSuccess }) => {
       </div>
 
       {/* Clean Minimalist Copyright Footer */}
-      <div className="py-2.5 sm:py-4 text-center text-[10px] sm:text-[11px] text-gray-500">
-        © 2026 LEOVERSE MENSWEAR ATELIER. Studio Executive Portal.
+      <div className="py-2.5 sm:py-4 text-center text-[10px] sm:text-[11px] text-gray-500 space-y-0.5">
+        <div>© 2026 LEOVERSE MENSWEAR ATELIER. Studio Executive Portal.</div>
+        <div className="text-[10px] text-gray-400">Developed & Designed by <span className="text-[#A68962] font-semibold">Krish Lad</span></div>
       </div>
     </div>
   );

@@ -124,6 +124,26 @@ export default function AdminSettingsPage({ onSeedCatalog }) {
           <li>Restart the Vite dev server—both the Customer Platform and Admin Dashboard will automatically sync through Firestore!</li>
         </ol>
       </div>
+
+      {/* Engineering & Design Credits Card */}
+      <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-[#2C4152] to-[#1D2A35] text-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#D5A249] flex items-center justify-center text-[#1D2A35] font-serif font-black text-lg shrink-0">
+            KL
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+              LEOVERSE Digital Studio Architecture
+            </h4>
+            <p className="text-[11px] text-[#D5A249] font-medium">
+              Developed & Designed by Krish Lad
+            </p>
+          </div>
+        </div>
+        <span className="text-[10px] text-white/60 tracking-wider uppercase bg-white/10 px-2.5 py-1 rounded-full self-start sm:self-auto font-mono">
+          Engineered Edition • 2026
+        </span>
+      </div>
     </div>
   );
 }

@@ -189,7 +189,7 @@ export default function AdminSidebar({
         </div>
 
         {/* Sidebar Footer Link to Storefront & Mobile Logout */}
-        <div className="p-4 border-t border-gray-100 bg-[#F5F5F5]/60 space-y-2">
+        <div className="p-4 border-t border-gray-100 bg-[#F5F5F5]/60 space-y-2.5">
           <a
             href="http://localhost:5173"
             target="_blank"
@@ -202,6 +202,16 @@ export default function AdminSidebar({
             </div>
             <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
           </a>
+
+          {/* Designer & Developer Credit */}
+          <div className="pt-2 border-t border-gray-200/60 text-center">
+            <span className="text-[10px] text-gray-400 font-medium block">
+              Developed & Designed by
+            </span>
+            <span className="text-[11px] font-bold text-[#2C4152] tracking-wide hover:text-[#D5A249] transition-colors">
+              Krish Lad
+            </span>
+          </div>
 
           {/* Mobile Sign Out Button */}
           <button
