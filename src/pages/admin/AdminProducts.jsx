@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Package,
   Plus,
@@ -62,9 +62,7 @@ export const AdminProducts = ({ onNavigateToAnalytics }) => {
     selectedMediaIds: []
   });
 
-  const loadData = async () => {
-    setLoading(true);
-    setError('');
+  const loadData = useCallback(async () => {
     try {
       const [prods, cats, media] = await Promise.all([
         getProducts({
@@ -77,16 +75,25 @@ export const AdminProducts = ({ onNavigateToAnalytics }) => {
       setProducts(prods);
       setCategories(cats);
       setMediaLibrary(media);
+      setError('');
     } catch (err) {
       setError(err.message || 'Failed to load catalog');
     } finally {
       setLoading(false);
     }
-  };
+  }, [categoryFilter, search]);
 
   useEffect(() => {
-    loadData();
-  }, [categoryFilter]);
+    let active = true;
+    const run = async () => {
+      await Promise.resolve();
+      if (active) loadData();
+    };
+    run();
+    return () => {
+      active = false;
+    };
+  }, [loadData]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Star, CheckCircle, ThumbsUp, Plus, Sparkles } from 'lucide-react';
 import { getReviews, submitReview } from '../../services/api';
 
@@ -14,21 +14,30 @@ export const ProductReviews = ({ product }) => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const loadReviews = async () => {
-    if (!product?.id) return;
+  const productId = product?.id;
+  const loadReviews = useCallback(async () => {
+    if (!productId) return;
     try {
-      const data = await getReviews(product.id);
+      const data = await getReviews(productId);
       setReviews(data);
     } catch {
       // fallback
     } finally {
       setLoading(false);
     }
-  };
+  }, [productId]);
 
   useEffect(() => {
-    loadReviews();
-  }, [product?.id]);
+    let active = true;
+    const run = async () => {
+      await Promise.resolve();
+      if (active) loadReviews();
+    };
+    run();
+    return () => {
+      active = false;
+    };
+  }, [loadReviews]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

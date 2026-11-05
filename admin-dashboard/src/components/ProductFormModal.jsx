@@ -110,7 +110,11 @@ export default function ProductFormModal({
   const [customSizeInput, setCustomSizeInput] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
-  useEffect(() => {
+  const [prevInitialData, setPrevInitialData] = useState(initialData);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (prevInitialData !== initialData || prevIsOpen !== isOpen) {
+    setPrevInitialData(initialData);
+    setPrevIsOpen(isOpen);
     if (initialData) {
       setFormData({
         ...initialData,
@@ -154,7 +158,7 @@ export default function ProductFormModal({
         care: 'Machine wash cold with like colors.',
       });
     }
-  }, [initialData, isOpen]);
+  }
 
   if (!isOpen) return null;
 

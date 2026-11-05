@@ -66,15 +66,17 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menus on route change
-  useEffect(() => {
+  // Close menus on route change during render to prevent cascading renders
+  const [prevLocationKey, setPrevLocationKey] = useState(location.pathname + location.search);
+  if (prevLocationKey !== location.pathname + location.search) {
+    setPrevLocationKey(location.pathname + location.search);
     setActiveMegaCategory(null);
     setProfileDropdownOpen(false);
     setMobileMenuOpen(false);
     setMobileMenuTab('shop');
     setSearchFocused(false);
     setMobileSearchOpen(false);
-  }, [location.pathname, location.search]);
+  }
 
   // Click outside detection for search & profile
   useEffect(() => {

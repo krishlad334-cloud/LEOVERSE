@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Mail, Search, Trash2, ExternalLink, RefreshCw, Check, Copy, Send, Sparkles, Inbox } from 'lucide-react';
 
 const LOCAL_STORAGE_KEY = 'leoverse_newsletter_inquiries';
@@ -11,8 +11,7 @@ export default function AdminInquiriesPage() {
   const [filterType, setFilterType] = useState('All');
   const [copiedId, setCopiedId] = useState(null);
 
-  const fetchInquiries = async () => {
-    setLoading(true);
+  const fetchInquiries = useCallback(async () => {
     try {
       // 1. Fetch from SQLite backend
       const res = await fetch('http://localhost:5173/api/inquiries');
@@ -20,7 +19,6 @@ export default function AdminInquiriesPage() {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           setInquiries(data);
-          setLoading(false);
           return;
         }
       }
@@ -53,11 +51,19 @@ export default function AdminInquiriesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchInquiries();
-  }, []);
+    let active = true;
+    const run = async () => {
+      await Promise.resolve();
+      if (active) fetchInquiries();
+    };
+    run();
+    return () => {
+      active = false;
+    };
+  }, [fetchInquiries]);
 
   const handleDelete = async (id) => {
     try {

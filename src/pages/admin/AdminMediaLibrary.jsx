@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Image as ImageIcon,
   Video,
@@ -33,8 +33,7 @@ export const AdminMediaLibrary = () => {
   const [uploadTitle, setUploadTitle] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  const loadData = async () => {
-    setLoading(true);
+  const loadData = useCallback(async () => {
     setError('');
     try {
       const [mediaData, prodsData] = await Promise.all([
@@ -52,11 +51,19 @@ export const AdminMediaLibrary = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [typeFilter, productFilter, searchQuery]);
 
   useEffect(() => {
-    loadData();
-  }, [typeFilter, productFilter]);
+    let active = true;
+    const run = async () => {
+      await Promise.resolve();
+      if (active) loadData();
+    };
+    run();
+    return () => {
+      active = false;
+    };
+  }, [loadData]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

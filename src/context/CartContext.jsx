@@ -1,3 +1,4 @@
+/* oxlint-disable react/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext(null);
@@ -72,19 +73,28 @@ export const CartProvider = ({ children }) => {
 
       if (existingIndex > -1) {
         const updated = [...prevItems];
-        updated[existingIndex].quantity = (updated[existingIndex].quantity || 1) + quantity;
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: (updated[existingIndex].quantity || 1) + quantity,
+        };
         return updated;
       } else {
+        const itemPrice = product.sellingPrice ?? product.salePrice ?? product.price ?? 1999;
         const newItem = {
           cartItemId,
+          id: product.id,
           productId: product.id,
           name: product.name,
           subtitle: product.subtitle,
-          price: product.salePrice ?? product.price,
-          originalPrice: product.price,
-          image: product.images?.[0] || '',
+          price: itemPrice,
+          sellingPrice: itemPrice,
+          originalPrice: product.mrp ?? product.price ?? itemPrice,
+          image: product.images?.[0] || product.image || '',
+          images: product.images || (product.image ? [product.image] : []),
           selectedSize: size,
+          size: size,
           selectedColor: color,
+          color: color,
           colorHex: colorHex,
           quantity: quantity,
           category: product.category,
@@ -96,10 +106,18 @@ export const CartProvider = ({ children }) => {
     showNotification(`Added ${product.name} (${size}) to your bag`);
   };
 
-  const removeFromCart = (cartItemId) => {
+  const removeFromCart = (idOrCartItemId, size, color) => {
     setCartItems((prev) => {
       const prevItems = Array.isArray(prev) ? prev : [];
-      return prevItems.filter((item) => item.cartItemId !== cartItemId);
+      return prevItems.filter((item) => {
+        if (item.cartItemId && item.cartItemId === idOrCartItemId) return false;
+        if (size && color) {
+          if (item.id === idOrCartItemId && (item.size === size || item.selectedSize === size) && (item.color === color || item.selectedColor === color)) return false;
+          if (item.productId === idOrCartItemId && (item.size === size || item.selectedSize === size) && (item.color === color || item.selectedColor === color)) return false;
+        }
+        if (item.id === idOrCartItemId || item.productId === idOrCartItemId || item.cartItemId === idOrCartItemId) return false;
+        return true;
+      });
     });
     showNotification('Item removed from your bag', 'info');
   };

@@ -27,12 +27,11 @@ export default function AdminProductsPage({
   const [selectedDept, setSelectedDept] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All'); // 'All', 'published', 'draft'
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
-
-  useEffect(() => {
-    if (initialSearch !== undefined) {
-      setSearchTerm(initialSearch);
-    }
-  }, [initialSearch]);
+  const [prevInitialSearch, setPrevInitialSearch] = useState(initialSearch);
+  if (prevInitialSearch !== initialSearch) {
+    setPrevInitialSearch(initialSearch);
+    setSearchTerm(initialSearch || '');
+  }
 
   const departments = ['All', 'Men', 'Women', 'Kids', 'Accessories'];
 

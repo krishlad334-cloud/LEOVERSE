@@ -33,12 +33,14 @@ export default function AdminDashboardPage({
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  useEffect(() => {
+  const [prevGlobalSearch, setPrevGlobalSearch] = useState(globalSearch);
+  if (prevGlobalSearch !== globalSearch) {
+    setPrevGlobalSearch(globalSearch);
     if (globalSearch !== undefined) {
       setSearchTerm(globalSearch);
       setCurrentPage(1);
     }
-  }, [globalSearch]);
+  }
 
   // Catalog Metrics
   const totalProducts = products.length;

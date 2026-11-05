@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Eye,
   Users,
@@ -30,16 +30,13 @@ export const AdminProductAnalytics = ({ initialProductId }) => {
     getProducts()
       .then((prods) => {
         setProducts(prods);
-        if (!selectedProductId && prods.length > 0) {
-          setSelectedProductId(initialProductId || prods[0].id);
-        }
+        setSelectedProductId((prev) => prev || initialProductId || (prods.length > 0 ? prods[0].id : ''));
       })
       .catch((err) => console.error('Failed to load products list', err));
   }, [initialProductId]);
 
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     if (!selectedProductId) return;
-    setLoading(true);
     setError('');
     try {
       const res = await getProductAnalytics(selectedProductId, {
@@ -53,13 +50,20 @@ export const AdminProductAnalytics = ({ initialProductId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedProductId, dateRange, customStart, customEnd]);
 
   useEffect(() => {
-    if (selectedProductId) {
-      loadAnalytics();
-    }
-  }, [selectedProductId, dateRange]);
+    if (!selectedProductId) return;
+    let active = true;
+    const run = async () => {
+      await Promise.resolve();
+      if (active) loadAnalytics();
+    };
+    run();
+    return () => {
+      active = false;
+    };
+  }, [selectedProductId, loadAnalytics]);
 
   const handleApplyCustomDate = (e) => {
     e.preventDefault();

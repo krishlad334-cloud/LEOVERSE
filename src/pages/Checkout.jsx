@@ -32,41 +32,46 @@ export const Checkout = () => {
     clearCart,
   } = useCart();
 
-  const [savedAddresses, setSavedAddresses] = useState([]);
-  const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [savedAddresses, setSavedAddresses] = useState(() => getSavedAddresses());
+  const [selectedAddressId, setSelectedAddressId] = useState(() => {
+    const addrs = getSavedAddresses();
+    if (addrs.length > 0) {
+      const def = addrs.find((a) => a.isDefault) || addrs[0];
+      return def.id;
+    }
+    return '';
+  });
   const [paymentMethod, setPaymentMethod] = useState('UPI / QR Code');
-  const [formData, setFormData] = useState({
-    fullName: 'Dev Sharma',
-    email: 'dev.sharma@example.com',
-    phone: '9876543210',
-    address: 'Flat 402, Highmont Residences',
-    apartment: 'Off Linking Road',
-    city: 'Mumbai',
-    state: 'Maharashtra',
-    pincode: '400050',
+  const [formData, setFormData] = useState(() => {
+    const base = {
+      fullName: 'Dev Sharma',
+      email: 'dev.sharma@example.com',
+      phone: '9876543210',
+      address: 'Flat 402, Highmont Residences',
+      apartment: 'Off Linking Road',
+      city: 'Mumbai',
+      state: 'Maharashtra',
+      pincode: '400050',
+    };
+    const addrs = getSavedAddresses();
+    if (addrs.length > 0) {
+      const def = addrs.find((a) => a.isDefault) || addrs[0];
+      return {
+        ...base,
+        fullName: def.name || base.fullName,
+        phone: def.phone ? def.phone.replace(/\D/g, '').slice(-10) : base.phone,
+        address: def.addressLine1 || base.address,
+        apartment: def.addressLine2 || '',
+        city: def.city || base.city,
+        state: def.state || base.state,
+        pincode: def.pincode || base.pincode,
+      };
+    }
+    return base;
   });
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    const addrs = getSavedAddresses();
-    setSavedAddresses(addrs);
-    if (addrs.length > 0) {
-      const def = addrs.find((a) => a.isDefault) || addrs[0];
-      setSelectedAddressId(def.id);
-      setFormData((prev) => ({
-        ...prev,
-        fullName: def.name || prev.fullName,
-        phone: def.phone ? def.phone.replace(/\D/g, '').slice(-10) : prev.phone,
-        address: def.addressLine1 || prev.address,
-        apartment: def.addressLine2 || '',
-        city: def.city || prev.city,
-        state: def.state || prev.state,
-        pincode: def.pincode || prev.pincode
-      }));
-    }
-  }, []);
 
   const handleSelectSavedAddress = (addr) => {
     setSelectedAddressId(addr.id);

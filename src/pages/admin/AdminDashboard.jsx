@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Package,
   Image as ImageIcon,
@@ -23,8 +23,7 @@ export const AdminDashboard = ({ onNavigateToAnalytics, onNavigateToProducts, on
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const loadData = async () => {
-    setLoading(true);
+  const loadData = useCallback(async () => {
     setError('');
     try {
       const res = await getAdminOverview();
@@ -34,11 +33,19 @@ export const AdminDashboard = ({ onNavigateToAnalytics, onNavigateToProducts, on
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    let active = true;
+    const run = async () => {
+      await Promise.resolve();
+      if (active) loadData();
+    };
+    run();
+    return () => {
+      active = false;
+    };
+  }, [loadData]);
 
   if (loading && !data) {
     return (

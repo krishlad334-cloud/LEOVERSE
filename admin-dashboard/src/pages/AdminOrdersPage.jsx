@@ -3,53 +3,64 @@ import { ShoppingBag, CheckCircle, Clock, Truck, Search, ExternalLink } from 'lu
 
 const LOCAL_ORDERS_KEY = 'leoverse_orders';
 
+const SAMPLE_ORDERS = [
+  {
+    id: 'ORD-8942-LEO',
+    customerName: 'Aarav Mehta',
+    email: 'aarav.mehta@example.com',
+    phone: '+91 98201 44521',
+    status: 'Delivered',
+    total: 13990,
+    date: '2026-11-04T14:30:00Z',
+    paymentMethod: 'UPI',
+    items: [
+      { name: 'Double-Breasted Silk-Blend Dinner Blazer', qty: 1, price: 13990 }
+    ],
+    address: { city: 'Mumbai', state: 'Maharashtra', pincode: '400050' }
+  },
+  {
+    id: 'ORD-7611-LEO',
+    customerName: 'Devansh Singhania',
+    email: 'devansh.s@example.com',
+    phone: '+91 98112 39012',
+    status: 'In Transit',
+    total: 7380,
+    date: '2026-11-05T09:15:00Z',
+    paymentMethod: 'Credit Card',
+    items: [
+      { name: 'Pure Egyptian Cotton Mandarin Casual Shirt', qty: 2, price: 2490 },
+      { name: 'Minimalist Italian Calfskin Low Sneakers', qty: 1, price: 4890 }
+    ],
+    address: { city: 'New Delhi', state: 'Delhi', pincode: '110001' }
+  }
+];
+
 export default function AdminOrdersPage() {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState(() => {
+    try {
+      const stored = localStorage.getItem(LOCAL_ORDERS_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return SAMPLE_ORDERS;
+  });
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(LOCAL_ORDERS_KEY);
-      if (stored) {
-        setOrders(JSON.parse(stored));
-      } else {
-        // Sample orders for visual polish
-        setOrders([
-          {
-            id: 'ORD-8942-LEO',
-            customerName: 'Aarav Mehta',
-            email: 'aarav.mehta@example.com',
-            phone: '+91 98201 44521',
-            status: 'Delivered',
-            total: 13990,
-            date: '2026-11-04T14:30:00Z',
-            paymentMethod: 'UPI',
-            items: [
-              { name: 'Double-Breasted Silk-Blend Dinner Blazer', qty: 1, price: 13990 }
-            ],
-            address: { city: 'Mumbai', state: 'Maharashtra', pincode: '400050' }
-          },
-          {
-            id: 'ORD-7611-LEO',
-            customerName: 'Devansh Singhania',
-            email: 'devansh.s@example.com',
-            phone: '+91 98112 39012',
-            status: 'In Transit',
-            total: 7380,
-            date: '2026-11-05T09:15:00Z',
-            paymentMethod: 'Credit Card',
-            items: [
-              { name: 'Pure Egyptian Cotton Mandarin Casual Shirt', qty: 2, price: 2490 },
-              { name: 'Minimalist Italian Calfskin Low Sneakers', qty: 1, price: 4890 }
-            ],
-            address: { city: 'New Delhi', state: 'Delhi', pincode: '110001' }
-          }
-        ]);
-      }
-    } catch {
-      setOrders([]);
-    }
+    const handleUpdate = () => {
+      try {
+        const stored = localStorage.getItem(LOCAL_ORDERS_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) setOrders(parsed);
+        }
+      } catch {}
+    };
+    window.addEventListener('storage', handleUpdate);
+    return () => window.removeEventListener('storage', handleUpdate);
   }, []);
 
   const filteredOrders = orders.filter((o) => {
@@ -121,7 +132,7 @@ export default function AdminOrdersPage() {
                   <div>
                     <span className="font-mono font-bold text-xs text-[#2C4152]">#{ord.id}</span>
                     <span className="block text-[10px] text-gray-400 mt-0.5">
-                      {new Date(ord.date || ord.createdAt || Date.now()).toLocaleDateString()}
+                      {ord.date || ord.createdAt ? new Date(ord.date || ord.createdAt).toLocaleDateString() : 'Recent'}
                     </span>
                   </div>
                   <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
@@ -188,7 +199,7 @@ export default function AdminOrdersPage() {
                       <td className="py-3 px-4">
                         <span className="font-bold text-[#2C4152] block font-mono">{ord.id}</span>
                         <span className="text-[10px] text-gray-400">
-                          {new Date(ord.date || ord.createdAt || Date.now()).toLocaleDateString()}
+                          {ord.date || ord.createdAt ? new Date(ord.date || ord.createdAt).toLocaleDateString() : 'Recent'}
                         </span>
                       </td>
 

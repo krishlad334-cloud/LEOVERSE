@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { ShoppingBag, RefreshCw, CheckCircle2, Clock, Truck, PackageCheck, User, MapPin, Calendar } from 'lucide-react';
 import { getOrders, updateOrderStatus } from '../../services/api';
 
@@ -7,9 +7,7 @@ export const AdminOrders = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const loadData = async () => {
-    setLoading(true);
-    setError('');
+  const loadData = useCallback(async () => {
     try {
       const data = await getOrders();
       setOrders(data);
@@ -18,11 +16,19 @@ export const AdminOrders = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    let active = true;
+    const run = async () => {
+      await Promise.resolve();
+      if (active) loadData();
+    };
+    run();
+    return () => {
+      active = false;
+    };
+  }, [loadData]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {

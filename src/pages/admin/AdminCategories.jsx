@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Layers, Plus, Edit, Trash2, X, RefreshCw } from 'lucide-react';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../services/api';
 
@@ -15,8 +15,7 @@ export const AdminCategories = () => {
   const [image, setImage] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const loadData = async () => {
-    setLoading(true);
+  const loadData = useCallback(async () => {
     setError('');
     try {
       const data = await getCategories();
@@ -26,11 +25,19 @@ export const AdminCategories = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    let active = true;
+    const run = async () => {
+      await Promise.resolve();
+      if (active) loadData();
+    };
+    run();
+    return () => {
+      active = false;
+    };
+  }, [loadData]);
 
   const handleOpenAdd = () => {
     setEditingCategory(null);

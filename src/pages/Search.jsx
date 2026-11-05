@@ -10,10 +10,12 @@ export const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlQuery = searchParams.get('q') || '';
   const [searchTerm, setSearchTerm] = useState(urlQuery);
+  const [prevUrlQuery, setPrevUrlQuery] = useState(urlQuery);
 
-  useEffect(() => {
-    setSearchTerm((prev) => (prev === urlQuery ? prev : urlQuery));
-  }, [urlQuery]);
+  if (prevUrlQuery !== urlQuery) {
+    setPrevUrlQuery(urlQuery);
+    setSearchTerm(urlQuery);
+  }
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

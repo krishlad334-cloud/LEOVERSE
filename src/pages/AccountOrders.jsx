@@ -6,11 +6,19 @@ import { formatPrice } from '../utils/formatPrice';
 import { getCustomerOrders } from '../services/productService';
 
 export const AccountOrders = () => {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState(() => getCustomerOrders());
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setOrders(getCustomerOrders());
+    const handleUpdate = () => {
+      setOrders(getCustomerOrders());
+    };
+    window.addEventListener('storage', handleUpdate);
+    window.addEventListener('leoverse:orders_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('leoverse:orders_updated', handleUpdate);
+    };
   }, []);
 
   const filteredOrders = orders.filter((o) => {

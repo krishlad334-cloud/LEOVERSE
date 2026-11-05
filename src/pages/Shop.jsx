@@ -26,22 +26,37 @@ export const Shop = () => {
   const [maxPrice, setMaxPrice] = useState(15000);
   const [inStockOnly, setInStockOnly] = useState(false);
 
-  // Sync state if URL search params change
-  useEffect(() => {
+  // Sync state if URL search params change during render
+  const searchParamsString = searchParams.toString();
+  const [prevParamsString, setPrevParamsString] = useState(searchParamsString);
+  if (prevParamsString !== searchParamsString) {
+    setPrevParamsString(searchParamsString);
     setDepartment(searchParams.get('department') || 'All');
     setCategory(searchParams.get('category') || 'All');
     setSearchQuery(searchParams.get('search') || '');
     setSortBy(searchParams.get('sort') || 'featured');
-  }, [searchParams]);
+  }
 
   // Load categories
   useEffect(() => {
-    getCategories().then(setCategories).catch(() => {});
+    let active = true;
+    getCategories()
+      .then((data) => {
+        if (active) setCategories(data);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Fetch products from SQLite API
   useEffect(() => {
-    setLoading(true);
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (!cancelled) setLoading(true);
+    });
+
     getProducts({
       department: department !== 'All' ? department : undefined,
       category: category !== 'All' ? category : undefined,
@@ -51,13 +66,19 @@ export const Shop = () => {
       sort: sortBy
     })
       .then((data) => {
-        setProducts(data);
+        if (!cancelled) setProducts(data);
       })
       .catch((err) => {
         console.error('Failed to load products', err);
-        setProducts([]);
+        if (!cancelled) setProducts([]);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [department, category, searchQuery, sortBy, maxPrice, inStockOnly]);
 
   const handleDepartmentChange = (newDept) => {

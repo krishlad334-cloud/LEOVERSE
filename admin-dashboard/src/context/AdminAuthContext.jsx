@@ -1,3 +1,4 @@
+/* oxlint-disable react/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
 import {
   auth,
@@ -38,7 +39,7 @@ export function AdminAuthProvider({ children }) {
       return DEMO_ADMIN;
     }
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => Boolean(auth && isFirebaseConfigured));
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -55,16 +56,17 @@ export function AdminAuthProvider({ children }) {
           localStorage.setItem(LOCAL_AUTH_KEY, JSON.stringify(adminObj));
         } else {
           // If we had a real firebase user that signed out
-          if (currentUser && !currentUser.isDemo) {
-            setCurrentUser(null);
-            localStorage.removeItem(LOCAL_AUTH_KEY);
-          }
+          setCurrentUser((prev) => {
+            if (prev && !prev.isDemo) {
+              localStorage.removeItem(LOCAL_AUTH_KEY);
+              return null;
+            }
+            return prev;
+          });
         }
         setLoading(false);
       });
       return () => unsubscribe();
-    } else {
-      setLoading(false);
     }
   }, []);
 

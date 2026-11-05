@@ -190,7 +190,11 @@ const QuickViewModalContent = ({ product, onClose }) => {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={handleAddToCart}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleAddToCart();
+                  }}
                   disabled={added}
                   className={`flex-1 py-3 px-4 text-xs font-bold uppercase tracking-[0.14em] flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md rounded-xl ${
                     added
@@ -211,7 +215,11 @@ const QuickViewModalContent = ({ product, onClose }) => {
 
                 <button
                   type="button"
-                  onClick={() => toggleWishlist(product)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleWishlist(product);
+                  }}
                   className="p-3 border border-[#D8D2C8] dark:border-[#27272A] hover:border-[#242321] dark:hover:border-white text-[#242321] dark:text-white bg-[#FAF9F6] dark:bg-[#202026] rounded-xl transition-colors cursor-pointer"
                   title="Wishlist"
                 >

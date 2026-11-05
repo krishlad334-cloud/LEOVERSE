@@ -47,7 +47,9 @@ export const ProductInfo = ({ product, onOpenSizeGuide }) => {
   const isLowStock = product.stock !== undefined && product.stock <= 5 && product.stock > 0;
   const isOutOfStock = product.stock !== undefined && product.stock === 0;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
     addToCart(product, selectedSize, selectedColor, quantity);
     // Track database event
     if (product.id) {
@@ -57,7 +59,9 @@ export const ProductInfo = ({ product, onOpenSizeGuide }) => {
     setTimeout(() => setAddedToast(false), 3000);
   };
 
-  const handleToggleWishlist = () => {
+  const handleToggleWishlist = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
     const willBeSaved = !isSaved;
     toggleWishlist(product);
     if (willBeSaved && product.id) {

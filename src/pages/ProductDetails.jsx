@@ -22,7 +22,10 @@ export const ProductDetails = () => {
 
   useEffect(() => {
     if (!id) return;
-    setLoading(true);
+    let active = true;
+    queueMicrotask(() => {
+      if (active) setLoading(true);
+    });
 
     // Track analytics and record in recently viewed
     trackProductView(id);
@@ -31,21 +34,30 @@ export const ProductDetails = () => {
     // Fetch product details
     getProductById(id)
       .then((data) => {
+        if (!active) return;
         setProduct(data);
         if (data) {
           recordProductView(data.id);
           getProducts({ department: data.department })
             .then((all) => {
-              setRelatedProducts(all.filter((p) => p.id !== data.id).slice(0, 4));
+              if (active) {
+                setRelatedProducts(all.filter((p) => p.id !== data.id).slice(0, 4));
+              }
             })
             .catch(() => {});
         }
       })
       .catch((err) => {
         console.error('Failed to load product', err);
-        setProduct(null);
+        if (active) setProduct(null);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, [id]);
 
   if (loading) {

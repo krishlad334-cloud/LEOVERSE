@@ -16,5 +16,19 @@ export default defineConfig({
     host: true,
     port: 5173,
     cors: true,
+    watch: {
+      ignored: [
+        '**/data/**',
+        '**/data/ecommerce.db**',
+        '**/*.db',
+        '**/*.db-wal',
+        '**/*.db-shm',
+        '**/*.sqlite',
+        '**/admin-dashboard/**',
+        '**/public/media/drops/**',
+        '**/public/content/**',
+        '**/.gemini/**',
+      ],
+    },
   },
 })

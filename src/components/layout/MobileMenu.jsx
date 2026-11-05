@@ -46,13 +46,17 @@ export const MobileMenu = ({ isOpen, onClose, initialTab = 'shop' }) => {
   const [expandedSection, setExpandedSection] = useState(null);
   const [addedWishlistId, setAddedWishlistId] = useState(null);
 
-  // Sync initialTab when drawer is opened
-  useEffect(() => {
+  // Sync initialTab when drawer is opened during render to prevent cascading renders
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const [prevInitialTab, setPrevInitialTab] = useState(initialTab);
+  if (isOpen !== prevIsOpen || initialTab !== prevInitialTab) {
+    setPrevIsOpen(isOpen);
+    setPrevInitialTab(initialTab);
     if (isOpen) {
       setActiveMainTab(initialTab || 'shop');
       setExpandedSection(null);
     }
-  }, [isOpen, initialTab]);
+  }
 
   if (!isOpen) return null;
 
@@ -568,7 +572,7 @@ export const MobileMenu = ({ isOpen, onClose, initialTab = 'shop' }) => {
                         </div>
                         <button
                           type="button"
-                          onClick={() => removeFromCart(item.id, item.size, item.color)}
+                          onClick={() => removeFromCart(item.cartItemId || item.id, item.size, item.color)}
                           className="p-1.5 text-gray-400 hover:text-red-500 rounded cursor-pointer"
                           title="Remove item"
                         >

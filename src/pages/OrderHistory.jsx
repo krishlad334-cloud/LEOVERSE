@@ -55,23 +55,40 @@ const DEFAULT_ORDERS = [
 
 export const OrderHistory = () => {
   const [trackingModalOrder, setTrackingModalOrder] = useState(null);
-  const [orders, setOrders] = useState(DEFAULT_ORDERS);
-  const [lookupQuery, setLookupQuery] = useState('');
-  const [lookupResult, setLookupResult] = useState(null);
-  const [lookupAttempted, setLookupAttempted] = useState(false);
-
-  useEffect(() => {
+  const [orders, setOrders] = useState(() => {
     try {
       const stored = localStorage.getItem('leoverse_orders');
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setOrders([...parsed, ...DEFAULT_ORDERS]);
+          return [...parsed, ...DEFAULT_ORDERS];
         }
       }
     } catch (e) {
       console.error(e);
     }
+    return DEFAULT_ORDERS;
+  });
+  const [lookupQuery, setLookupQuery] = useState('');
+  const [lookupResult, setLookupResult] = useState(null);
+  const [lookupAttempted, setLookupAttempted] = useState(false);
+
+  useEffect(() => {
+    const handleStorage = () => {
+      try {
+        const stored = localStorage.getItem('leoverse_orders');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setOrders([...parsed, ...DEFAULT_ORDERS]);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
   const handleLookup = (e) => {

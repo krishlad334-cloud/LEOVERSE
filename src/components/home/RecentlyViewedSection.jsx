@@ -13,10 +13,18 @@ export const RecentlyViewedSection = () => {
   });
 
   useEffect(() => {
-    const recent = getRecentlyViewed();
-    if (recent.length > 0) {
-      setItems(recent);
-    }
+    const handleUpdate = () => {
+      const recent = getRecentlyViewed();
+      if (recent.length > 0) {
+        setItems(recent);
+      }
+    };
+    window.addEventListener('storage', handleUpdate);
+    window.addEventListener('leoverse:recently_viewed', handleUpdate);
+    return () => {
+      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('leoverse:recently_viewed', handleUpdate);
+    };
   }, []);
 
   if (items.length === 0) return null;

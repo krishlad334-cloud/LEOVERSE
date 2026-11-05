@@ -70,8 +70,11 @@ export const Products = () => {
   const [sortBy, setSortBy] = useState(sortParam);
   const [searchQuery, setSearchQuery] = useState(searchParam);
 
-  // Sync state if URL changes externally
-  useEffect(() => {
+  // Sync state if URL changes externally during render
+  const searchParamsString = searchParams.toString();
+  const [prevParamsString, setPrevParamsString] = useState(searchParamsString);
+  if (prevParamsString !== searchParamsString) {
+    setPrevParamsString(searchParamsString);
     setDepartment(searchParams.get('department') || 'All');
     setCategory(searchParams.get('category') || 'All');
     setSubcategory(searchParams.get('subcategory') || 'All');
@@ -88,7 +91,7 @@ export const Products = () => {
     setSortBy(searchParams.get('sort') || 'featured');
     setSearchQuery(searchParams.get('search') || '');
     setPage(1);
-  }, [searchParams]);
+  }
 
   // Update URL helper
   const updateQueryParams = (updates) => {
@@ -160,6 +163,7 @@ export const Products = () => {
 
   // Fetch filtered catalog
   const catalogResult = useMemo(() => {
+    void catalogVersion;
     return getProductCatalog({
       department: department !== 'All' ? department : undefined,
       category: category !== 'All' ? category : undefined,

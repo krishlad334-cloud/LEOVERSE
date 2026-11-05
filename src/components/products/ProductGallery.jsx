@@ -40,7 +40,7 @@ export const ProductGallery = ({
       const mediaId = imageMedia[selectedImage]?.id || `img-${productId}-${selectedImage}`;
       trackImageView(productId, mediaId);
     }
-  }, [selectedImage, productId]);
+  }, [selectedImage, productId, images.length, imageMedia]);
 
   const handleSelectImage = (index) => {
     setSelectedImage(index);
@@ -124,7 +124,7 @@ export const ProductGallery = ({
       }
     }
     return () => clearInterval(watchTimerRef.current);
-  }, [isPlaying, productId, selectedVideo]);
+  }, [isPlaying, productId, selectedVideo, videos]);
 
   const toggleFullscreen = () => {
     if (!videoRef.current) return;
