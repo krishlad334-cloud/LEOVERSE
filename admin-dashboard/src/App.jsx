@@ -18,6 +18,7 @@ import AdminOrdersPage from './pages/AdminOrdersPage';
 import AdminMediaPage from './pages/AdminMediaPage';
 import AdminCategoriesPage from './pages/AdminCategoriesPage';
 import AdminSettingsPage from './pages/AdminSettingsPage';
+import AdminInquiriesPage from './pages/AdminInquiriesPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [globalSearch, setGlobalSearch] = useState('');
+  const [inquiryCount, setInquiryCount] = useState(0);
 
   // Modal states
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -40,6 +42,32 @@ export default function App() {
     return () => {
       if (typeof unsubscribe === 'function') unsubscribe();
     };
+  }, []);
+
+  // Fetch inquiries count
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const res = await fetch('http://localhost:5173/api/inquiries');
+        if (res.ok) {
+          const list = await res.json();
+          if (Array.isArray(list)) {
+            setInquiryCount(list.length);
+          }
+        }
+      } catch {
+        // Fallback to local
+        try {
+          const stored = localStorage.getItem('leoverse_newsletter_inquiries');
+          if (stored) {
+            setInquiryCount(JSON.parse(stored).length);
+          }
+        } catch {}
+      }
+    };
+    fetchCount();
+    const interval = setInterval(fetchCount, 8000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -132,6 +160,7 @@ export default function App() {
           setActiveTab={setActiveTab}
           productCount={products.length}
           publishedCount={publishedCount}
+          inquiryCount={inquiryCount}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           onOpenAddProduct={handleOpenAdd}
@@ -164,6 +193,8 @@ export default function App() {
             )}
 
             {activeTab === 'orders' && <AdminOrdersPage />}
+
+            {activeTab === 'inquiries' && <AdminInquiriesPage />}
 
             {activeTab === 'media' && <AdminMediaPage />}
 

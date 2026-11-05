@@ -23,6 +23,7 @@ import { formatPrice } from '../../utils/formatPrice';
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuTab, setMobileMenuTab] = useState('shop');
   const [activeMegaCategory, setActiveMegaCategory] = useState(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -70,6 +71,7 @@ export const Navbar = () => {
     setActiveMegaCategory(null);
     setProfileDropdownOpen(false);
     setMobileMenuOpen(false);
+    setMobileMenuTab('shop');
     setSearchFocused(false);
     setMobileSearchOpen(false);
   }, [location.pathname, location.search]);
@@ -164,7 +166,10 @@ export const Navbar = () => {
             <div className="flex items-center gap-3 lg:gap-6 shrink-0">
               <button
                 type="button"
-                onClick={() => setMobileMenuOpen(true)}
+                onClick={() => {
+                  setMobileMenuTab('shop');
+                  setMobileMenuOpen(true);
+                }}
                 className="lg:hidden p-1.5 -ml-1 text-[#2C4152] dark:text-white hover:text-[#D5A249] rounded-lg transition-colors cursor-pointer"
                 aria-label="Open mobile navigation menu"
               >
@@ -317,10 +322,10 @@ export const Navbar = () => {
                 <Search className="w-5 h-5" />
               </button>
 
-              {/* Account Dropdown (Opens on Hover or Click) */}
+              {/* Account Dropdown (Visible on Desktop, hidden on mobile since it lives in the sidebar) */}
               <div
                 ref={profileRef}
-                className="relative"
+                className="relative hidden lg:block"
                 onMouseEnter={handleProfileMouseEnter}
                 onMouseLeave={handleProfileMouseLeave}
               >
@@ -465,10 +470,10 @@ export const Navbar = () => {
                 )}
               </div>
 
-              {/* Wishlist Icon with live counter */}
+              {/* Wishlist Icon (Desktop only, hidden on mobile) */}
               <Link
                 to="/wishlist"
-                className="relative p-2 text-[#2C4152] dark:text-gray-200 hover:text-[#D5A249] rounded-full hover:bg-[#F5F5F5] dark:hover:bg-[#1A232C] transition-colors"
+                className="relative hidden lg:inline-flex p-2 text-[#2C4152] dark:text-gray-200 hover:text-[#D5A249] rounded-full hover:bg-[#F5F5F5] dark:hover:bg-[#1A232C] transition-colors"
                 aria-label="Wishlist"
               >
                 <Heart className={`w-5 h-5 transition-transform ${wishlistNotification ? 'scale-125 text-rose-600' : ''}`} />
@@ -479,10 +484,10 @@ export const Navbar = () => {
                 )}
               </Link>
 
-              {/* Shopping Bag Icon with live counter */}
+              {/* Shopping Bag Icon (Desktop only, hidden on mobile) */}
               <Link
                 to="/cart"
-                className="relative p-2 text-[#2C4152] dark:text-gray-200 hover:text-[#D5A249] rounded-full hover:bg-[#F5F5F5] dark:hover:bg-[#1A232C] transition-colors"
+                className="relative hidden lg:inline-flex p-2 text-[#2C4152] dark:text-gray-200 hover:text-[#D5A249] rounded-full hover:bg-[#F5F5F5] dark:hover:bg-[#1A232C] transition-colors"
                 aria-label="Shopping Cart"
               >
                 <ShoppingBag className={`w-5 h-5 transition-transform ${cartNotification ? 'scale-125 text-[#D5A249]' : ''}`} />
@@ -535,6 +540,7 @@ export const Navbar = () => {
       <MobileMenu
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
+        initialTab={mobileMenuTab}
       />
     </>
   );

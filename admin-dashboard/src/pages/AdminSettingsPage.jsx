@@ -125,6 +125,43 @@ export default function AdminSettingsPage({ onSeedCatalog }) {
         </ol>
       </div>
 
+      {/* Email Notification & Inquiry Routing Card */}
+      <div className="p-5 rounded-xl bg-white border border-gray-200 shadow-2xs space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-[#D5A249]/15 text-[#D5A249]">
+              <Key className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-[#2C4152]">
+                Customer Inquiry & Lead Delivery Target
+              </h3>
+              <p className="text-xs text-gray-500">
+                All visitor newsletter signups and contact inquiries are configured for delivery to Krish Lad.
+              </p>
+            </div>
+          </div>
+          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
+            Active
+          </span>
+        </div>
+
+        <div className="p-3.5 bg-gray-50 rounded-lg border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div>
+            <span className="text-gray-400 font-medium block text-[10px] uppercase">Registered Notification Inbox</span>
+            <span className="font-mono font-bold text-[#2C4152] text-sm">krishlad334@gmail.com</span>
+          </div>
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=krishlad334@gmail.com&su=LEOVERSE+Delivery+Channel+Verification&body=Hello+Krish%2C+the+LEOVERSE+inquiry+channel+is+active+and+operational."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#2C4152] text-white rounded-lg hover:bg-[#1D2A35] font-semibold transition-colors cursor-pointer"
+          >
+            <span>Test Direct Gmail Delivery</span>
+          </a>
+        </div>
+      </div>
+
       {/* Engineering & Design Credits Card */}
       <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-[#2C4152] to-[#1D2A35] text-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">

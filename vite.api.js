@@ -289,6 +289,52 @@ export function leoverseApiPlugin() {
           }
 
           // ------------------------------------
+          // Inquiries & Newsletter Subscriptions
+          // Target: krishlad334@gmail.com
+          // ------------------------------------
+          if (pathname === '/api/inquiries') {
+            if (method === 'GET') {
+              const inquiries = db.getAllInquiries();
+              return sendJson(res, 200, inquiries);
+            }
+            if (method === 'POST') {
+              const body = await readJsonBody(req);
+              const cleanEmail = (body.email || '').trim();
+              if (!cleanEmail || !cleanEmail.includes('@')) {
+                return sendJson(res, 400, { error: 'Valid email address is required' });
+              }
+              const inquiry = db.createInquiry({
+                name: body.name || 'VIP Subscriber',
+                email: cleanEmail,
+                type: body.type || 'newsletter',
+                subject: body.subject || 'VIP Newsletter Subscription',
+                message: body.message || `Subscribed via website footer. Target inbox: krishlad334@gmail.com`,
+                targetEmail: 'krishlad334@gmail.com'
+              });
+              return sendJson(res, 201, {
+                success: true,
+                inquiry,
+                targetEmail: 'krishlad334@gmail.com',
+                message: 'Inquiry registered and routed to krishlad334@gmail.com'
+              });
+            }
+          }
+
+          const inquiryIdMatch = pathname.match(/^\/api\/inquiries\/([^/]+)$/);
+          if (inquiryIdMatch) {
+            const inquiryId = inquiryIdMatch[1];
+            if (method === 'PATCH' || method === 'PUT') {
+              const body = await readJsonBody(req);
+              const updated = db.updateInquiryStatus(inquiryId, body.status || 'read');
+              return sendJson(res, 200, updated);
+            }
+            if (method === 'DELETE') {
+              const result = db.deleteInquiry(inquiryId);
+              return sendJson(res, 200, result);
+            }
+          }
+
+          // ------------------------------------
           // Admin Auth
           // ------------------------------------
           if (pathname === '/api/auth/admin-login' && method === 'POST') {

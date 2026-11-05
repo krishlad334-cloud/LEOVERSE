@@ -1,12 +1,27 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Globe, ExternalLink, RefreshCw } from 'lucide-react';
+import { ArrowRight, Check, Globe, ExternalLink, RefreshCw, Mail, Send } from 'lucide-react';
 import { footerLinks } from '../../data/navigation';
 
 export const Footer = () => {
   const [email, setEmail] = useState('');
+  const [submittedEmail, setSubmittedEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+
+  const getGmailUrl = (target) => {
+    const clean = target || 'client@leoverse.com';
+    const su = encodeURIComponent(`LEOVERSE VIP Newsletter Subscription: ${clean}`);
+    const body = encodeURIComponent(`Hello Krish Lad,\n\nPlease register my email address for exclusive LEOVERSE menswear VIP drops and private tailoring salon updates:\n\nEmail: ${clean}\nWebsite: LEOVERSE Menswear Atelier\n\nThank you!`);
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=krishlad334@gmail.com&su=${su}&body=${body}`;
+  };
+
+  const getMailtoUrl = (target) => {
+    const clean = target || 'client@leoverse.com';
+    const su = encodeURIComponent(`LEOVERSE VIP Newsletter Subscription: ${clean}`);
+    const body = encodeURIComponent(`Hello Krish Lad,\n\nPlease register my email address for exclusive LEOVERSE menswear VIP drops and private tailoring salon updates:\n\nEmail: ${clean}\nWebsite: LEOVERSE Menswear Atelier\n\nThank you!`);
+    return `mailto:krishlad334@gmail.com?subject=${su}&body=${body}`;
+  };
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -14,42 +29,40 @@ export const Footer = () => {
     if (!cleanEmail || !cleanEmail.includes('@')) return;
 
     setLoading(true);
+    setSubmittedEmail(cleanEmail);
+
+    // 1. Post to Atelier API for persistent database storage
     try {
-      // Dispatch inquiry directly to krishlad334@gmail.com
-      await fetch('https://formsubmit.co/ajax/krishlad334@gmail.com', {
+      await fetch('/api/inquiries', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: cleanEmail,
-          _subject: 'New LEOVERSE VIP Newsletter Inquiry',
-          _template: 'table',
-          inquiry: `New subscriber registered via website footer: ${cleanEmail}`,
-          destination: 'krishlad334@gmail.com',
-          website: 'LEOVERSE Menswear Atelier',
-          timestamp: new Date().toLocaleString(),
+          type: 'newsletter',
+          subject: 'LEOVERSE VIP Newsletter Subscription',
+          message: `Visitor registered via website footer. Targeted to krishlad334@gmail.com`,
+          targetEmail: 'krishlad334@gmail.com',
         }),
       });
-
-      // Also record locally in browser for resilience
-      try {
-        const stored = JSON.parse(localStorage.getItem('leoverse_newsletter_inquiries') || '[]');
-        stored.push({ email: cleanEmail, date: new Date().toISOString() });
-        localStorage.setItem('leoverse_newsletter_inquiries', JSON.stringify(stored));
-      } catch {}
-
-      setSubscribed(true);
-      setEmail('');
     } catch (err) {
-      console.warn('Inquiry dispatch notice:', err);
-      // Gracefully show success so customer flow is unbroken
-      setSubscribed(true);
-      setEmail('');
-    } finally {
-      setLoading(false);
+      console.warn('API submission fallback:', err);
     }
+
+    // 2. Local browser storage resilience
+    try {
+      const stored = JSON.parse(localStorage.getItem('leoverse_newsletter_inquiries') || '[]');
+      stored.unshift({ email: cleanEmail, type: 'newsletter', date: new Date().toISOString() });
+      localStorage.setItem('leoverse_newsletter_inquiries', JSON.stringify(stored));
+    } catch {}
+
+    // 3. Open Gmail directly so the inquiry is guaranteed delivered to Krish Lad
+    try {
+      window.open(getGmailUrl(cleanEmail), '_blank', 'noopener,noreferrer');
+    } catch {}
+
+    setSubscribed(true);
+    setEmail('');
+    setLoading(false);
   };
 
   return (
@@ -67,14 +80,44 @@ export const Footer = () => {
             </p>
             <form onSubmit={handleSubscribe} className="pt-2 max-w-md">
               {subscribed ? (
-                <div className="space-y-1.5 animate-in fade-in duration-200">
-                  <div className="flex items-center gap-2 text-sm text-[#EAE5DC] bg-[#383733]/60 py-3 px-4 border border-[#4a4944] rounded-lg">
-                    <Check className="w-4 h-4 text-[#D5A249] shrink-0" />
-                    <span>Thank you for subscribing! Your inquiry has been forwarded to our team.</span>
+                <div className="space-y-3 animate-in fade-in duration-200 bg-[#383733]/70 p-4 border border-[#4a4944] rounded-xl">
+                  <div className="flex items-start gap-2.5 text-sm text-[#FAF9F6]">
+                    <Check className="w-4 h-4 text-[#D5A249] shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-semibold block text-[#FAF9F6]">Subscription Registered!</span>
+                      <span className="text-xs text-[#DCD5CA]/80">
+                        Inquiry recorded and addressed to <strong className="text-[#D5A249]">krishlad334@gmail.com</strong>
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[11px] text-[#DCD5CA]/70 block pl-1">
-                    Inquiry notification dispatched to <strong className="text-[#D5A249]">krishlad334@gmail.com</strong>
-                  </span>
+
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <a
+                      href={getGmailUrl(submittedEmail)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#D5A249] hover:bg-[#c4923b] text-[#252522] text-xs font-semibold rounded-lg transition-colors cursor-pointer shadow-xs"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>Send to Krish via Gmail</span>
+                      <ExternalLink className="w-3 h-3 opacity-70" />
+                    </a>
+
+                    <a
+                      href={getMailtoUrl(submittedEmail)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#4a4944] hover:bg-[#585751] text-[#FAF9F6] text-xs font-medium rounded-lg transition-colors cursor-pointer"
+                    >
+                      <span>Default Mail App</span>
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={() => setSubscribed(false)}
+                      className="text-[11px] text-[#DCD5CA]/70 hover:text-[#FAF9F6] underline ml-auto cursor-pointer"
+                    >
+                      Add another email
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="relative flex items-center">

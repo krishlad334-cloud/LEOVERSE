@@ -14,6 +14,7 @@ import {
   Plus,
   LogOut,
   Eye,
+  Mail,
 } from 'lucide-react';
 
 export default function AdminSidebar({
@@ -21,6 +22,7 @@ export default function AdminSidebar({
   setActiveTab,
   productCount = 0,
   publishedCount = 0,
+  inquiryCount = 0,
   isOpen = false,
   onClose,
   onOpenAddProduct,
@@ -44,6 +46,7 @@ export default function AdminSidebar({
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'products', label: 'Products & Inventory', icon: Package, badge: productCount },
     { id: 'orders', label: 'Customer Orders', icon: ShoppingBag },
+    { id: 'inquiries', label: 'Email Inquiries', icon: Mail, badge: inquiryCount },
     { id: 'media', label: 'Storage & Media', icon: ImageIcon },
     { id: 'categories', label: 'Departments & Tags', icon: Layers },
     { id: 'settings', label: 'Firebase & Database', icon: Settings },

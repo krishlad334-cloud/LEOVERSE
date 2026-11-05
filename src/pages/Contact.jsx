@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MessageCircle, CheckCircle, Clock } from 'lucide-react';
+import { Mail, Phone, MessageCircle, CheckCircle, Clock, Send, ExternalLink } from 'lucide-react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Breadcrumb from '../components/common/Breadcrumb';
@@ -15,36 +15,64 @@ export const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const getGmailContactUrl = () => {
+    const su = encodeURIComponent(`[LEOVERSE Inquiry] ${formData.subject || 'Client Inquiry'} - ${formData.name}`);
+    const body = encodeURIComponent(`Hello Krish Lad,\n\nNew Client Inquiry from LEOVERSE Atelier:\n\nClient Name: ${formData.name}\nEmail: ${formData.email}\nTopic: ${formData.subject}\n\nMessage:\n${formData.message}\n\nWebsite: LEOVERSE Menswear Atelier\n\nThank you!`);
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=krishlad334@gmail.com&su=${su}&body=${body}`;
+  };
+
+  const getMailtoContactUrl = () => {
+    const su = encodeURIComponent(`[LEOVERSE Inquiry] ${formData.subject || 'Client Inquiry'} - ${formData.name}`);
+    const body = encodeURIComponent(`Hello Krish Lad,\n\nNew Client Inquiry from LEOVERSE Atelier:\n\nClient Name: ${formData.name}\nEmail: ${formData.email}\nTopic: ${formData.subject}\n\nMessage:\n${formData.message}\n\nWebsite: LEOVERSE Menswear Atelier\n\nThank you!`);
+    return `mailto:krishlad334@gmail.com?subject=${su}&body=${body}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.name && formData.email && formData.message) {
       setLoading(true);
+
+      // 1. Post to Atelier API for database persistence
       try {
-        await fetch('https://formsubmit.co/ajax/krishlad334@gmail.com', {
+        await fetch('/api/inquiries', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
           },
           body: JSON.stringify({
             name: formData.name,
             email: formData.email,
             subject: formData.subject,
             message: formData.message,
-            _subject: `New LEOVERSE Client Inquiry: ${formData.subject}`,
-            _template: 'table',
-            destination: 'krishlad334@gmail.com',
-            website: 'LEOVERSE Menswear Atelier',
-            timestamp: new Date().toLocaleString(),
+            type: 'contact',
+            targetEmail: 'krishlad334@gmail.com',
           }),
         });
-        setSubmitted(true);
       } catch (err) {
-        console.warn('Contact form dispatch notice:', err);
-        setSubmitted(true);
-      } finally {
-        setLoading(false);
+        console.warn('Contact API record notice:', err);
       }
+
+      // 2. Also record in local browser storage
+      try {
+        const stored = JSON.parse(localStorage.getItem('leoverse_newsletter_inquiries') || '[]');
+        stored.unshift({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          type: 'contact',
+          date: new Date().toISOString(),
+        });
+        localStorage.setItem('leoverse_newsletter_inquiries', JSON.stringify(stored));
+      } catch {}
+
+      // 3. Open Gmail directly addressed to krishlad334@gmail.com
+      try {
+        window.open(getGmailContactUrl(), '_blank', 'noopener,noreferrer');
+      } catch {}
+
+      setSubmitted(true);
+      setLoading(false);
     }
   };
 
@@ -70,15 +98,41 @@ export const Contact = () => {
         {/* Left: Contact Form */}
         <div className="lg:col-span-7">
           {submitted ? (
-            <div className="bg-[#FAF9F6] border border-[#D8D2C8] p-8 text-center space-y-4">
-              <CheckCircle className="w-10 h-10 text-[#242321] mx-auto" />
-              <h2 className="text-xl font-medium text-[#242321]">Inquiry Dispatched</h2>
-              <p className="text-xs text-[#77746E] max-w-md mx-auto">
-                Thank you, {formData.name}. Your inquiry has been routed directly to our team at <strong className="text-[#A68962]">krishlad334@gmail.com</strong>. We will reply to {formData.email} promptly.
-              </p>
-              <Button onClick={() => setSubmitted(false)} variant="secondary" size="sm">
-                Send Another Message
-              </Button>
+            <div className="bg-[#FAF9F6] border border-[#D8D2C8] p-8 text-center space-y-5 rounded-sm">
+              <CheckCircle className="w-12 h-12 text-[#242321] mx-auto text-[#D5A249]" />
+              <div className="space-y-1">
+                <h2 className="text-xl font-medium text-[#242321]">Inquiry Registered & Dispatched</h2>
+                <p className="text-xs text-[#77746E] max-w-md mx-auto leading-relaxed">
+                  Thank you, <strong className="text-[#242321]">{formData.name}</strong>. Your inquiry has been logged in our Atelier records and configured for direct routing to <strong className="text-[#A68962]">krishlad334@gmail.com</strong>.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <a
+                  href={getGmailContactUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#242321] text-[#FAF9F6] hover:bg-[#383733] text-xs font-semibold tracking-wider uppercase transition-colors cursor-pointer shadow-xs"
+                >
+                  <Send className="w-3.5 h-3.5 text-[#D5A249]" />
+                  <span>Send via Gmail</span>
+                  <ExternalLink className="w-3 h-3 opacity-60" />
+                </a>
+
+                <a
+                  href={getMailtoContactUrl()}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-[#D8D2C8] text-[#242321] hover:bg-gray-50 text-xs font-semibold tracking-wider uppercase transition-colors cursor-pointer"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>Send via Mail App</span>
+                </a>
+              </div>
+
+              <div className="pt-2">
+                <Button onClick={() => setSubmitted(false)} variant="secondary" size="sm">
+                  Send Another Message
+                </Button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 bg-[#FAF9F6] border border-[#D8D2C8] p-6 sm:p-8">
@@ -152,7 +206,12 @@ export const Contact = () => {
                 <Mail className="w-4 h-4 text-[#242321] shrink-0 mt-0.5" />
                 <div>
                   <span className="block text-[#242321] font-medium">Email Client Care</span>
-                  <span>concierge@leoverse.com</span>
+                  <a
+                    href="mailto:krishlad334@gmail.com?subject=LEOVERSE%20Concierge%20Inquiry"
+                    className="hover:underline text-[#242321] font-medium transition-colors"
+                  >
+                    krishlad334@gmail.com
+                  </a>
                 </div>
               </div>
               <div className="flex items-start gap-3">

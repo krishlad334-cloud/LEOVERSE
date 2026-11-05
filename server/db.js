@@ -131,6 +131,23 @@ db.exec(`
     createdAt TEXT,
     FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
   );
+
+  CREATE TABLE IF NOT EXISTS inquiries (
+    id TEXT PRIMARY KEY,
+    name TEXT,
+    email TEXT NOT NULL,
+    type TEXT DEFAULT 'newsletter',
+    subject TEXT,
+    message TEXT,
+    targetEmail TEXT DEFAULT 'krishlad334@gmail.com',
+    status TEXT DEFAULT 'new',
+    createdAt TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS system_settings (
+    key TEXT PRIMARY KEY,
+    value TEXT
+  );
 `);
 
 // 2. Seeder function to populate initial marketplace data if fresh or forced
@@ -1189,4 +1206,58 @@ export function addProductReview(review) {
   `).run(roundedRating, stats.cnt, review.productId);
 
   return db.prepare('SELECT * FROM reviews WHERE id = ?').get(id);
+}
+
+// Inquiries & VIP Subscriptions
+export function createInquiry(data) {
+  const id = `inq-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+  const now = new Date().toISOString();
+  db.prepare(`
+    INSERT INTO inquiries (id, name, email, type, subject, message, targetEmail, status, createdAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    id,
+    data.name || 'VIP Client',
+    data.email,
+    data.type || 'newsletter',
+    data.subject || 'VIP Newsletter Subscription',
+    data.message || '',
+    data.targetEmail || 'krishlad334@gmail.com',
+    'new',
+    now
+  );
+  return getInquiryById(id);
+}
+
+export function getAllInquiries() {
+  return db.prepare('SELECT * FROM inquiries ORDER BY createdAt DESC').all();
+}
+
+export function getInquiryById(id) {
+  return db.prepare('SELECT * FROM inquiries WHERE id = ?').get(id);
+}
+
+export function updateInquiryStatus(id, status) {
+  db.prepare('UPDATE inquiries SET status = ? WHERE id = ?').run(status, id);
+  return getInquiryById(id);
+}
+
+export function deleteInquiry(id) {
+  db.prepare('DELETE FROM inquiries WHERE id = ?').run(id);
+  return { success: true };
+}
+
+// System Settings
+export function getSetting(key, defaultValue = null) {
+  const row = db.prepare('SELECT value FROM system_settings WHERE key = ?').get(key);
+  return row ? JSON.parse(row.value) : defaultValue;
+}
+
+export function setSetting(key, value) {
+  const str = JSON.stringify(value);
+  db.prepare(`
+    INSERT INTO system_settings (key, value) VALUES (?, ?)
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value
+  `).run(key, str);
+  return value;
 }
