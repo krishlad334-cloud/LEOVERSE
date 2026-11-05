@@ -107,9 +107,27 @@ export const Navbar = () => {
   };
 
   const handleNavMouseLeave = () => {
+    if (navLeaveTimeoutRef.current) {
+      clearTimeout(navLeaveTimeoutRef.current);
+    }
     navLeaveTimeoutRef.current = setTimeout(() => {
       setActiveMegaCategory(null);
-    }, 180);
+    }, 280);
+  };
+
+  const handleMegaMouseEnter = () => {
+    if (navLeaveTimeoutRef.current) {
+      clearTimeout(navLeaveTimeoutRef.current);
+    }
+  };
+
+  const handleMegaMouseLeave = () => {
+    if (navLeaveTimeoutRef.current) {
+      clearTimeout(navLeaveTimeoutRef.current);
+    }
+    navLeaveTimeoutRef.current = setTimeout(() => {
+      setActiveMegaCategory(null);
+    }, 200);
   };
 
   const handleSearchSubmit = (e) => {
@@ -504,10 +522,12 @@ export const Navbar = () => {
           </div>
         )}
 
-        {/* Mega Menu Overlay */}
+        {/* Mega Menu Overlay with Synchronized Hover Handlers */}
         <MegaMenu
           activeCategory={activeMegaCategory}
           onClose={() => setActiveMegaCategory(null)}
+          onMouseEnter={handleMegaMouseEnter}
+          onMouseLeave={handleMegaMouseLeave}
         />
       </header>
 

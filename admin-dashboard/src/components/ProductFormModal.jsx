@@ -305,26 +305,26 @@ export default function ProductFormModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
-      <div className="relative bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col border border-gray-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 md:p-6">
+      <div className="relative bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[96vh] sm:max-h-[92vh] flex flex-col border border-gray-200 overflow-hidden">
         {/* Modal Header */}
-        <div className="px-6 py-4 bg-[#2C4152] text-white flex items-center justify-between border-b border-[#2C4152]">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 bg-[#2C4152] text-white flex items-center justify-between border-b border-[#2C4152]">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#D5A249]" />
-            <h2 className="text-lg font-serif font-bold tracking-wide">
+            <h2 className="text-base sm:text-lg font-serif font-bold tracking-wide">
               {isEditing ? 'Edit Fashion Product' : 'Add New Fashion Product'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Form Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
           {errorMsg && (
             <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
@@ -333,7 +333,7 @@ export default function ProductFormModal({
           )}
 
           {/* Section: Basic Details */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
             <div className="md:col-span-2 space-y-1.5">
               <label className="text-xs font-semibold text-[#2C4152] uppercase tracking-wider">
                 Product Title *
@@ -355,7 +355,7 @@ export default function ProductFormModal({
               <select
                 value={formData.brand}
                 onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                className="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D5A249] outline-none bg-white"
+                className="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D5A249] outline-none bg-white cursor-pointer"
               >
                 {PRESET_BRANDS.map((b) => (
                   <option key={b} value={b}>{b}</option>
@@ -365,7 +365,7 @@ export default function ProductFormModal({
           </div>
 
           {/* Section: Department, Category, Subcategory */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-[#2C4152] uppercase tracking-wider">
                 Department
@@ -373,7 +373,7 @@ export default function ProductFormModal({
               <select
                 value={formData.department}
                 onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                className="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D5A249] outline-none bg-white"
+                className="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D5A249] outline-none bg-white cursor-pointer"
               >
                 {PRESET_DEPARTMENTS.map((d) => (
                   <option key={d} value={d}>{d}</option>
@@ -388,7 +388,7 @@ export default function ProductFormModal({
               <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D5A249] outline-none bg-white"
+                className="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D5A249] outline-none bg-white cursor-pointer"
               >
                 {PRESET_CATEGORIES.map((c) => (
                   <option key={c} value={c}>{c}</option>
@@ -403,7 +403,7 @@ export default function ProductFormModal({
               <select
                 value={formData.subcategory}
                 onChange={(e) => setFormData({ ...formData, subcategory: e.target.value })}
-                className="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D5A249] outline-none bg-white"
+                className="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D5A249] outline-none bg-white cursor-pointer"
               >
                 {PRESET_SUBCATEGORIES.map((s) => (
                   <option key={s} value={s}>{s}</option>
@@ -413,7 +413,7 @@ export default function ProductFormModal({
           </div>
 
           {/* Section: Pricing & Inventory */}
-          <div className="p-4 rounded-xl bg-[#F5F5F5] border border-gray-200 grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-[#F5F5F5] border border-gray-200 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-[#2C4152]">
                 Original MRP (₹/$) *
@@ -475,7 +475,7 @@ export default function ProductFormModal({
 
           {/* Section: Multiple Images Management */}
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div>
                 <label className="text-xs font-semibold text-[#2C4152] uppercase tracking-wider block">
                   Product Images (Multiple Supported) *
@@ -484,7 +484,7 @@ export default function ProductFormModal({
                   First image acts as primary catalog cover. Drag or click "Set Cover" to reorder.
                 </span>
               </div>
-              <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md bg-[#2C4152] text-white hover:bg-[#1E2D3A] cursor-pointer transition-colors shadow-xs">
+              <label className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md bg-[#2C4152] text-white hover:bg-[#1E2D3A] cursor-pointer transition-colors shadow-xs w-full sm:w-auto">
                 <Upload className="w-3.5 h-3.5" />
                 <span>{uploadingImage ? 'Uploading to Storage...' : 'Upload Photos'}</span>
                 <input
@@ -499,7 +499,7 @@ export default function ProductFormModal({
             </div>
 
             {/* URL input field */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <input
                 type="url"
                 value={imageUrlInput}
@@ -510,7 +510,7 @@ export default function ProductFormModal({
               <button
                 type="button"
                 onClick={handleAddImageUrl}
-                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-[#F5F5F5] border border-gray-300 text-[#2C4152] hover:bg-gray-200"
+                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-[#F5F5F5] border border-gray-300 text-[#2C4152] hover:bg-gray-200 cursor-pointer"
               >
                 Add URL
               </button>
@@ -770,17 +770,17 @@ export default function ProductFormModal({
           </div>
 
           {/* Form Actions Footer */}
-          <div className="pt-4 border-t border-gray-200 flex items-center justify-end gap-3">
+          <div className="pt-4 border-t border-gray-200 flex flex-col-reverse sm:flex-row sm:items-center justify-end gap-2.5 sm:gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 active:scale-95 transition-all cursor-pointer"
+              className="px-4 py-2.5 sm:py-2 text-xs font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 active:scale-95 transition-all cursor-pointer w-full sm:w-auto text-center"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 text-xs font-bold text-[#1D2A35] bg-[#D5A249] hover:bg-[#E5B55E] active:scale-98 rounded-lg transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+              className="px-6 py-2.5 sm:py-2 text-xs font-bold text-[#1D2A35] bg-[#D5A249] hover:bg-[#E5B55E] active:scale-98 rounded-lg transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer w-full sm:w-auto"
             >
               <Check className="w-4 h-4" />
               <span>{isEditing ? 'Save Changes & Sync Store' : 'Publish Product to Store'}</span>

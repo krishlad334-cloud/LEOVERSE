@@ -65,7 +65,7 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl font-bold font-serif text-[#2C4152] tracking-wide">
             Customer Orders & Fulfillment
@@ -75,8 +75,8 @@ export default function AdminOrdersPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="relative flex items-center">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+          <div className="relative flex items-center w-full sm:w-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
               <Search className="w-4 h-4 shrink-0" strokeWidth={2} />
             </div>
@@ -85,13 +85,13 @@ export default function AdminOrdersPage() {
               placeholder="Search by order ID or name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-9 pl-9 pr-3 text-xs border border-gray-300 rounded-lg outline-none focus:border-[#D5A249] focus:ring-1 focus:ring-[#D5A249] bg-white w-64 transition-all"
+              className="h-9 pl-9 pr-3 text-xs border border-gray-300 rounded-lg outline-none focus:border-[#D5A249] focus:ring-1 focus:ring-[#D5A249] bg-white w-full sm:w-64 transition-all"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="h-9 px-3 text-xs border border-gray-300 rounded-lg bg-white outline-none cursor-pointer hover:border-[#D5A249] transition-colors"
+            className="h-9 px-3 text-xs border border-gray-300 rounded-lg bg-white outline-none cursor-pointer hover:border-[#D5A249] transition-colors w-full sm:w-auto"
           >
             <option value="All">All Statuses</option>
             <option value="Confirmed">Confirmed</option>
@@ -108,69 +108,132 @@ export default function AdminOrdersPage() {
           <p className="text-xs text-gray-500 mt-1">Orders submitted from the customer checkout will appear here.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-2xs overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-[#2C4152] text-white font-semibold uppercase text-[10px] tracking-wider">
-                <tr>
-                  <th className="py-3 px-4">Order ID & Date</th>
-                  <th className="py-3 px-3">Customer & Location</th>
-                  <th className="py-3 px-3">Purchased Items</th>
-                  <th className="py-3 px-3">Total & Payment</th>
-                  <th className="py-3 px-3 text-center">Fulfillment</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredOrders.map((ord) => (
-                  <tr key={ord.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="py-3 px-4">
-                      <span className="font-bold text-[#2C4152] block font-mono">{ord.id}</span>
-                      <span className="text-[10px] text-gray-400">
-                        {new Date(ord.date || ord.createdAt || Date.now()).toLocaleDateString()}
-                      </span>
-                    </td>
+        <div>
+          {/* Mobile Order Cards (md:hidden) */}
+          <div className="md:hidden space-y-3">
+            {filteredOrders.map((ord) => (
+              <div
+                key={ord.id}
+                className="p-3.5 bg-white rounded-xl border border-gray-200 shadow-2xs space-y-2.5"
+              >
+                {/* Header: Order ID & Status */}
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <span className="font-mono font-bold text-xs text-[#2C4152]">#{ord.id}</span>
+                    <span className="block text-[10px] text-gray-400 mt-0.5">
+                      {new Date(ord.date || ord.createdAt || Date.now()).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                    ord.status === 'Delivered'
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : ord.status === 'In Transit'
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    {ord.status === 'Delivered' && <CheckCircle className="w-3 h-3" />}
+                    {ord.status === 'In Transit' && <Truck className="w-3 h-3" />}
+                    {ord.status !== 'Delivered' && ord.status !== 'In Transit' && <Clock className="w-3 h-3" />}
+                    <span>{ord.status || 'Confirmed'}</span>
+                  </span>
+                </div>
 
-                    <td className="py-3 px-3">
-                      <span className="font-bold text-[#2C4152] block">{ord.customerName || ord.shippingAddress?.fullName || 'Valued Client'}</span>
-                      <span className="text-[10px] text-gray-500">
-                        {ord.address?.city || ord.shippingAddress?.city || 'Mumbai'}, {ord.address?.pincode || ord.shippingAddress?.pincode || '400001'}
-                      </span>
-                    </td>
+                {/* Customer & Location */}
+                <div className="text-xs pt-2 border-t border-gray-100">
+                  <span className="font-bold text-[#2C4152] block">
+                    {ord.customerName || ord.shippingAddress?.fullName || 'Valued Client'}
+                  </span>
+                  <span className="text-[10px] text-gray-500">
+                    {ord.address?.city || ord.shippingAddress?.city || 'Mumbai'}, {ord.address?.pincode || ord.shippingAddress?.pincode || '400001'}
+                  </span>
+                </div>
 
-                    <td className="py-3 px-3">
-                      <div className="space-y-0.5 max-w-xs">
-                        {ord.items?.map((it, idx) => (
-                          <div key={idx} className="text-[11px] text-gray-700 flex items-center justify-between">
-                            <span className="truncate max-w-[200px]">{it.name}</span>
-                            <span className="text-gray-400 font-semibold ml-2">x{it.quantity || it.qty || 1}</span>
-                          </div>
-                        ))}
+                {/* Items Preview */}
+                {ord.items && ord.items.length > 0 && (
+                  <div className="bg-gray-50/80 rounded-lg p-2.5 space-y-1 text-xs">
+                    {ord.items.map((it, idx) => (
+                      <div key={idx} className="flex items-center justify-between text-[11px] text-gray-700">
+                        <span className="truncate max-w-[220px]">{it.name}</span>
+                        <span className="text-gray-400 font-semibold ml-2">x{it.quantity || it.qty || 1}</span>
                       </div>
-                    </td>
+                    ))}
+                  </div>
+                )}
 
-                    <td className="py-3 px-3">
-                      <span className="font-bold text-[#2C4152] text-sm">₹{(ord.total || 0).toLocaleString()}</span>
-                      <span className="block text-[10px] text-gray-500 font-medium">{ord.paymentMethod || 'Prepaid'}</span>
-                    </td>
+                {/* Total & Payment */}
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100 text-xs">
+                  <span className="text-gray-500 text-[11px]">Payment: <strong className="text-gray-700">{ord.paymentMethod || 'Prepaid'}</strong></span>
+                  <span className="font-bold text-[#2C4152] text-sm">₹{(ord.total || 0).toLocaleString()}</span>
+                </div>
+              </div>
+            ))}
+          </div>
 
-                    <td className="py-3 px-3 text-center">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                        ord.status === 'Delivered'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : ord.status === 'In Transit'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-amber-100 text-amber-800'
-                      }`}>
-                        {ord.status === 'Delivered' && <CheckCircle className="w-3 h-3" />}
-                        {ord.status === 'In Transit' && <Truck className="w-3 h-3" />}
-                        {ord.status !== 'Delivered' && ord.status !== 'In Transit' && <Clock className="w-3 h-3" />}
-                        <span>{ord.status || 'Confirmed'}</span>
-                      </span>
-                    </td>
+          {/* Desktop Table (hidden md:block) */}
+          <div className="hidden md:block bg-white rounded-xl border border-gray-200 shadow-2xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[680px] text-left text-xs">
+                <thead className="bg-[#2C4152] text-white font-semibold uppercase text-[10px] tracking-wider">
+                  <tr>
+                    <th className="py-3 px-4">Order ID & Date</th>
+                    <th className="py-3 px-3">Customer & Location</th>
+                    <th className="py-3 px-3">Purchased Items</th>
+                    <th className="py-3 px-3">Total & Payment</th>
+                    <th className="py-3 px-3 text-center">Fulfillment</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredOrders.map((ord) => (
+                    <tr key={ord.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="py-3 px-4">
+                        <span className="font-bold text-[#2C4152] block font-mono">{ord.id}</span>
+                        <span className="text-[10px] text-gray-400">
+                          {new Date(ord.date || ord.createdAt || Date.now()).toLocaleDateString()}
+                        </span>
+                      </td>
+
+                      <td className="py-3 px-3">
+                        <span className="font-bold text-[#2C4152] block">{ord.customerName || ord.shippingAddress?.fullName || 'Valued Client'}</span>
+                        <span className="text-[10px] text-gray-500">
+                          {ord.address?.city || ord.shippingAddress?.city || 'Mumbai'}, {ord.address?.pincode || ord.shippingAddress?.pincode || '400001'}
+                        </span>
+                      </td>
+
+                      <td className="py-3 px-3">
+                        <div className="space-y-0.5 max-w-xs">
+                          {ord.items?.map((it, idx) => (
+                            <div key={idx} className="text-[11px] text-gray-700 flex items-center justify-between">
+                              <span className="truncate max-w-[200px]">{it.name}</span>
+                              <span className="text-gray-400 font-semibold ml-2">x{it.quantity || it.qty || 1}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+
+                      <td className="py-3 px-3">
+                        <span className="font-bold text-[#2C4152] text-sm">₹{(ord.total || 0).toLocaleString()}</span>
+                        <span className="block text-[10px] text-gray-500 font-medium">{ord.paymentMethod || 'Prepaid'}</span>
+                      </td>
+
+                      <td className="py-3 px-3 text-center">
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                          ord.status === 'Delivered'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : ord.status === 'In Transit'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}>
+                          {ord.status === 'Delivered' && <CheckCircle className="w-3 h-3" />}
+                          {ord.status === 'In Transit' && <Truck className="w-3 h-3" />}
+                          {ord.status !== 'Delivered' && ord.status !== 'In Transit' && <Clock className="w-3 h-3" />}
+                          <span>{ord.status || 'Confirmed'}</span>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

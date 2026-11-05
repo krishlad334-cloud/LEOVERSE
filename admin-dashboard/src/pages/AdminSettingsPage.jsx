@@ -32,10 +32,10 @@ export default function AdminSettingsPage({ onSeedCatalog }) {
       </div>
 
       {/* Status Card */}
-      <div className="p-5 rounded-xl bg-white border border-gray-200 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="p-4 sm:p-5 rounded-xl bg-white border border-gray-200 shadow-2xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className={`p-3 rounded-lg ${isFirebaseConfigured ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
+            <div className={`p-3 rounded-lg shrink-0 ${isFirebaseConfigured ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
               <Database className="w-6 h-6" />
             </div>
             <div>
@@ -49,7 +49,7 @@ export default function AdminSettingsPage({ onSeedCatalog }) {
               </p>
             </div>
           </div>
-          <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+          <span className={`px-3 py-1 rounded-full text-xs font-bold self-start sm:self-auto shrink-0 ${
             isFirebaseConfigured ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
           }`}>
             {isFirebaseConfigured ? 'Cloud Connected' : 'Local Fallback'}

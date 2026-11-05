@@ -56,7 +56,7 @@ export const OrderSuccess = () => {
             </div>
           </div>
 
-          {order && (
+          {order ? (
             <div className="space-y-2 text-xs">
               <div className="flex justify-between text-gray-600 dark:text-gray-300">
                 <span>Shipping to:</span>
@@ -71,6 +71,13 @@ export const OrderSuccess = () => {
                 </span>
               </div>
             </div>
+          ) : (
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between text-gray-600 dark:text-gray-300">
+                <span>Order Status:</span>
+                <span className="font-bold text-emerald-600">Confirmed & Processing</span>
+              </div>
+            </div>
           )}
 
           <div className="flex items-center gap-2 pt-2 text-[11px] text-gray-500">
@@ -81,19 +88,17 @@ export const OrderSuccess = () => {
 
         {/* Action CTAs */}
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-          {order && (
-            <Link
-              to={`/account/orders/${order.orderId}`}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#242321] dark:bg-white text-white dark:text-black font-bold text-xs uppercase tracking-wider rounded-xl transition hover:opacity-90 inline-flex items-center justify-center gap-2"
-            >
-              <Package className="w-4 h-4" />
-              <span>Track Order Details</span>
-            </Link>
-          )}
+          <Link
+            to={order ? `/account/orders/${order.orderId}` : '/account/orders'}
+            className="w-full sm:w-auto px-8 py-3.5 bg-[#242321] dark:bg-white text-white dark:text-black font-bold text-xs uppercase tracking-wider rounded-xl transition hover:opacity-90 inline-flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <Package className="w-4 h-4" />
+            <span>Track Order Details</span>
+          </Link>
 
           <Link
             to="/products"
-            className="w-full sm:w-auto px-8 py-3.5 bg-[#FAF9F6] dark:bg-[#202026] text-[#242321] dark:text-white border border-[#D8D2C8] dark:border-[#383842] font-bold text-xs uppercase tracking-wider rounded-xl transition hover:border-[#A68962] inline-flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 bg-[#FAF9F6] dark:bg-[#202026] text-[#242321] dark:text-white border border-[#D8D2C8] dark:border-[#383842] font-bold text-xs uppercase tracking-wider rounded-xl transition hover:border-[#A68962] inline-flex items-center justify-center gap-2 cursor-pointer"
           >
             <ShoppingBag className="w-4 h-4" />
             <span>Continue Shopping</span>

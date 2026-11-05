@@ -80,7 +80,7 @@ export default function AdminMediaPage() {
           </p>
         </div>
 
-        <label className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg bg-[#2C4152] text-white hover:bg-[#1E2D3A] transition-colors shadow-sm cursor-pointer self-start sm:self-auto">
+        <label className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold rounded-lg bg-[#2C4152] text-white hover:bg-[#1E2D3A] transition-colors shadow-sm cursor-pointer w-full sm:w-auto">
           <Upload className="w-4 h-4 text-[#D5A249]" />
           <span>{uploading ? 'Uploading to Storage...' : 'Upload Media to Cloud'}</span>
           <input
@@ -95,9 +95,9 @@ export default function AdminMediaPage() {
       </div>
 
       {/* Cloud bucket banner */}
-      <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-2xs flex items-center justify-between">
+      <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-[#D5A249]/20 text-[#2C4152]">
+          <div className="p-2.5 rounded-lg bg-[#D5A249]/20 text-[#2C4152] shrink-0">
             <ImageIcon className="w-5 h-5 text-[#2C4152]" />
           </div>
           <div>
@@ -109,13 +109,13 @@ export default function AdminMediaPage() {
             </span>
           </div>
         </div>
-        <span className="text-xs font-bold px-2.5 py-1 bg-gray-100 rounded-md text-gray-700">
+        <span className="text-xs font-bold px-2.5 py-1 bg-gray-100 rounded-md text-gray-700 self-start sm:self-auto shrink-0">
           {images.length} Assets
         </span>
       </div>
 
       {/* Media Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
         {images.map((img) => (
           <div
             key={img.id}

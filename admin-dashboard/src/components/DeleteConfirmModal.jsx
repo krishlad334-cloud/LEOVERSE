@@ -50,10 +50,10 @@ export default function DeleteConfirmModal({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 mt-6">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-end gap-2 sm:gap-3 mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 active:scale-95 rounded-lg transition-all cursor-pointer"
+            className="px-4 py-2 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 active:scale-95 rounded-lg transition-all cursor-pointer w-full sm:w-auto text-center"
           >
             Cancel
           </button>
@@ -62,7 +62,7 @@ export default function DeleteConfirmModal({
               onConfirm(product.id);
               onClose();
             }}
-            className="px-4 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 active:scale-95 rounded-lg flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+            className="px-4 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 active:scale-95 rounded-lg flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer w-full sm:w-auto"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>Yes, Delete from Catalog</span>

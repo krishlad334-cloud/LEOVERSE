@@ -139,72 +139,72 @@ export default function AdminDashboardPage({
         </div>
       )}
 
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Metrics Grid (2 per line on mobile, 4 on desktop) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* Metric 1: Total Products */}
-        <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-2xs hover:border-[#2C4152]/30 transition-colors">
+        <div className="p-3 sm:p-4 rounded-xl bg-white border border-gray-200 shadow-2xs hover:border-[#2C4152]/30 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">Total Products</span>
-            <div className="p-2 rounded-lg bg-[#2C4152]/5 text-[#2C4152]">
-              <Package className="w-4 h-4" />
+            <span className="text-[11px] sm:text-xs font-medium text-gray-500">Total Products</span>
+            <div className="p-1.5 sm:p-2 rounded-lg bg-[#2C4152]/5 text-[#2C4152]">
+              <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-[#2C4152] mt-2">{totalProducts}</p>
-          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-gray-500 flex-wrap">
+          <p className="text-xl sm:text-2xl font-bold text-[#2C4152] mt-1.5 sm:mt-2">{totalProducts}</p>
+          <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] sm:text-[11px] text-gray-500 flex-wrap">
             <span>{deptCounts.Men} Men</span>
             <span>•</span>
-            <span>{deptCounts.Women} Women</span>
+            <span>{deptCounts.Women} Wmn</span>
             <span>•</span>
             <span>{deptCounts.Kids} Kids</span>
           </div>
         </div>
 
         {/* Metric 2: Published Live */}
-        <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-2xs hover:border-emerald-300 transition-colors">
+        <div className="p-3 sm:p-4 rounded-xl bg-white border border-gray-200 shadow-2xs hover:border-emerald-300 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">Published Live</span>
-            <div className="p-2 rounded-lg bg-emerald-50 text-emerald-600">
-              <CheckCircle2 className="w-4 h-4" />
+            <span className="text-[11px] sm:text-xs font-medium text-gray-500">Published Live</span>
+            <div className="p-1.5 sm:p-2 rounded-lg bg-emerald-50 text-emerald-600">
+              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-emerald-600 mt-2">{publishedProducts}</p>
-          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-emerald-700 font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span>Visible on live storefront</span>
+          <p className="text-xl sm:text-2xl font-bold text-emerald-600 mt-1.5 sm:mt-2">{publishedProducts}</p>
+          <div className="flex items-center gap-1.5 mt-1.5 sm:mt-2 text-[10px] sm:text-[11px] text-emerald-700 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="truncate">Visible on store</span>
           </div>
         </div>
 
         {/* Metric 3: Drafts / Inactive */}
-        <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-2xs hover:border-[#D5A249]/40 transition-colors">
+        <div className="p-3 sm:p-4 rounded-xl bg-white border border-gray-200 shadow-2xs hover:border-[#D5A249]/40 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">Drafts / Inactive</span>
-            <div className="p-2 rounded-lg bg-amber-50 text-[#D5A249]">
-              <Clock className="w-4 h-4" />
+            <span className="text-[11px] sm:text-xs font-medium text-gray-500">Drafts / Inactive</span>
+            <div className="p-1.5 sm:p-2 rounded-lg bg-amber-50 text-[#D5A249]">
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-[#D5A249] mt-2">{draftProducts}</p>
-          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-gray-500">
-            <span>Hidden from customer store</span>
+          <p className="text-xl sm:text-2xl font-bold text-[#D5A249] mt-1.5 sm:mt-2">{draftProducts}</p>
+          <div className="flex items-center gap-1.5 mt-1.5 sm:mt-2 text-[10px] sm:text-[11px] text-gray-500">
+            <span className="truncate">Hidden from store</span>
           </div>
         </div>
 
         {/* Metric 4: Total Units & Valuation */}
-        <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-2xs hover:border-blue-300 transition-colors">
+        <div className="p-3 sm:p-4 rounded-xl bg-white border border-gray-200 shadow-2xs hover:border-blue-300 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">Total Units in Vault</span>
-            <div className="p-2 rounded-lg bg-blue-50 text-blue-600">
-              <TrendingUp className="w-4 h-4" />
+            <span className="text-[11px] sm:text-xs font-medium text-gray-500">Units in Vault</span>
+            <div className="p-1.5 sm:p-2 rounded-lg bg-blue-50 text-blue-600">
+              <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-[#2C4152] mt-2">{totalStock} units</p>
-          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-gray-500">
-            <span>Est. Value: <strong className="text-[#2C4152]">₹{totalValue.toLocaleString()}</strong></span>
+          <p className="text-xl sm:text-2xl font-bold text-[#2C4152] mt-1.5 sm:mt-2">{totalStock}</p>
+          <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10px] sm:text-[11px] text-gray-500 truncate">
+            <span>Val: <strong className="text-[#2C4152]">₹{totalValue.toLocaleString()}</strong></span>
           </div>
         </div>
       </div>
 
       {/* Full-Width Storefront Catalog Table (Clean, no description box) */}
-      <div className="w-full p-5 rounded-2xl bg-white border border-gray-200 shadow-2xs space-y-4">
+      <div className="w-full p-4 sm:p-5 rounded-2xl bg-white border border-gray-200 shadow-2xs space-y-4">
         {/* Table Top Controls Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100">
           <div>
@@ -224,7 +224,7 @@ export default function AdminDashboardPage({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setActiveTab('products')}
-              className="text-xs font-bold text-[#2C4152] hover:text-[#D5A249] flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+              className="text-xs font-bold text-[#2C4152] hover:text-[#D5A249] flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors w-full sm:w-auto justify-center"
             >
               <span>Manage Full Catalog</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -233,9 +233,9 @@ export default function AdminDashboardPage({
         </div>
 
         {/* Department Filter Tabs & Search Bar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Department Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 scrollbar-none w-full md:w-auto -mx-1 px-1">
             {DEPARTMENTS.map((dept) => {
               const count = dept === 'All' ? totalProducts : (deptCounts[dept] || 0);
               const isActive = activeDept === dept;
@@ -246,7 +246,7 @@ export default function AdminDashboardPage({
                     setActiveDept(dept);
                     setCurrentPage(1);
                   }}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-[0.98] shrink-0 ${
                     isActive
                       ? 'bg-[#2C4152] text-white shadow-xs'
                       : 'bg-[#F5F5F5] text-gray-700 hover:bg-gray-200 hover:text-[#2C4152]'
@@ -262,7 +262,7 @@ export default function AdminDashboardPage({
           </div>
 
           {/* Search Input & Status Filter */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
             <div className="relative flex-1 sm:w-64 flex items-center">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                 <Search className="w-3.5 h-3.5 shrink-0" strokeWidth={2.2} />
@@ -285,7 +285,7 @@ export default function AdminDashboardPage({
                 setStatusFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="h-9 px-3 text-xs border border-gray-300 rounded-lg outline-none bg-white font-medium text-gray-700 cursor-pointer hover:border-[#D5A249] transition-colors"
+              className="h-9 px-3 text-xs border border-gray-300 rounded-lg outline-none bg-white font-medium text-gray-700 cursor-pointer hover:border-[#D5A249] transition-colors w-full sm:w-auto"
             >
               <option value="All">All Status</option>
               <option value="published">Published</option>
@@ -294,9 +294,133 @@ export default function AdminDashboardPage({
           </div>
         </div>
 
-        {/* Full-Width Table */}
-        <div className="overflow-x-auto rounded-xl border border-gray-200/80">
-          <table className="w-full text-left text-xs">
+        {/* MOBILE VIEW (md:hidden): Touch-Friendly Responsive Cards */}
+        <div className="md:hidden space-y-3">
+          {pagedProducts.length === 0 ? (
+            <div className="py-10 text-center text-gray-400 bg-gray-50 rounded-xl border border-gray-200">
+              <Package className="w-8 h-8 mx-auto mb-2 opacity-40" />
+              <p className="font-semibold text-gray-500 text-xs">No matching products found</p>
+              <p className="text-[11px] text-gray-400 mt-1">Try clearing filters or search term</p>
+            </div>
+          ) : (
+            pagedProducts.map((item) => {
+              const isPub = item.isPublished !== false;
+              const mrp = Number(item.price || item.mrp || 2490);
+              const salePrice = Number(item.salePrice || item.sellingPrice || mrp);
+              const discount = item.discountPercent || (mrp > salePrice ? Math.round(((mrp - salePrice) / mrp) * 100) : 0);
+              const stock = Number(item.stock !== undefined ? item.stock : 20);
+              const thumb = item.images?.[0] || 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=150&q=80';
+
+              return (
+                <div
+                  key={item.id}
+                  className="p-3.5 bg-white rounded-xl border border-gray-200 shadow-2xs hover:border-[#D5A249]/60 transition-all space-y-3"
+                >
+                  {/* Top Row: Thumbnail + Item Meta */}
+                  <div className="flex items-start gap-3">
+                    <img
+                      src={thumb}
+                      alt={item.name}
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=150&q=80';
+                      }}
+                      className="w-14 h-18 object-cover rounded-lg border border-gray-200 shrink-0 shadow-2xs"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1.5 flex-wrap">
+                        <span className="text-[10px] font-bold text-[#D5A249] uppercase tracking-wider truncate">
+                          {item.brand || 'Atelier Leo'}
+                        </span>
+                        <span className="inline-block px-2 py-0.5 rounded text-[9px] font-bold bg-[#2C4152]/10 text-[#2C4152] shrink-0">
+                          {item.department || 'Men'} • {item.subcategory || item.category || 'Apparel'}
+                        </span>
+                      </div>
+                      <h4 className="font-bold text-[#2C4152] text-xs line-clamp-2 mt-1 leading-snug">
+                        {item.name}
+                      </h4>
+                      <span className="text-[9px] text-gray-400 font-mono block mt-1">
+                        #{item.id?.substring(0, 14)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Pricing & Stock Row */}
+                  <div className="flex items-center justify-between pt-2 border-t border-gray-100 text-xs">
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                      <span className="font-bold text-[#2C4152] text-sm">
+                        ₹{salePrice.toLocaleString()}
+                      </span>
+                      {mrp > salePrice && (
+                        <>
+                          <span className="line-through text-gray-400 text-[10px]">
+                            ₹{mrp.toLocaleString()}
+                          </span>
+                          <span className="text-emerald-700 font-bold text-[9px] bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                            {discount}% OFF
+                          </span>
+                        </>
+                      )}
+                    </div>
+
+                    <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
+                      stock <= 0
+                        ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                        : stock < 6
+                        ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                        : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                    }`}>
+                      {stock <= 0 ? 'Out of Stock' : `${stock} in vault`}
+                    </span>
+                  </div>
+
+                  {/* Actions & Status Row */}
+                  <div className="flex items-center justify-between pt-2 border-t border-gray-100 gap-2">
+                    {/* Status Toggle Button */}
+                    <button
+                      type="button"
+                      onClick={() => onTogglePublish(item.id, !isPub)}
+                      className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+                        isPub
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200'
+                          : 'bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200'
+                      }`}
+                      title="Click to toggle live customer storefront visibility"
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full ${isPub ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`} />
+                      <span>{isPub ? 'Live on Store' : 'Draft Only'}</span>
+                    </button>
+
+                    {/* Preview & Edit Action Buttons */}
+                    <div className="flex items-center gap-1.5">
+                      <a
+                        href={`http://localhost:5173/product/${item.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1.5 rounded-lg text-gray-700 hover:text-[#2C4152] bg-gray-100 hover:bg-gray-200 active:scale-95 transition-all flex items-center gap-1 text-[11px] font-semibold cursor-pointer border border-gray-200"
+                        title="Preview on customer storefront"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-[#D5A249]" />
+                        <span>Preview</span>
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={() => onEditProduct(item)}
+                        className="px-3.5 py-1.5 text-[11px] font-bold text-[#1D2A35] bg-[#D5A249] hover:bg-[#c4923e] active:scale-95 rounded-lg transition-all shadow-2xs cursor-pointer"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* DESKTOP TABLE VIEW (hidden md:block) */}
+        <div className="hidden md:block overflow-x-auto rounded-xl border border-gray-200/80 -mx-1 sm:mx-0">
+          <table className="w-full min-w-[700px] text-left text-xs">
             <thead className="bg-[#F5F5F5] text-gray-600 font-semibold uppercase text-[10px] tracking-wider border-b border-gray-200">
               <tr>
                 <th className="py-3 px-4">Item</th>
@@ -438,8 +562,8 @@ export default function AdminDashboardPage({
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100 text-xs text-gray-500">
-            <span>
+          <div className="flex flex-col sm:flex-row items-center justify-between pt-3 border-t border-gray-100 text-xs text-gray-500 gap-2.5">
+            <span className="text-center sm:text-left">
               Showing <strong className="text-[#2C4152]">{(safePage - 1) * itemsPerPage + 1}</strong> to{' '}
               <strong className="text-[#2C4152]">
                 {Math.min(safePage * itemsPerPage, filteredProducts.length)}

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, Tag, ChevronRight } from 'lucide-react';
 import { MEGA_MENU_CONFIG, BRANDS } from '../../services/productService';
 
-export const MegaMenu = ({ activeCategory, onClose }) => {
+export const MegaMenu = ({ activeCategory, onClose, onMouseEnter, onMouseLeave }) => {
   if (!activeCategory || !MEGA_MENU_CONFIG[activeCategory]) {
     return null;
   }
@@ -12,8 +12,9 @@ export const MegaMenu = ({ activeCategory, onClose }) => {
 
   return (
     <div
-      className="absolute top-full left-0 w-full bg-white dark:bg-[#18181C] text-[#242321] dark:text-[#F3EFE6] shadow-2xl border-t border-b border-[#E8E3D9] dark:border-[#27272A] z-50 animate-in fade-in slide-in-from-top-1 duration-200"
-      onMouseLeave={onClose}
+      className="absolute top-full left-0 w-full bg-white dark:bg-[#18181C] text-[#242321] dark:text-[#F3EFE6] shadow-2xl border-t border-b border-[#E8E3D9] dark:border-[#27272A] z-50 animate-in fade-in slide-in-from-top-1 duration-150 select-none"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave || onClose}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
         <div className="grid grid-cols-12 gap-8 items-start">
@@ -24,16 +25,16 @@ export const MegaMenu = ({ activeCategory, onClose }) => {
                 <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#2C4152] dark:text-[#D5A249] pb-1 border-b border-gray-200 dark:border-gray-800">
                   {col.title}
                 </h3>
-                <ul className="space-y-2">
+                <ul className="space-y-1">
                   {col.items.map((item, itemIdx) => (
                     <li key={itemIdx}>
                       <Link
                         to={item.href}
                         onClick={onClose}
-                        className="text-xs text-gray-600 dark:text-gray-300 hover:text-[#2C4152] dark:hover:text-white hover:translate-x-1 inline-flex items-center gap-1 transition-all group font-normal"
+                        className="flex items-center gap-2 py-1.5 px-2.5 -mx-2.5 rounded-lg text-xs text-gray-600 dark:text-gray-300 hover:text-[#1D2A35] dark:hover:text-[#D5A249] hover:bg-amber-50/80 dark:hover:bg-[#25252D] hover:translate-x-1 transition-all duration-150 group font-medium cursor-pointer"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-transparent group-hover:bg-[#D5A249] transition-colors" />
-                        <span>{item.label}</span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 group-hover:bg-[#D5A249] group-hover:scale-125 transition-all shrink-0" />
+                        <span className="group-hover:font-semibold transition-all">{item.label}</span>
                       </Link>
                     </li>
                   ))}
@@ -46,27 +47,27 @@ export const MegaMenu = ({ activeCategory, onClose }) => {
               <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#2C4152] dark:text-[#D5A249] pb-1 border-b border-gray-200 dark:border-gray-800">
                 Featured Brands
               </h3>
-              <ul className="space-y-2">
+              <ul className="space-y-1">
                 {BRANDS.slice(0, 5).map((brand, bIdx) => (
                   <li key={bIdx}>
                     <Link
                       to={`/products?brand=${encodeURIComponent(brand)}`}
                       onClick={onClose}
-                      className="text-xs text-gray-600 dark:text-gray-300 hover:text-[#2C4152] dark:hover:text-white hover:translate-x-1 inline-flex items-center gap-1 transition-all group font-normal"
+                      className="flex items-center gap-2 py-1.5 px-2.5 -mx-2.5 rounded-lg text-xs text-gray-600 dark:text-gray-300 hover:text-[#1D2A35] dark:hover:text-[#D5A249] hover:bg-amber-50/80 dark:hover:bg-[#25252D] hover:translate-x-1 transition-all duration-150 group font-medium cursor-pointer"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-transparent group-hover:bg-[#D5A249] transition-colors" />
-                      <span>{brand}</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 group-hover:bg-[#D5A249] group-hover:scale-125 transition-all shrink-0" />
+                      <span className="group-hover:font-semibold transition-all">{brand}</span>
                     </Link>
                   </li>
                 ))}
-                <li>
+                <li className="pt-1.5">
                   <Link
                     to="/products"
                     onClick={onClose}
-                    className="text-[11px] font-bold uppercase tracking-wider text-[#D5A249] hover:underline inline-flex items-center gap-1 pt-1"
+                    className="flex items-center gap-1.5 py-1 px-2.5 -mx-2.5 text-[11px] font-bold uppercase tracking-wider text-[#D5A249] hover:text-[#BF8D35] hover:underline cursor-pointer group"
                   >
                     <span>View All Brands</span>
-                    <ChevronRight className="w-3 h-3" />
+                    <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </li>
               </ul>

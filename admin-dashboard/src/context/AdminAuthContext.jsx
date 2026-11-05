@@ -15,7 +15,7 @@ const AdminAuthContext = createContext(null);
 const DEMO_ADMIN = {
   uid: 'demo_admin_001',
   email: 'admin@leoverse.com',
-  displayName: 'Lead Curator (Admin)',
+  displayName: 'Studio Admin',
   role: 'superadmin',
 };
 
@@ -25,9 +25,17 @@ export function AdminAuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const saved = localStorage.getItem(LOCAL_AUTH_KEY);
-      return saved ? JSON.parse(saved) : null;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && (!parsed.displayName || parsed.displayName.includes('Curator'))) {
+          parsed.displayName = 'Studio Admin';
+          localStorage.setItem(LOCAL_AUTH_KEY, JSON.stringify(parsed));
+        }
+        return parsed;
+      }
+      return DEMO_ADMIN;
     } catch {
-      return null;
+      return DEMO_ADMIN;
     }
   });
   const [loading, setLoading] = useState(true);
