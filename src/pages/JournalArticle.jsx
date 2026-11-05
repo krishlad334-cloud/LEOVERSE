@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Clock, Share2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import journalArticles from '../data/journal';
 import Breadcrumb from '../components/common/Breadcrumb';
 import EmptyState from '../components/common/EmptyState';
@@ -78,7 +78,7 @@ export const JournalArticle = () => {
             <span>Back to all Journal Notes</span>
           </Link>
 
-          <Button to="/shop" variant="primary" size="sm">
+          <Button to="/products" variant="primary" size="sm">
             Explore the Collection
           </Button>
         </div>

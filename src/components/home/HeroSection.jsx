@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import { ArrowRight, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const BANNERS = [
   {
@@ -21,7 +21,7 @@ const BANNERS = [
     subhead: "Retro Cuban Collars & Forward-Pleat Chinos",
     description: "Relaxed retro Cuban camp collars, Super 120s virgin wool blazers, and double-pleated linen trousers.",
     primaryCta: "Explore Shirts & Polos",
-    primaryLink: "/shop?department=Men's%20Apparel",
+    primaryLink: "/products?department=Men&subcategory=Shirts",
     bgImage: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1800&q=85",
     theme: "dark"
   },
@@ -32,13 +32,13 @@ const BANNERS = [
     subhead: "Handcrafted Bundis, Silk Kurtas & Festive Tailoring",
     description: "Regal silhouettes cut from hand-embroidered Raw Silk and pure Chanderi, crafted for weddings and celebrations.",
     primaryCta: "Explore Ethnic Wear",
-    primaryLink: "/shop?department=Men's%20Ethnic",
+    primaryLink: "/products?department=Men&subcategory=Ethnic+Wear",
     bgImage: "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?auto=format&fit=crop&w=1800&q=85",
     theme: "dark"
   },
   {
     id: 4,
-    tag: "FLASH PROMOTION • 40% OFF",
+    tag: "FLASH PROMOTION • 15% OFF",
     headline: "MID-SEASON PRIVATE SALE.",
     subhead: "Use Promo Code LUXE15 For Additional 15% Savings",
     description: "Exclusive markdowns on luxury chronographs, Italian leather duffles, and designer menswear staples.",
@@ -51,18 +51,24 @@ const BANNERS = [
 
 export const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
+    if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % BANNERS.length);
-    }, 6000);
+    }, 5500);
     return () => clearInterval(timer);
-  }, []);
+  }, [isPaused]);
 
   const slide = BANNERS[currentSlide];
 
   return (
-    <section className="relative w-full bg-[#141416] text-[#FAF9F6] overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center select-none border-b border-[#D8D2C8]/30">
+    <section
+      className="relative w-full bg-[#141416] text-[#FAF9F6] overflow-hidden min-h-[80vh] sm:min-h-[85vh] flex items-center select-none border-b border-[#D8D2C8]/30"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       {/* Background Banner Slides */}
       {BANNERS.map((b, idx) => (
         <div
@@ -126,11 +132,11 @@ export const HeroSection = () => {
           <div className="flex flex-wrap items-center gap-2 pt-3">
             <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold mr-1">Menswear Departments:</span>
             {[
-              { label: "Shirts & Polos", link: "/shop?department=Men's%20Apparel" },
-              { label: "Suits & Tailoring", link: "/shop?department=Men's%20Tailoring" },
-              { label: "Streetwear", link: "/shop?department=Men's%20Casuals" },
-              { label: "Ethnic Wear", link: "/shop?department=Men's%20Ethnic" },
-              { label: "Accessories", link: "/shop?department=Men's%20Accessories" }
+              { label: "Shirts & Polos", link: "/products?department=Men&subcategory=Shirts" },
+              { label: "Suits & Tailoring", link: "/products?department=Men&subcategory=Suits+%26+Blazers" },
+              { label: "Streetwear", link: "/category/streetwear" },
+              { label: "Ethnic Wear", link: "/products?department=Men&subcategory=Ethnic+Wear" },
+              { label: "Footwear", link: "/products?department=Men&subcategory=Sneakers" }
             ].map((chip) => (
               <Link
                 key={chip.label}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Globe } from 'lucide-react';
+import { ArrowRight, Check, Globe, ExternalLink } from 'lucide-react';
 import { footerLinks } from '../../data/navigation';
 
 export const Footer = () => {
@@ -144,6 +144,15 @@ export const Footer = () => {
             </div>
           </div>
           <div className="flex items-center space-x-6">
+            <a
+              href="http://localhost:5174"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#D5A249] hover:text-[#E4BA68] font-bold transition-colors flex items-center gap-1"
+            >
+              <span>Admin Studio Portal</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
             <Link to="/privacy-policy" className="hover:text-[#DCD5CA] transition-colors">
               Privacy Policy
             </Link>

@@ -1,22 +1,28 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal, Sparkles } from 'lucide-react';
 import categories from '../data/categories';
-import products from '../data/products';
-import ProductGrid from '../components/products/ProductGrid';
+import { getProductCatalog } from '../services/productService';
+import ProductCard from '../components/products/ProductCard';
 import Breadcrumb from '../components/common/Breadcrumb';
 import EmptyState from '../components/common/EmptyState';
 
 export const CategoryPage = () => {
   const { slug } = useParams();
+  const [sortBy, setSortBy] = useState('featured');
 
   const category = useMemo(() => {
     return categories.find((c) => c.slug === slug);
   }, [slug]);
 
-  const categoryProducts = useMemo(() => {
-    return products.filter((p) => p.categorySlug === slug);
-  }, [slug]);
+  const categoryResult = useMemo(() => {
+    if (!category) return { products: [], totalCount: 0 };
+    return getProductCatalog({
+      category: category.slug,
+      sort: sortBy,
+      limit: 50
+    });
+  }, [category, sortBy]);
 
   if (!category) {
     return (
@@ -24,15 +30,15 @@ export const CategoryPage = () => {
         <EmptyState
           title="Category Not Found"
           description="The clothing category you are looking for does not exist or has been relocated."
-          actionLabel="View All Men's Clothing"
-          actionTo="/shop"
+          actionLabel="View All Fashion"
+          actionTo="/products"
         />
       </div>
     );
   }
 
   const breadcrumbs = [
-    { label: 'Shop All', to: '/shop' },
+    { label: 'Shop All', to: '/products' },
     { label: category.name }
   ];
 
@@ -41,24 +47,28 @@ export const CategoryPage = () => {
       <Breadcrumb items={breadcrumbs} />
 
       {/* Category Editorial Hero Banner */}
-      <div className="relative overflow-hidden bg-[#252522] text-[#FAF9F6] border border-[#D8D2C8] mb-10 sm:mb-14">
+      <div className="relative overflow-hidden bg-[#252522] text-[#FAF9F6] border border-[#D8D2C8] dark:border-[#27272A] rounded-2xl mb-10 sm:mb-14 shadow-lg">
         <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
           <div className="lg:col-span-7 p-6 sm:p-10 lg:p-14 space-y-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#DCD5CA]">
-              Men's Clothing Collection
-            </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-tight text-[#FAF9F6]">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 text-[10px] font-bold uppercase tracking-[0.24em] text-[#DCD5CA]">
+              <Sparkles className="w-3 h-3 text-[#C5A880]" />
+              <span>Curated Atelier Collection</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase tracking-tight text-[#FAF9F6]">
               {category.name}
             </h1>
             <p className="font-serif italic text-base sm:text-lg text-[#EAE5DC]/90">
               {category.tagline}
             </p>
-            <p className="text-xs sm:text-sm text-[#DCD5CA]/80 leading-relaxed font-light max-w-xl pt-2">
+            <p className="text-xs sm:text-sm text-[#DCD5CA]/80 leading-relaxed font-light max-w-xl pt-1">
               {category.description}
             </p>
-            <div className="pt-3">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#FAF9F6] bg-white/10 px-3 py-1 border border-white/15">
-                {categoryProducts.length} Curated Garments Available
+            <div className="pt-3 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#FAF9F6] bg-white/10 px-3 py-1 rounded-lg border border-white/15">
+                {categoryResult.totalCount} Garments Available
+              </span>
+              <span className="text-xs font-mono uppercase tracking-wider text-rose-300 bg-rose-950/60 px-3 py-1 rounded-lg border border-rose-800">
+                Code LUXE15 for 15% Savings
               </span>
             </div>
           </div>
@@ -73,22 +83,44 @@ export const CategoryPage = () => {
         </div>
       </div>
 
-      {/* Filter / Shop Link Bar */}
-      <div className="flex items-center justify-between pb-6 border-b border-[#D8D2C8] mb-8">
+      {/* Filter / Sort Control Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-[#D8D2C8] dark:border-[#27272A] mb-8 gap-4">
         <span className="text-xs uppercase font-bold tracking-wider text-[#77746E]">
-          Showing {categoryProducts.length} items
+          Showing {categoryResult.products.length} of {categoryResult.totalCount} items
         </span>
-        <Link
-          to={`/shop?category=${category.slug}`}
-          className="text-xs uppercase tracking-wider font-semibold text-[#242321] hover:underline flex items-center gap-1.5"
-        >
-          <SlidersHorizontal className="w-3.5 h-3.5" />
-          <span>Open Full Filter View</span>
-        </Link>
+
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="font-bold uppercase tracking-wider text-gray-500">Sort:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-3 py-1.5 rounded-lg border border-[#D8D2C8] dark:border-[#383842] bg-[#FAF9F6] dark:bg-[#1E1E22] text-[#242321] dark:text-white text-xs font-semibold focus:outline-none"
+            >
+              <option value="featured">Featured / Recommended</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="newest">Newest First</option>
+              <option value="discount">Highest Discount</option>
+            </select>
+          </div>
+
+          <Link
+            to={`/products?category=${encodeURIComponent(category.slug)}`}
+            className="text-xs uppercase tracking-wider font-bold text-[#A68962] hover:underline flex items-center gap-1.5"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            <span>Open Multifaceted Filters</span>
+          </Link>
+        </div>
       </div>
 
       {/* Product Grid */}
-      <ProductGrid products={categoryProducts} columns={4} />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        {categoryResult.products.map((prod) => (
+          <ProductCard key={prod.id} product={prod} />
+        ))}
+      </div>
     </div>
   );
 };

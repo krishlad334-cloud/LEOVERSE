@@ -1,200 +1,206 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { X, Search, Heart, ShoppingBag, User, ArrowRight, Sparkles } from 'lucide-react';
+import {
+  X,
+  Heart,
+  ShoppingBag,
+  User,
+  ChevronRight,
+  ChevronDown,
+  Sparkles,
+  Tag,
+  Package
+} from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
-import categories from '../../data/categories';
+import { MEGA_MENU_CONFIG } from '../../services/productService';
 
 export const MobileMenu = ({ isOpen, onClose }) => {
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
+  const [activeTab, setActiveTab] = useState('men');
+  const [expandedSection, setExpandedSection] = useState(null);
 
   if (!isOpen) return null;
 
+  const currentConfig = MEGA_MENU_CONFIG[activeTab] || MEGA_MENU_CONFIG.men;
+
+  const toggleSection = (idx) => {
+    setExpandedSection(expandedSection === idx ? null : idx);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 lg:hidden flex">
+    <div className="fixed inset-0 z-50 lg:hidden flex animate-in fade-in duration-200">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#252522]/50 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Slide-out drawer */}
-      <div className="relative w-4/5 max-w-sm bg-[#F7F5F0] h-full shadow-2xl flex flex-col z-10 border-r border-[#D8D2C8] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#D8D2C8]">
+      {/* Drawer */}
+      <div className="relative w-5/6 max-w-sm bg-white dark:bg-[#151518] text-[#242321] dark:text-[#F3EFE6] h-full shadow-2xl flex flex-col z-10 border-r border-[#EAE5DC] dark:border-[#27272A] overflow-y-auto">
+        
+        {/* Top Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
           <Link
             to="/"
             onClick={onClose}
-            className="text-lg font-bold tracking-[0.2em] text-[#242321] uppercase"
+            className="flex items-center gap-2"
           >
-            LEOVERSE
+            <span className="font-serif text-xl font-extrabold tracking-[0.16em] text-[#2C4152] dark:text-white uppercase">
+              LEOVERSE
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D5A249]" />
           </Link>
           <button
             onClick={onClose}
-            className="p-1.5 text-[#242321] hover:text-[#77746E] transition-colors cursor-pointer"
-            aria-label="Close navigation menu"
+            className="p-1.5 text-gray-500 hover:text-black dark:hover:text-white rounded-lg cursor-pointer"
+            aria-label="Close navigation drawer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Search quick button */}
-        <div className="p-4 border-b border-[#D8D2C8] bg-[#EAE5DC]/40">
-          <Link
-            to="/search"
-            onClick={onClose}
-            className="flex items-center gap-3 w-full px-4 py-2.5 bg-[#FAF9F6] border border-[#D8D2C8] text-xs text-[#77746E] tracking-wider uppercase font-medium"
-          >
-            <Search className="w-4 h-4 text-[#77746E]" />
-            <span>Search men's clothing...</span>
-          </Link>
+        {/* Department Switcher Tabs (AJIO style) */}
+        <div className="grid grid-cols-4 bg-[#F5F5F5] dark:bg-[#1A232C] border-b border-gray-200 dark:border-gray-800">
+          {['men', 'women', 'kids', 'accessories'].map((dept) => (
+            <button
+              key={dept}
+              type="button"
+              onClick={() => {
+                setActiveTab(dept);
+                setExpandedSection(null);
+              }}
+              className={`py-3 text-[11px] font-bold uppercase tracking-wider transition-all border-b-2 cursor-pointer ${
+                activeTab === dept
+                  ? 'border-[#2C4152] text-[#2C4152] dark:border-[#D5A249] dark:text-[#D5A249] bg-white dark:bg-[#121A21]'
+                  : 'border-transparent text-gray-500 hover:text-black dark:hover:text-white'
+              }`}
+            >
+              {dept}
+            </button>
+          ))}
         </div>
 
-        {/* Quick Main Links */}
-        <div className="px-6 pt-4 pb-2 space-y-2 text-xs uppercase tracking-wider font-semibold border-b border-[#D8D2C8]/60">
+        {/* Quick Department Banner */}
+        <div className="p-3 bg-[#F5F5F5] dark:bg-[#1A232C] border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
           <Link
-            to="/shop"
+            to={currentConfig.href}
             onClick={onClose}
-            className="block p-2.5 text-center bg-[#FAF9F6] border border-[#D8D2C8] text-[#242321] hover:bg-[#252522] hover:text-[#FAF9F6] transition-colors"
+            className="text-xs font-bold uppercase tracking-wider text-[#2C4152] dark:text-[#D5A249] hover:underline flex items-center gap-1"
           >
-            Explore All Menswear
+            <span>Explore All {currentConfig.title}</span>
+            <ChevronRight className="w-3.5 h-3.5" />
           </Link>
-          <div className="grid grid-cols-2 gap-2">
-          <Link
-            to="/new-arrivals"
-            onClick={onClose}
-            className="p-2.5 text-center bg-[#FAF9F6] border border-[#D8D2C8] text-[#242321] hover:bg-[#252522] hover:text-[#FAF9F6] transition-colors"
-          >
-            New Arrivals
-          </Link>
-          <Link
-            to="/sale"
-            onClick={onClose}
-            className="p-2.5 text-center bg-[#252522] text-[#FAF9F6] hover:bg-black transition-colors"
-          >
-            Sale & Offers
-          </Link>
-          </div>
+          <span className="text-[10px] font-mono text-gray-400">SS26 EDIT</span>
         </div>
 
-        {/* Navigation links & 11 Categories */}
-        <nav className="flex-1 px-6 py-4 space-y-4">
-          <div>
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#D8D2C8]/50">
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#77746E]">
-                Men's Clothing Categories
-              </span>
-              <Link
-                to="/shop"
-                onClick={onClose}
-                className="text-[10px] uppercase font-bold text-[#242321]"
-              >
-                View All
-              </Link>
-            </div>
-
-            <div className="space-y-1">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.slug}
-                  to={`/category/${cat.slug}`}
-                  onClick={onClose}
-                  className="flex items-center justify-between py-2 text-xs tracking-wide font-medium text-[#242321] hover:text-[#77746E] border-b border-[#D8D2C8]/30"
+        {/* Subcategories Accordions */}
+        <div className="flex-1 overflow-y-auto px-4 py-3 divide-y divide-[#F0ECE1] dark:divide-[#27272A]">
+          {currentConfig.columns.map((col, idx) => {
+            const isExpanded = expandedSection === idx;
+            return (
+              <div key={idx} className="py-2.5">
+                <button
+                  type="button"
+                  onClick={() => toggleSection(idx)}
+                  className="w-full flex items-center justify-between py-1.5 text-xs font-bold uppercase tracking-wider text-[#242321] dark:text-gray-100 hover:text-[#A68962] cursor-pointer"
                 >
-                  <span>{cat.name}</span>
-                  <span className="text-[10px] text-[#77746E] font-normal">({cat.itemCount})</span>
-                </Link>
-              ))}
-            </div>
-          </div>
+                  <span>{col.title}</span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-180 text-[#D5A249]' : ''}`}
+                  />
+                </button>
 
-          <div className="pt-2 space-y-2 border-t border-[#D8D2C8]/60">
+                {isExpanded && (
+                  <ul className="pt-2 pb-1 pl-3 space-y-2 animate-in slide-in-from-top-1 duration-150">
+                    {col.items.map((item, itemIdx) => (
+                      <li key={itemIdx}>
+                        <Link
+                          to={item.href}
+                          onClick={onClose}
+                          className="text-xs text-gray-600 dark:text-gray-300 hover:text-[#2C4152] dark:hover:text-white flex items-center gap-2 py-0.5"
+                        >
+                          <span className="w-1 h-1 rounded-full bg-[#D5A249]" />
+                          <span>{item.label}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+
+          {/* Quick Links for New & Sale */}
+          <div className="pt-4 pb-2 space-y-2">
             <Link
-              to="/collections"
+              to="/new-arrivals"
               onClick={onClose}
-              className="flex items-center justify-between py-1.5 text-xs tracking-wider font-semibold text-[#242321] uppercase hover:text-[#77746E]"
+              className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50 dark:bg-gray-800/60 text-xs font-bold uppercase tracking-wider text-[#2C4152] dark:text-white hover:border-[#D5A249]"
             >
-              <span>Collections</span>
-              <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#D5A249]" />
+                <span>New Arrivals</span>
+              </div>
+              <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
             </Link>
+
             <Link
-              to="/bestsellers"
+              to="/sale"
               onClick={onClose}
-              className="block py-1.5 text-xs tracking-wider font-medium text-[#242321] uppercase hover:text-[#77746E]"
+              className="flex items-center justify-between p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-300"
             >
-              Bestsellers
-            </Link>
-            <Link
-              to="/about"
-              onClick={onClose}
-              className="block py-1.5 text-xs tracking-wider font-medium text-[#242321] uppercase hover:text-[#77746E]"
-            >
-              About LEOVERSE
-            </Link>
-            <Link
-              to="/contact"
-              onClick={onClose}
-              className="block py-1.5 text-xs tracking-wider font-medium text-[#242321] uppercase hover:text-[#77746E]"
-            >
-              Client Care & Contact
-            </Link>
-            <Link
-              to="/faq"
-              onClick={onClose}
-              className="block py-1.5 text-xs tracking-wider font-medium text-[#242321] uppercase hover:text-[#77746E]"
-            >
-              Frequently Asked Questions
+              <div className="flex items-center gap-2">
+                <Tag className="w-4 h-4 text-rose-600" />
+                <span>Sale & Special Offers</span>
+              </div>
+              <span className="px-2 py-0.5 rounded bg-rose-600 text-white text-[9px] font-bold">15% OFF</span>
             </Link>
           </div>
-        </nav>
+        </div>
 
-        {/* Footer actions */}
-        <div className="p-6 border-t border-[#D8D2C8] bg-[#EAE5DC]/50 space-y-3">
-          <div className="grid grid-cols-3 gap-2 text-center">
+        {/* Footer Account / Bag / Wishlist Links */}
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-[#F5F5F5] dark:bg-[#1A232C] space-y-2">
+          <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
             <Link
               to="/wishlist"
               onClick={onClose}
-              className="flex flex-col items-center justify-center p-2.5 bg-[#FAF9F6] border border-[#D8D2C8] hover:border-[#242321] transition-colors relative"
+              className="flex items-center justify-center gap-2 py-2 px-3 bg-white dark:bg-[#121A21] border border-gray-200 dark:border-gray-700 rounded-xl text-[#2C4152] dark:text-white"
             >
-              <Heart className="w-4 h-4 text-[#242321] mb-1" />
-              <span className="text-[10px] tracking-wider uppercase font-medium">Wishlist</span>
-              {wishlistCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#242321] text-[#FAF9F6] text-[9px] flex items-center justify-center font-bold">
-                  {wishlistCount}
-                </span>
-              )}
+              <Heart className="w-3.5 h-3.5 text-rose-600" />
+              <span>Wishlist ({wishlistCount})</span>
             </Link>
 
             <Link
               to="/cart"
               onClick={onClose}
-              className="flex flex-col items-center justify-center p-2.5 bg-[#FAF9F6] border border-[#D8D2C8] hover:border-[#242321] transition-colors relative"
+              className="flex items-center justify-center gap-2 py-2 px-3 bg-[#2C4152] text-white rounded-xl"
             >
-              <ShoppingBag className="w-4 h-4 text-[#242321] mb-1" />
-              <span className="text-[10px] tracking-wider uppercase font-medium">Bag</span>
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#252522] text-[#FAF9F6] text-[9px] flex items-center justify-center font-bold">
-                  {cartCount}
-                </span>
-              )}
+              <ShoppingBag className="w-3.5 h-3.5" />
+              <span>Bag ({cartCount})</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
+            <Link
+              to="/account/orders"
+              onClick={onClose}
+              className="flex items-center justify-center gap-1.5 py-1.5 text-gray-600 dark:text-gray-300 hover:text-black"
+            >
+              <Package className="w-3.5 h-3.5 text-[#D5A249]" />
+              <span>Track Orders</span>
             </Link>
 
             <Link
               to="/account"
               onClick={onClose}
-              className="flex flex-col items-center justify-center p-2.5 bg-[#FAF9F6] border border-[#D8D2C8] hover:border-[#242321] transition-colors"
+              className="flex items-center justify-center gap-1.5 py-1.5 text-gray-600 dark:text-gray-300 hover:text-black"
             >
-              <User className="w-4 h-4 text-[#242321] mb-1" />
-              <span className="text-[10px] tracking-wider uppercase font-medium">Account</span>
+              <User className="w-3.5 h-3.5 text-[#D5A249]" />
+              <span>My Account</span>
             </Link>
-          </div>
-
-          <div className="text-center pt-2">
-            <p className="text-[11px] text-[#77746E]">
-              Everyday Essentials. Elevated. • Men's Clothing Only
-            </p>
           </div>
         </div>
       </div>

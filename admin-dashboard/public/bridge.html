@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LEOVERSE Cross-Origin Admin Storage Bridge</title>
+</head>
+<body>
+<script>
+  const LOCAL_KEY = 'leoverse_firestore_products';
+  const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('leoverse_firestore_sync') : null;
+
+  function sendProductsToParent() {
+    try {
+      const raw = localStorage.getItem(LOCAL_KEY);
+      if (raw) {
+        const products = JSON.parse(raw);
+        if (Array.isArray(products) && products.length > 0) {
+          window.parent.postMessage({
+            type: 'LEOVERSE_BRIDGE_SYNC',
+            products: products
+          }, '*');
+        }
+      }
+    } catch (e) {
+      console.warn('[Bridge] Read error', e);
+    }
+  }
+
+  // Emit on load
+  sendProductsToParent();
+
+  // Listen to local changes
+  window.addEventListener('storage', (e) => {
+    if (e.key === LOCAL_KEY) {
+      sendProductsToParent();
+    }
+  });
+
+  if (syncChannel) {
+    syncChannel.addEventListener('message', () => {
+      sendProductsToParent();
+    });
+  }
+
+  // Listen to requests from parent
+  window.addEventListener('message', (e) => {
+    if (e.data?.type === 'REQUEST_BRIDGE_PRODUCTS') {
+      sendProductsToParent();
+    }
+    if (e.data?.type === 'SAVE_BRIDGE_PRODUCTS' && Array.isArray(e.data.products)) {
+      try {
+        localStorage.setItem(LOCAL_KEY, JSON.stringify(e.data.products));
+        if (syncChannel) syncChannel.postMessage({ type: 'PRODUCTS_UPDATED' });
+        sendProductsToParent();
+      } catch (err) {}
+    }
+  });
+</script>
+</body>
+</html>

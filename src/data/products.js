@@ -1,4 +1,6 @@
-export const products = [
+import { expandedProducts } from './expandedProducts.js';
+
+const baseProducts = [
   // ==========================================
   // 1. SUMMER WEAR
   // ==========================================
@@ -212,8 +214,8 @@ export const products = [
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "/images/products/black-street-hoodie-1.jpg",
-      "/images/products/black-street-hoodie-2.jpg"
+      "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1000&q=80"
     ],
     description: "Engineered from substantial 480 GSM organic cotton loopback fleece. Cut in an oversized boxy silhouette with clean crossover hood construction (no drawstrings), double-layer hood, and contrast sleeve racing stripes.",
     details: [
@@ -255,8 +257,8 @@ export const products = [
     ],
     sizes: ["XS", "S", "M", "L", "XL", "XXL"],
     images: [
-      "/images/products/burgundy-oversized-tee-1.jpg",
-      "/images/products/burgundy-oversized-tee-2.jpg"
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80"
     ],
     description: "An authentic streetwear boxy fit cut with exaggerated dropped shoulders, wide sleeves, and a reinforced micro-ribbed crew collar. Spun from heavy 280 GSM combed cotton that retains its crisp architectural drape without clinging.",
     details: [
@@ -690,8 +692,8 @@ export const products = [
     ],
     sizes: ["30", "32", "34", "36", "38"],
     images: [
-      "/images/products/wide-track-pants-1.jpg",
-      "/images/products/black-street-hoodie-2.jpg"
+      "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=1000&q=80"
     ],
     description: "Contemporary wide-leg track pants featuring full-length side contrast stripes, an elasticated waistband with interior cotton drawcords, and concealed ankle zips for customizable hem break.",
     details: [
@@ -930,8 +932,8 @@ export const products = [
     ],
     sizes: ["30", "32", "34", "36", "38"],
     images: [
-      "/images/products/baggy-denim-shorts-1.jpg",
-      "/images/products/burgundy-oversized-tee-2.jpg"
+      "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1000&q=80"
     ],
     description: "90s-inspired knee-length baggy denim jorts crafted from 100% durable 13.5oz ring-spun cotton denim. Features a spacious relaxed thigh cut, classic 5-pocket styling, and heavy antique brass hardware.",
     details: [
@@ -1113,4 +1115,5 @@ export const products = [
   }
 ];
 
+export const products = [...baseProducts, ...expandedProducts];
 export default products;

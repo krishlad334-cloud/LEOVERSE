@@ -29,7 +29,7 @@ export const Account = () => {
       <Breadcrumb items={breadcrumbs} />
 
       <div className="py-6 border-b border-[#D8D2C8] dark:border-[#27272A] mb-8">
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#77746E] dark:text-[#C5A880]">
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A68962] dark:text-[#C5A880]">
           LEOVERSE Gentlemen's Club
         </span>
         <h1 className="text-3xl sm:text-4xl font-bold text-[#242321] dark:text-white mt-1">
@@ -39,7 +39,7 @@ export const Account = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Sidebar Tabs */}
-        <aside className="lg:col-span-4 bg-[#FAF9F6] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] p-5 space-y-1 rounded-2xl">
+        <aside className="lg:col-span-4 bg-[#FAF9F6] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] p-5 space-y-1.5 rounded-2xl">
           <button
             type="button"
             onClick={() => setActiveTab('profile')}
@@ -54,12 +54,23 @@ export const Account = () => {
           </button>
 
           <Link
-            to="/order-history"
+            to="/account/orders"
             className="w-full flex items-center justify-between p-3 text-xs uppercase font-bold tracking-wider text-left text-[#77746E] dark:text-gray-300 hover:text-[#242321] dark:hover:text-white hover:bg-[#EAE5DC]/50 dark:hover:bg-[#202026] transition-colors rounded-xl"
           >
             <div className="flex items-center gap-3">
               <Package className="w-4 h-4" />
-              <span>Order History & Tracking</span>
+              <span>Orders & Tracking</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+
+          <Link
+            to="/account/addresses"
+            className="w-full flex items-center justify-between p-3 text-xs uppercase font-bold tracking-wider text-left text-[#77746E] dark:text-gray-300 hover:text-[#242321] dark:hover:text-white hover:bg-[#EAE5DC]/50 dark:hover:bg-[#202026] transition-colors rounded-xl"
+          >
+            <div className="flex items-center gap-3">
+              <MapPin className="w-4 h-4" />
+              <span>Saved Addresses</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -99,77 +110,79 @@ export const Account = () => {
           </div>
         </aside>
 
-        {/* Content Area */}
-        <main className="lg:col-span-8 bg-[#FAF9F6] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] p-6 sm:p-8 rounded-2xl">
+        {/* Tab Content */}
+        <div className="lg:col-span-8 bg-white dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] rounded-2xl p-6 sm:p-8 shadow-xs">
           {activeTab === 'profile' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-bold text-[#242321] dark:text-white">Personal Profile</h2>
-              <p className="text-xs text-[#77746E] dark:text-gray-400">
-                Update your contact details and default delivery information.
-              </p>
+              <div className="pb-4 border-b border-[#EAE5DC] dark:border-[#27272A]">
+                <h2 className="text-lg font-bold text-[#242321] dark:text-white uppercase tracking-wider">
+                  Personal Profile
+                </h2>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Manage your personal identity, contact details, and sizing profile.
+                </p>
+              </div>
 
               {saved && (
-                <div className="flex items-center gap-2 p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold rounded-xl">
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs font-semibold flex items-center gap-2">
                   <Check className="w-4 h-4" />
-                  <span>Changes saved successfully.</span>
+                  <span>Profile updated successfully!</span>
                 </div>
               )}
 
-              <form onSubmit={handleSave} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#242321] dark:text-gray-200 block mb-1">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      value={profile.firstName}
-                      onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
-                      className="w-full p-2.5 bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#2E2E36] text-xs text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962] rounded-xl"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#242321] dark:text-gray-200 block mb-1">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      value={profile.lastName}
-                      onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
-                      className="w-full p-2.5 bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#2E2E36] text-xs text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962] rounded-xl"
-                    />
-                  </div>
+              <form onSubmit={handleSave} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    value={profile.firstName}
+                    onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#383842] rounded-xl text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962]"
+                  />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#242321] dark:text-gray-200 block mb-1">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      value={profile.email}
-                      onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                      className="w-full p-2.5 bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#2E2E36] text-xs text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962] rounded-xl"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#242321] dark:text-gray-200 block mb-1">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      value={profile.phone}
-                      onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                      className="w-full p-2.5 bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#2E2E36] text-xs text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962] rounded-xl"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    value={profile.lastName}
+                    onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#383842] rounded-xl text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962]"
+                  />
                 </div>
 
-                <div className="pt-2">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={profile.email}
+                    onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#383842] rounded-xl text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    value={profile.phone}
+                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#383842] rounded-xl text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962]"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 pt-2">
                   <button
                     type="submit"
-                    className="px-6 py-2.5 bg-[#252522] dark:bg-[#C5A880] hover:bg-black dark:hover:bg-[#B3956E] text-[#FAF9F6] dark:text-black text-xs uppercase tracking-wider font-bold transition-all cursor-pointer shadow-sm rounded-xl"
+                    className="px-6 py-2.5 bg-[#242321] dark:bg-white text-white dark:text-black font-bold text-xs uppercase tracking-wider rounded-xl transition hover:opacity-90 cursor-pointer"
                   >
                     Save Changes
                   </button>
@@ -180,43 +193,49 @@ export const Account = () => {
 
           {activeTab === 'security' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-bold text-[#242321]">Account Security</h2>
-              <p className="text-xs text-[#77746E]">
-                Update your account password and security preferences.
-              </p>
-              <form onSubmit={handleSave} className="space-y-4 max-w-md">
+              <div className="pb-4 border-b border-[#EAE5DC] dark:border-[#27272A]">
+                <h2 className="text-lg font-bold text-[#242321] dark:text-white uppercase tracking-wider">
+                  Security & Authentication
+                </h2>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Update your wardrobe account password and active login sessions.
+                </p>
+              </div>
+
+              <div className="space-y-4 max-w-md">
                 <div>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#242321] block mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
                     Current Password
                   </label>
                   <input
                     type="password"
                     placeholder="••••••••"
-                    className="w-full p-2.5 bg-[#FAF9F6] border border-[#D8D2C8] text-xs text-[#242321] focus:outline-none focus:border-[#242321]"
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#383842] rounded-xl text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962]"
                   />
                 </div>
+
                 <div>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#242321] block mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
                     New Password
                   </label>
                   <input
                     type="password"
-                    placeholder="••••••••"
-                    className="w-full p-2.5 bg-[#FAF9F6] border border-[#D8D2C8] text-xs text-[#242321] focus:outline-none focus:border-[#242321]"
+                    placeholder="Minimum 6 characters"
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FAF9F6] dark:bg-[#202026] border border-[#D8D2C8] dark:border-[#383842] rounded-xl text-[#242321] dark:text-white focus:outline-none focus:border-[#A68962]"
                   />
                 </div>
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    className="px-6 py-2.5 bg-[#252522] hover:bg-black text-[#FAF9F6] text-xs uppercase tracking-wider font-bold transition-all cursor-pointer"
-                  >
-                    Update Password
-                  </button>
-                </div>
-              </form>
+
+                <button
+                  type="button"
+                  onClick={() => alert('Password updated.')}
+                  className="px-6 py-2.5 bg-[#242321] dark:bg-white text-white dark:text-black font-bold text-xs uppercase tracking-wider rounded-xl transition hover:opacity-90 cursor-pointer"
+                >
+                  Update Password
+                </button>
+              </div>
             </div>
           )}
-        </main>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Tag, ArrowRight, Copy, Check, Clock } from 'lucide-react';
+import { ArrowRight, Copy, Check, Clock } from 'lucide-react';
 import products from '../../data/products';
 import ProductGrid from '../products/ProductGrid';
 

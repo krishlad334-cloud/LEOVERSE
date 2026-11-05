@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image as ImageIcon,
   Video,
@@ -6,15 +6,9 @@ import {
   Play,
   Eye,
   Trash2,
-  ExternalLink,
-  Filter,
   Search,
-  Calendar,
-  X,
-  Check,
   RefreshCw,
-  FolderPlus,
-  AlertCircle
+  X
 } from 'lucide-react';
 import { getMedia, uploadMedia, updateMedia, deleteMedia, getProducts } from '../../services/api';
 
@@ -22,7 +16,6 @@ export const AdminMediaLibrary = () => {
   const [mediaList, setMediaList] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   // Filters
   const [typeFilter, setTypeFilter] = useState('all');

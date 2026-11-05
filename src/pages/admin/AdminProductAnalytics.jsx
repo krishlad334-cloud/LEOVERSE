@@ -12,10 +12,7 @@ import {
   ChevronDown,
   RefreshCw,
   ExternalLink,
-  Percent,
-  Sparkles,
-  ArrowRight,
-  Filter
+  Percent
 } from 'lucide-react';
 import { getProducts, getProductAnalytics } from '../../services/api';
 

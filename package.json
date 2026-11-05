@@ -5,12 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:admin": "npm --prefix admin-dashboard run dev",
     "build": "vite build",
+    "build:admin": "npm --prefix admin-dashboard run build",
+    "build:all": "npm run build && npm run build:admin",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "firebase": "^13.2.0",
     "lucide-react": "^1.65.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

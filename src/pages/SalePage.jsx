@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Tag, SlidersHorizontal, Clock } from 'lucide-react';
+import { SlidersHorizontal, Clock } from 'lucide-react';
 import products from '../data/products';
 import ProductGrid from '../components/products/ProductGrid';
 import ProductSort from '../components/products/ProductSort';

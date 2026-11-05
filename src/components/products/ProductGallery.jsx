@@ -227,7 +227,7 @@ export const ProductGallery = ({
         </div>
 
         {/* Main Display Area (Photo or Video Player) */}
-        <div className="flex-1 aspect-[4/5] bg-[#EAE5DC]/50 rounded-2xl overflow-hidden relative group border border-[#E5E0D6]">
+        <div className="flex-1 aspect-[4/5] bg-[#EAE5DC]/50 dark:bg-[#1A232C] rounded-2xl overflow-hidden relative group border border-[#E5E0D6] dark:border-gray-800">
           {activeTab === 'photos' ? (
             <div className="w-full h-full relative overflow-hidden group">
               <img

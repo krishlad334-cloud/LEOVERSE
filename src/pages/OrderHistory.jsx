@@ -20,7 +20,7 @@ const DEFAULT_ORDERS = [
         size: 'L',
         price: 1990,
         quantity: 1,
-        image: '/images/products/burgundy-oversized-tee-1.jpg'
+        image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80'
       },
       {
         name: 'The Heavyweight Street Stripe Hoodie',
@@ -28,7 +28,7 @@ const DEFAULT_ORDERS = [
         size: 'XL',
         price: 3890,
         quantity: 1,
-        image: '/images/products/black-street-hoodie-1.jpg'
+        image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80'
       }
     ]
   },

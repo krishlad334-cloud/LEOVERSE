@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import CartItem from '../components/cart/CartItem';
 import CartSummary from '../components/cart/CartSummary';
@@ -32,9 +32,9 @@ export const Cart = () => {
         <EmptyState
           icon={ShoppingBag}
           title="Your shopping bag is empty"
-          description="You haven't added any pieces yet. Explore our latest arrivals or foundational essentials to begin building your everyday rotation."
+          description="You haven't added any menswear pieces yet. Explore our latest arrivals or foundational essentials to begin building your everyday rotation."
           actionLabel="Explore Collections"
-          actionTo="/shop"
+          actionTo="/products"
         />
       </div>
     );
@@ -44,13 +44,23 @@ export const Cart = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
       <Breadcrumb items={breadcrumbs} />
 
-      <div className="pb-8 mb-8 border-b border-[#D8D2C8] dark:border-[#27272A]">
-        <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-[#242321] dark:text-white">
-          Shopping Bag
-        </h1>
-        <p className="text-xs text-[#77746E] dark:text-gray-400 mt-1">
-          Review your selected menswear pieces and proceed to express checkout.
-        </p>
+      <div className="pb-6 mb-8 border-b border-[#D8D2C8] dark:border-[#27272A] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A68962]">
+            Review & Checkout
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#242321] dark:text-white mt-1">
+            Shopping Bag ({cartItems.length} {cartItems.length === 1 ? 'Garment' : 'Garments'})
+          </h1>
+        </div>
+
+        <Link
+          to="/products"
+          className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#A68962] hover:underline self-start sm:self-auto"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Continue Shopping</span>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14">

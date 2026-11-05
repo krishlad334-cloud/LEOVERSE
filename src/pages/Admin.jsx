@@ -20,26 +20,10 @@ export const Admin = () => {
     }
   });
 
-  const tabFromUrl = searchParams.get('tab') || 'overview';
-  const prodFromUrl = searchParams.get('productId') || '';
-
-  const [activeTab, setActiveTab] = useState(tabFromUrl);
-  const [selectedProductId, setSelectedProductId] = useState(prodFromUrl);
-
-  useEffect(() => {
-    if (tabFromUrl && tabFromUrl !== activeTab) {
-      setActiveTab(tabFromUrl);
-    }
-  }, [tabFromUrl]);
-
-  useEffect(() => {
-    if (prodFromUrl) {
-      setSelectedProductId(prodFromUrl);
-    }
-  }, [prodFromUrl]);
+  const activeTab = searchParams.get('tab') || 'overview';
+  const selectedProductId = searchParams.get('productId') || '';
 
   const handleSelectTab = (tabId) => {
-    setActiveTab(tabId);
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
       next.set('tab', tabId);
@@ -49,12 +33,10 @@ export const Admin = () => {
 
   const handleNavigateToAnalytics = (productId) => {
     if (productId) {
-      setSelectedProductId(productId);
       setSearchParams({ tab: 'analytics', productId });
     } else {
       setSearchParams({ tab: 'analytics' });
     }
-    setActiveTab('analytics');
   };
 
   const handleLogout = () => {

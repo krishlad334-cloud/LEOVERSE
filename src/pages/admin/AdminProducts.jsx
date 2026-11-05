@@ -14,7 +14,6 @@ import {
   Upload,
   AlertCircle,
   RefreshCw,
-  Image as ImageIcon,
   Video
 } from 'lucide-react';
 import {
@@ -32,7 +31,6 @@ export const AdminProducts = ({ onNavigateToAnalytics }) => {
   const [categories, setCategories] = useState([]);
   const [mediaLibrary, setMediaLibrary] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   // Filters
   const [search, setSearch] = useState('');

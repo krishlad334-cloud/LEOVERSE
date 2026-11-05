@@ -5,14 +5,14 @@ import { formatPrice } from '../../utils/formatPrice';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 
-export const QuickViewModal = ({ product, isOpen, onClose }) => {
-  if (!isOpen || !product) return null;
-
+const QuickViewModalContent = ({ product, onClose }) => {
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
 
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || 'M');
-  const [selectedColor, setSelectedColor] = useState(product.colors?.[0]?.name || '');
+  const [selectedColor, setSelectedColor] = useState(
+    typeof product.colors?.[0] === 'object' ? product.colors[0]?.name : (product.colors?.[0] || 'Standard')
+  );
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
@@ -28,6 +28,12 @@ export const QuickViewModal = ({ product, isOpen, onClose }) => {
     }, 1200);
   };
 
+  const sellingPrice = product.sellingPrice ?? product.salePrice ?? product.price ?? 1999;
+  const mrp = product.mrp ?? product.price ?? sellingPrice;
+  const discountPercent = mrp > sellingPrice
+    ? Math.round(((mrp - sellingPrice) / mrp) * 100)
+    : (product.discountPercent || 0);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
@@ -37,7 +43,7 @@ export const QuickViewModal = ({ product, isOpen, onClose }) => {
       />
 
       {/* Modal Dialog */}
-      <div className="relative bg-[#FAF9F6] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] text-[#242321] dark:text-[#F3EFE6] rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto z-10 p-6 sm:p-8">
+      <div className="relative bg-[#FAF9F6] dark:bg-[#18181C] border border-[#D8D2C8] dark:border-[#27272A] text-[#242321] dark:text-[#F3EFE6] rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto z-10 p-6 sm:p-8 animate-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
           type="button"
@@ -226,6 +232,11 @@ export const QuickViewModal = ({ product, isOpen, onClose }) => {
       </div>
     </div>
   );
+};
+
+export const QuickViewModal = ({ product, isOpen = true, onClose }) => {
+  if (!isOpen || !product) return null;
+  return <QuickViewModalContent product={product} onClose={onClose} />;
 };
 
 export default QuickViewModal;

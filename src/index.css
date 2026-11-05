@@ -1,18 +1,29 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
 
 @theme {
-  --color-warm-ivory: #F7F5F0;
+  /* AJIO-inspired Brand Color Palette */
+  --color-primary-navy: #2C4152;
+  --color-primary: #2C4152;
+  --color-brand-gold: #D5A249;
+  --color-gold: #D5A249;
+  --color-brand-white: #FFFFFF;
+  --color-light-gray: #F5F5F5;
+  --color-brand-gray: #F5F5F5;
+
+  --color-warm-ivory: #F5F5F5;
   --color-soft-beige: #EAE5DC;
-  --color-light-stone: #DCD5CA;
-  --color-deep-charcoal: #242321;
-  --color-muted-grey: #77746E;
-  --color-warm-grey: #D8D2C8;
-  --color-near-black: #252522;
-  --color-off-white: #FAF9F6;
-  --color-footer-bg: #1B1B1E;
-  --color-footer-text: #F7F5F0;
+  --color-light-stone: #E5E7EB;
+  --color-deep-charcoal: #2C4152;
+  --color-muted-grey: #6B7280;
+  --color-warm-grey: #D1D5DB;
+  --color-near-black: #1E2D3A;
+  --color-off-white: #FFFFFF;
+  --color-gold-accent: #D5A249;
+  --color-gold-light: #E4BA68;
+  --color-footer-bg: #1B2935;
+  --color-footer-text: #F5F5F5;
 
   --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-serif: "Cormorant Garamond", Georgia, serif;
@@ -20,17 +31,36 @@
 
 @layer base {
   body {
-    background-color: var(--color-warm-ivory);
-    color: var(--color-deep-charcoal);
+    background-color: #F5F5F5;
+    color: #2C4152;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.25s ease, color 0.25s ease;
+    overflow-x: hidden;
   }
 
-  .dark body {
-    background-color: #121214;
-    color: #F3EFE6;
+  .dark body,
+  [data-theme="dark"] body,
+  body.dark {
+    background-color: #121A21;
+    color: #F5F5F5;
+  }
+
+  button,
+  [role="button"],
+  a,
+  select,
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"] {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"][aria-disabled="true"],
+  input:disabled {
+    cursor: not-allowed;
   }
 }
 
@@ -67,4 +97,48 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Skeleton Loading Shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(220, 213, 202, 0.4) 25%,
+    rgba(220, 213, 202, 0.8) 37%,
+    rgba(220, 213, 202, 0.4) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(40, 40, 48, 0.4) 25%,
+    rgba(60, 60, 72, 0.8) 37%,
+    rgba(40, 40, 48, 0.4) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

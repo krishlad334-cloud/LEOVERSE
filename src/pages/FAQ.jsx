@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, HelpCircle, ShieldCheck, Truck, RefreshCw, Sparkles } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import Breadcrumb from '../components/common/Breadcrumb';
 
 export const FAQ = () => {

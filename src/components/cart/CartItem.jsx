@@ -6,11 +6,11 @@ import QuantitySelector from './QuantitySelector';
 
 export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   return (
-    <div className="py-6 border-b border-[#D8D2C8] flex gap-4 sm:gap-6">
+    <div className="py-6 border-b border-[#D8D2C8] dark:border-gray-800 flex gap-4 sm:gap-6">
       {/* Product Image */}
       <Link
         to={`/product/${item.productId}`}
-        className="aspect-[4/5] w-20 sm:w-28 bg-[#EAE5DC] shrink-0 overflow-hidden"
+        className="aspect-[4/5] w-20 sm:w-28 bg-[#EAE5DC] dark:bg-[#1A232C] rounded-lg shrink-0 overflow-hidden"
       >
         <img
           src={item.image}
@@ -26,29 +26,29 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
             <div>
               <Link
                 to={`/product/${item.productId}`}
-                className="text-sm font-medium text-[#242321] hover:text-[#77746E] transition-colors"
+                className="text-sm font-semibold text-[#2C4152] dark:text-white hover:text-[#D5A249] dark:hover:text-[#D5A249] transition-colors"
               >
                 {item.name}
               </Link>
               {item.subtitle && (
-                <p className="text-xs text-[#77746E] mt-0.5">{item.subtitle}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{item.subtitle}</p>
               )}
             </div>
-            <span className="text-sm font-medium text-[#242321] shrink-0">
+            <span className="text-sm font-bold text-[#2C4152] dark:text-white shrink-0">
               {formatPrice(item.price * item.quantity)}
             </span>
           </div>
 
-          <div className="flex items-center gap-4 text-xs text-[#77746E] mt-2">
-            <span>Size: <strong className="text-[#242321] font-medium">{item.selectedSize}</strong></span>
+          <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mt-2">
+            <span>Size: <strong className="text-[#2C4152] dark:text-white font-semibold">{item.selectedSize}</strong></span>
             <span>•</span>
             <span className="flex items-center gap-1.5">
               Color:
               <span
-                className="w-2.5 h-2.5 rounded-full inline-block border border-black/10"
+                className="w-2.5 h-2.5 rounded-full inline-block border border-black/10 dark:border-white/20"
                 style={{ backgroundColor: item.colorHex }}
               />
-              <strong className="text-[#242321] font-medium">{item.selectedColor}</strong>
+              <strong className="text-[#2C4152] dark:text-white font-semibold">{item.selectedColor}</strong>
             </span>
           </div>
         </div>
@@ -65,7 +65,7 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
           <button
             type="button"
             onClick={() => onRemove(item.cartItemId)}
-            className="text-xs text-[#77746E] hover:text-[#242321] flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="text-xs text-gray-500 dark:text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 flex items-center gap-1.5 transition-colors cursor-pointer"
             aria-label="Remove item"
           >
             <Trash2 className="w-3.5 h-3.5" />

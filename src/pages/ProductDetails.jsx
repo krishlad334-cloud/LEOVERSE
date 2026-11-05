@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getProductById, getProducts } from '../services/api';
+import { recordProductView } from '../services/productService';
 import { trackProductView } from '../utils/analytics';
 import ProductGallery from '../components/products/ProductGallery';
 import ProductInfo from '../components/products/ProductInfo';
 import ProductReviews from '../components/products/ProductReviews';
 import RelatedProducts from '../components/products/RelatedProducts';
+import RecentlyViewedSection from '../components/home/RecentlyViewedSection';
 import Breadcrumb from '../components/common/Breadcrumb';
 import Modal from '../components/common/Modal';
 import EmptyState from '../components/common/EmptyState';
@@ -22,19 +24,22 @@ export const ProductDetails = () => {
     if (!id) return;
     setLoading(true);
 
-    // Track real-time product page view in SQLite database!
+    // Track analytics and record in recently viewed
     trackProductView(id);
+    recordProductView(id);
 
-    // Fetch product details from live API connected to SQLite
+    // Fetch product details
     getProductById(id)
       .then((data) => {
         setProduct(data);
-        // Fetch related products
-        getProducts({ department: data.department })
-          .then((all) => {
-            setRelatedProducts(all.filter((p) => p.id !== data.id).slice(0, 4));
-          })
-          .catch(() => {});
+        if (data) {
+          recordProductView(data.id);
+          getProducts({ department: data.department })
+            .then((all) => {
+              setRelatedProducts(all.filter((p) => p.id !== data.id).slice(0, 4));
+            })
+            .catch(() => {});
+        }
       })
       .catch((err) => {
         console.error('Failed to load product', err);
@@ -60,16 +65,16 @@ export const ProductDetails = () => {
           title="Product not found"
           description="The garment you are looking for may have been archived or moved."
           actionLabel="Return to Shop"
-          actionTo="/shop"
+          actionTo="/products"
         />
       </div>
     );
   }
 
   const breadcrumbs = [
-    { label: 'Shop', to: '/shop' },
-    { label: product.department || 'Fashion', to: `/shop?department=${product.department}` },
-    { label: product.category, to: `/shop?department=${product.department}&category=${encodeURIComponent(product.category)}` },
+    { label: 'Shop All', to: '/products' },
+    { label: product.department || 'Fashion', to: `/products?department=${encodeURIComponent(product.department || 'Men')}` },
+    { label: product.category, to: `/category/${encodeURIComponent(product.categorySlug || 'casual-wear')}` },
     { label: product.name }
   ];
 
@@ -102,10 +107,13 @@ export const ProductDetails = () => {
       {/* Customer Reviews Section */}
       <ProductReviews product={product} />
 
-      {/* Related Products */}
+      {/* Related Products Rail */}
       {relatedProducts.length > 0 && (
-        <RelatedProducts products={relatedProducts} title={`You May Also Appreciate in ${product.department}`} />
+        <RelatedProducts products={relatedProducts} title={`You May Also Appreciate in ${product.department || 'Atelier'}`} />
       )}
+
+      {/* Recently Viewed Products */}
+      <RecentlyViewedSection />
 
       {/* Size Guide Modal */}
       <Modal

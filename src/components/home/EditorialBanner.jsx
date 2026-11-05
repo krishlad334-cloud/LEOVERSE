@@ -9,7 +9,7 @@ export const EditorialBanner = () => {
         {/* Left: Streetwear Photography (Heavyweight Loopback Hoodie & Wide Pants) */}
         <div className="lg:col-span-7 relative min-h-[380px] sm:min-h-[480px] lg:min-h-[580px] bg-[#1E1E1C]">
           <img
-            src="/images/banners/hero-streetwear-hoodie.jpg"
+            src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80"
             alt="LEOVERSE Monochrome Streetwear Edition"
             loading="lazy"
             className="w-full h-full object-cover object-[center_35%]"

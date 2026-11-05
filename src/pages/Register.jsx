@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Eye, EyeOff, CheckCircle, ArrowLeft, ArrowRight, User, Lock, Mail, ShieldCheck } from 'lucide-react';
 
 export const Register = () => {
@@ -14,7 +14,6 @@ export const Register = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [registered, setRegistered] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,38 +38,40 @@ export const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] flex flex-col justify-between items-center p-4 sm:p-6 select-none font-sans">
-      {/* Top Bar with Brand & Back to Storefront Link */}
-      <div className="w-full max-w-md flex items-center justify-between pt-4 pb-2">
-        <Link
-          to="/"
-          className="inline-flex items-center space-x-1.5 text-xs font-semibold text-gray-500 hover:text-black transition"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Return to Store</span>
-        </Link>
+    <div className="min-h-screen bg-[#F5F5F5] dark:bg-[#121A21] text-[#2C4152] dark:text-[#F5F5F5] flex flex-col justify-between items-center select-none font-sans transition-colors">
+      {/* Full-width Luxury Top Header */}
+      <header className="w-full border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-[#121A21]/95 backdrop-blur-md py-3.5 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#2C4152] dark:text-gray-300 hover:text-[#D5A249] transition"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Return to Store</span>
+          </Link>
 
-        <span className="text-[10px] uppercase font-bold tracking-widest text-[#A68962] bg-[#FAF9F6] border border-[#E5E0D6] px-2.5 py-1 rounded-full">
-          Customer Portal
-        </span>
-      </div>
+          <Link to="/" className="font-serif text-2xl font-extrabold tracking-[0.2em] text-[#2C4152] dark:text-white uppercase hover:text-[#D5A249] transition leading-none">
+            LEOVERSE
+          </Link>
 
-      {/* Main Auth Card (Standalone: NO Header, NO Navbar, NO Footer) */}
-      <div className="w-full max-w-md bg-white border border-[#E5E0D6] rounded-2xl shadow-xl p-6 sm:p-8 my-auto space-y-6">
+          <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+            <ShieldCheck className="w-4 h-4 text-[#D5A249]" />
+            <span className="hidden sm:inline font-semibold">256-Bit SSL Encrypted</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Auth Card */}
+      <div className="w-full max-w-md bg-white dark:bg-[#1A232C] border border-[#E5E0D6] dark:border-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 my-8 space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <Link to="/" className="inline-block group">
-            <span className="text-2xl font-serif font-extrabold tracking-[0.24em] text-[#1E1E1E] uppercase group-hover:opacity-90 transition">
-              LEOVERSE
-            </span>
-            <span className="text-[9px] uppercase tracking-[0.38em] text-[#A68962] font-semibold block -mt-1">
-              Menswear Atelier
-            </span>
-          </Link>
-          <h1 className="text-lg font-bold text-[#1E1E1E] pt-2">
+          <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#D5A249]">
+            Client Privilege Registration
+          </span>
+          <h1 className="text-xl sm:text-2xl font-serif font-bold text-[#2C4152] dark:text-white">
             Create LEOVERSE Account
           </h1>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             Join our menswear circle for private drops and tailored sizing privileges.
           </p>
         </div>
@@ -208,7 +209,7 @@ export const Register = () => {
 
       {/* Clean Minimalist Copyright Footer */}
       <div className="py-4 text-center text-[11px] text-gray-500">
-        © {new Date().getFullYear()} LEOVERSE MENSWEAR ATELIER. All rights reserved.
+        © 2026 LEOVERSE MENSWEAR ATELIER. All rights reserved.
       </div>
     </div>
   );

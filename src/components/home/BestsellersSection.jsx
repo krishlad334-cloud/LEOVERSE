@@ -2,17 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Flame } from 'lucide-react';
 import { getProducts } from '../../services/api';
+import { subscribeCatalogUpdates } from '../../services/productService';
 import ProductGrid from '../products/ProductGrid';
 
 export const BestsellersSection = () => {
   const [bestsellers, setBestsellers] = useState([]);
 
   useEffect(() => {
-    getProducts({ sort: 'rating' })
-      .then((data) => {
-        setBestsellers(data.slice(0, 4));
-      })
-      .catch(() => {});
+    const fetchBest = () => {
+      getProducts({ sort: 'rating' })
+        .then((data) => {
+          setBestsellers(data.slice(0, 4));
+        })
+        .catch(() => {});
+    };
+
+    fetchBest();
+    const unsub = subscribeCatalogUpdates(fetchBest);
+    return () => unsub();
   }, []);
 
   return (

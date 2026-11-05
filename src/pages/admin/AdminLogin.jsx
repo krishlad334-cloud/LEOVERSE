@@ -135,7 +135,7 @@ export const AdminLogin = ({ onLoginSuccess }) => {
 
       {/* Clean Minimalist Copyright Footer */}
       <div className="py-4 text-center text-[11px] text-gray-500">
-        © {new Date().getFullYear()} LEOVERSE MENSWEAR ATELIER. Studio Executive Portal.
+        © 2026 LEOVERSE MENSWEAR ATELIER. Studio Executive Portal.
       </div>
     </div>
   );

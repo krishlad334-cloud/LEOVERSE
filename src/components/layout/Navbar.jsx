@@ -6,50 +6,80 @@ import {
   ShoppingBag,
   User,
   Menu,
-  ChevronDown,
-  Sparkles,
-  ShieldCheck,
   Package,
   X,
-  ArrowRight,
   Sun,
-  Moon
+  Moon,
+  MapPin,
+  ExternalLink
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useTheme } from '../../context/ThemeContext';
-import { getCategories, getProducts } from '../../services/api';
+import { getProductCatalog } from '../../services/productService';
+import MegaMenu from './MegaMenu';
+import MobileMenu from './MobileMenu';
+import { formatPrice } from '../../utils/formatPrice';
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [activeMegaCategory, setActiveMegaCategory] = useState(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
-  const searchInputRef = useRef(null);
+  const searchContainerRef = useRef(null);
   const profileRef = useRef(null);
-  const { cartCount } = useCart();
-  const { wishlistCount } = useWishlist();
-  const { theme, toggleTheme, isDark } = useTheme();
+  const navLeaveTimeoutRef = useRef(null);
+  const profileTimeoutRef = useRef(null);
+
+  const { cartCount, notification: cartNotification } = useCart();
+  const { wishlistCount, notification: wishlistNotification } = useWishlist();
+  const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Scroll detection for sticky navbar background
+  // Profile hover handlers
+  const handleProfileMouseEnter = () => {
+    if (profileTimeoutRef.current) {
+      clearTimeout(profileTimeoutRef.current);
+    }
+    setProfileDropdownOpen(true);
+  };
+
+  const handleProfileMouseLeave = () => {
+    profileTimeoutRef.current = setTimeout(() => {
+      setProfileDropdownOpen(false);
+    }, 220);
+  };
+
+  // Scroll detection
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 15);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close profile dropdown when clicking outside
+  // Close menus on route change
+  useEffect(() => {
+    setActiveMegaCategory(null);
+    setProfileDropdownOpen(false);
+    setMobileMenuOpen(false);
+    setSearchFocused(false);
+    setMobileSearchOpen(false);
+  }, [location.pathname, location.search]);
+
+  // Click outside detection for search & profile
   useEffect(() => {
     const handleClickOutside = (e) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
+        setSearchFocused(false);
+      }
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setProfileDropdownOpen(false);
       }
@@ -58,647 +88,434 @@ export const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch categories from SQLite database
+  // Live search debounce
   useEffect(() => {
-    getCategories()
-      .then(setCategories)
-      .catch(() => {});
-  }, []);
-
-  // Close all menus on route change
-  useEffect(() => {
-    setActiveDropdown(null);
-    setProfileDropdownOpen(false);
-    setMobileMenuOpen(false);
-    setSearchOpen(false);
-  }, [location.pathname, location.search]);
-
-  // Live search typeahead
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setSearchResults([]);
-      return;
-    }
+    if (!searchQuery.trim()) return;
     const timer = setTimeout(() => {
-      getProducts({ search: searchQuery })
-        .then((prods) => setSearchResults(prods.slice(0, 5)))
-        .catch(() => {});
-    }, 200);
+      const res = getProductCatalog({ search: searchQuery, limit: 5 });
+      setSearchResults(res.products);
+    }, 150);
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  // Mega menu hover handlers with smooth delay
+  const handleNavMouseEnter = (catKey) => {
+    if (navLeaveTimeoutRef.current) {
+      clearTimeout(navLeaveTimeoutRef.current);
+    }
+    setActiveMegaCategory(catKey);
+  };
+
+  const handleNavMouseLeave = () => {
+    navLeaveTimeoutRef.current = setTimeout(() => {
+      setActiveMegaCategory(null);
+    }, 180);
+  };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchOpen(false);
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchFocused(false);
+      setMobileSearchOpen(false);
     }
   };
 
-  // Pure menswear primary navigation items - Single clean words to prevent awkward wrapping
-  const navItems = [
-    {
-      id: "shirts",
-      label: "Shirts",
-      fullLabel: "Shirts & Polos",
-      link: "/shop?department=Men's%20Apparel",
-      lookbookTitle: "Riviera Linen & Resort Collars",
-      lookbookImage: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80",
-      columns: [
-        {
-          title: "Casual & Resort",
-          items: ["French Flax Linen Shirts", "Camp Collar Resort Shirts", "Supima Cotton Polos", "Relaxed Cuban Overshirts"]
-        },
-        {
-          title: "Formal & Evening",
-          items: ["Pinpoint Oxford Formals", "Spread Collar Dress Shirts", "Liquid Rayon Party Shirts", "Mandarin Band-Collar Shirts"]
-        }
-      ]
-    },
-    {
-      id: "suiting",
-      label: "Suiting",
-      fullLabel: "Suits & Tailoring",
-      link: "/shop?department=Men's%20Tailoring",
-      lookbookTitle: "Super 120s Virgin Wool Tailoring",
-      lookbookImage: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80",
-      columns: [
-        {
-          title: "Tailored Jackets",
-          items: ["Virgin Wool Blazers", "Unstructured Summer Blazers", "Double-Breasted Jackets", "Satin Peak Lapel Tuxedos"]
-        },
-        {
-          title: "Complete Sets",
-          items: ["Two-Piece Boardroom Suits", "Three-Piece Wedding Suits", "Tailored Waistcoats", "Formal Tuxedo Sets"]
-        }
-      ]
-    },
-    {
-      id: "trousers",
-      label: "Trousers",
-      fullLabel: "Trousers & Chinos",
-      link: "/shop?category=trousers-chinos",
-      lookbookTitle: "Forward-Pleats & Relaxed Chinos",
-      lookbookImage: "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=600&q=80",
-      columns: [
-        {
-          title: "Tailored Trousers",
-          items: ["Forward-Pleat Trousers", "Gurkha Military Trousers", "Extended Waistband Slacks", "Fine Wool Dress Trousers"]
-        },
-        {
-          title: "Casual & Relaxed",
-          items: ["Linen Drawstring Pants", "Relaxed Straight Chinos", "Vintage Washed Denim", "Tailored Linen Shorts"]
-        }
-      ]
-    },
-    {
-      id: "ethnic",
-      label: "Ethnic",
-      fullLabel: "Traditional Ethnic Wear",
-      link: "/shop?department=Men's%20Ethnic",
-      lookbookTitle: "Royal Raw Silk & Festive Bundis",
-      lookbookImage: "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?auto=format&fit=crop&w=600&q=80",
-      columns: [
-        {
-          title: "Ceremonial & Festive",
-          items: ["Handcrafted Raw Silk Kurtas", "Nehru Bundi Jackets", "Hand-Embroidered Kurta Sets", "Bespoke Festive Sherwanis"]
-        },
-        {
-          title: "Casual Indian",
-          items: ["Pure Linen Short Kurtas", "Churidar Pyjama Sets", "Pathani Suits", "Bandhgala Jackets"]
-        }
-      ]
-    },
-    {
-      id: "streetwear",
-      label: "Streetwear",
-      fullLabel: "Streetwear & Hoodies",
-      link: "/shop?department=Men's%20Casuals",
-      lookbookTitle: "Heavyweight 280 GSM Boxy Cuts",
-      lookbookImage: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=600&q=80",
-      columns: [
-        {
-          title: "Tops & Hoodies",
-          items: ["280 GSM Oversized Boxy Tees", "480 GSM Loopback Hoodies", "Vintage Acid Wash Tees", "Heavyweight Sweatshirts"]
-        },
-        {
-          title: "Bottoms",
-          items: ["Baggy Skate Denim", "Retro Piping Track Pants", "Deep Pocket Cargoes", "Relaxed Terry Shorts"]
-        }
-      ]
-    },
-    {
-      id: "accessories",
-      label: "Accessories",
-      fullLabel: "Footwear & Accessories",
-      link: "/shop?department=Men's%20Accessories",
-      lookbookTitle: "Swiss Movements & Blake Calfskin",
-      lookbookImage: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=600&q=80",
-      columns: [
-        {
-          title: "Footwear & Leather",
-          items: ["Blake-Stitched Penny Loafers", "Tuscan Leather Duffles", "Hand-Burnished Belts", "Bifold Card Holders"]
-        },
-        {
-          title: "Accents & Timepieces",
-          items: ["Swiss Chronograph Watches", "Handmade Silk Neckties", "Acetate Sunglasses", "Silk Pocket Squares"]
-        }
-      ]
-    },
-    {
-      id: "new",
-      label: "New Arrivals",
-      fullLabel: "Seasonal Drops",
-      link: "/new-arrivals",
-      lookbookTitle: "Fresh SS26 Silhouette Releases",
-      lookbookImage: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80",
-      columns: [
-        {
-          title: "Latest Drops",
-          items: ["Spring/Summer 2026 Drop", "French Riviera Capsule", "Small-Batch Handcrafted", "Runway Editorial Pieces"]
-        },
-        {
-          title: "Featured Fabrics",
-          items: ["Normandy French Flax", "Super 120s Virgin Wool", "Mulberry Raw Silk", "480 GSM Loopback Fleece"]
-        }
-      ]
-    },
-    {
-      id: "sale",
-      label: "Sale",
-      fullLabel: "Private Mid-Season Sale",
-      link: "/sale",
-      isSale: true
-    }
+  // Clean, single-line AJIO navigation items without bulky chevrons or line-breaking badges
+  const primaryNavItems = [
+    { key: 'men', label: 'MEN', href: '/men', hasMega: true },
+    { key: 'women', label: 'WOMEN', href: '/women', hasMega: true },
+    { key: 'kids', label: 'KIDS', href: '/kids', hasMega: true },
+    { key: 'accessories', label: 'ACCESSORIES', href: '/products?department=Accessories', hasMega: true },
+    { key: 'sale', label: 'SALE', href: '/sale', hasMega: false, isSale: true }
   ];
 
   return (
     <>
-      {/* 1. Top Minimal Luxury Announcement Bar */}
-      <div className="bg-[#18181B] dark:bg-[#0D0D0F] text-[#D8D2C8] dark:text-[#A1A1AA] border-b border-[#27272A] text-[11px] py-2 px-4 select-none transition-colors">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-[#C5A880] font-bold tracking-wider">LUXE PRIVILEGE</span>
-            <span className="text-gray-500">•</span>
-            <span>Complimentary express delivery on orders over ₹2,499 | Code: <strong className="text-white font-mono">LUXE15</strong> for 15% savings</span>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-4 text-[10px] text-gray-400 font-semibold tracking-widest uppercase">
-            <span>100% Pure Menswear Atelier</span>
-            <span>•</span>
-            <span>Handcrafted in India</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Main Luxury Header - Perfectly Aligned, No Wrapping */}
       <header
-        className={`sticky top-0 z-40 w-full transition-all duration-200 select-none ${
+        className={`sticky top-0 z-40 transition-all duration-200 ${
           isScrolled
-            ? 'bg-[#FAF9F6]/95 dark:bg-[#151518]/95 backdrop-blur-md shadow-xs border-b border-[#DCD5C9] dark:border-[#27272A]'
-            : 'bg-[#FAF9F6] dark:bg-[#151518] border-b border-[#E5E0D6] dark:border-[#27272A]'
+            ? 'bg-white/98 dark:bg-[#121A21]/98 backdrop-blur-md shadow-xs border-b border-gray-200 dark:border-gray-800'
+            : 'bg-white dark:bg-[#121A21] border-b border-gray-200/90 dark:border-gray-800'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Mobile Hamburger Button */}
-            <div className="flex lg:hidden justify-start">
+          <div className="flex items-center justify-between h-16 sm:h-18 gap-4 lg:gap-8">
+            
+            {/* Left: Mobile Menu Trigger + Brand Logo */}
+            <div className="flex items-center gap-3 lg:gap-6 shrink-0">
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(true)}
-                className="p-2 -ml-2 text-[#242321] dark:text-gray-200 hover:text-[#A68962] dark:hover:text-[#C5A880] transition cursor-pointer"
-                aria-label="Open navigation menu"
+                className="lg:hidden p-1.5 -ml-1 text-[#2C4152] dark:text-white hover:text-[#D5A249] rounded-lg transition-colors cursor-pointer"
+                aria-label="Open mobile navigation menu"
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5" />
               </button>
-            </div>
 
-            {/* Left Brand Logo (shrink-0 ensures it never squishes) */}
-            <div className="flex items-center shrink-0">
-              <Link to="/" className="flex flex-col items-start group">
-                <span className="text-2xl font-serif font-extrabold tracking-[0.24em] text-[#1E1E1E] dark:text-white uppercase group-hover:opacity-90 transition leading-none">
+              {/* Brand Logo - Sleek & Modern AJIO-style presence */}
+              <Link to="/" className="flex items-center gap-2 group select-none">
+                <span className="font-serif text-2xl sm:text-3xl font-extrabold tracking-[0.16em] text-[#2C4152] dark:text-white uppercase group-hover:text-[#D5A249] transition-colors leading-none">
                   LEOVERSE
                 </span>
-                <span className="text-[9px] uppercase tracking-[0.38em] text-[#A68962] dark:text-[#C5A880] font-semibold mt-1">
-                  Menswear Atelier
-                </span>
+                <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-[#D5A249]" />
               </Link>
             </div>
 
-            {/* Center Desktop Navigation Menu - Strictly Single-Line whitespace-nowrap */}
-            <nav className="hidden lg:flex items-center justify-center space-x-5 xl:space-x-7 flex-1 px-4">
-              {navItems.map((item) => {
-                const isDropdownOpen = activeDropdown === item.id;
-                const isSaleItem = item.isSale;
+            {/* Center Desktop Navigation - Clean, Single-Line, AJIO-Style */}
+            <nav
+              className="hidden lg:flex items-center space-x-6 xl:space-x-8 h-full whitespace-nowrap flex-nowrap"
+              onMouseLeave={handleNavMouseLeave}
+            >
+              {primaryNavItems.map((item) => {
+                const isActive = activeMegaCategory === item.key;
+                const isCurrentPath = location.pathname === item.href;
 
                 return (
                   <div
-                    key={item.id}
-                    className="relative group py-7"
-                    onMouseEnter={() => !isSaleItem && setActiveDropdown(item.id)}
-                    onMouseLeave={() => !isSaleItem && setActiveDropdown(null)}
+                    key={item.key}
+                    className="relative h-full flex items-center shrink-0"
+                    onMouseEnter={() => item.hasMega && handleNavMouseEnter(item.key)}
                   >
                     <Link
-                      to={item.link}
-                      className={`whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.14em] transition-colors py-2 flex items-center space-x-1 ${
-                        isSaleItem
-                          ? 'text-rose-600 hover:text-rose-700'
-                          : isDropdownOpen
-                          ? 'text-[#A68962] dark:text-[#C5A880]'
-                          : 'text-[#242321] dark:text-gray-200 hover:text-[#A68962] dark:hover:text-[#C5A880]'
+                      to={item.href}
+                      className={`h-full flex items-center px-1 text-[13px] font-bold tracking-[0.08em] transition-colors whitespace-nowrap ${
+                        item.isSale
+                          ? 'text-rose-600 hover:text-rose-700 dark:text-rose-400 font-extrabold'
+                          : isActive || isCurrentPath
+                          ? 'text-[#2C4152] dark:text-white'
+                          : 'text-gray-700 dark:text-gray-300 hover:text-[#2C4152] dark:hover:text-white'
                       }`}
                     >
                       <span>{item.label}</span>
-                      {!isSaleItem && item.columns && (
-                        <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${
-                          isDropdownOpen ? 'rotate-180 text-[#A68962] dark:text-[#C5A880]' : 'group-hover:text-[#A68962] dark:group-hover:text-[#C5A880]'
-                        }`} />
-                      )}
                     </Link>
 
-                    {/* Mega Menu Dropdown */}
-                    {!isSaleItem && item.columns && isDropdownOpen && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 w-[620px] pt-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                        <div className="bg-white dark:bg-[#18181C] border border-[#E5E0D6] dark:border-[#2A2A34] rounded-2xl shadow-2xl p-6 grid grid-cols-5 gap-6">
-                          {/* 2 Subcategory Columns */}
-                          <div className="col-span-3 grid grid-cols-2 gap-4">
-                            {item.columns.map((col, idx) => (
-                              <div key={idx} className="space-y-3">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A68962] dark:text-[#C5A880] block pb-1 border-b border-[#F0ECE1] dark:border-[#27272A]">
-                                  {col.title}
-                                </span>
-                                <ul className="space-y-2 text-xs">
-                                  {col.items.map((subItem, sIdx) => (
-                                    <li key={sIdx}>
-                                      <Link
-                                        to={`${item.link}&search=${encodeURIComponent(subItem)}`}
-                                        className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:translate-x-1 transition-all duration-150 flex items-center space-x-1.5 font-medium leading-tight"
-                                      >
-                                        <span className="w-1 h-1 rounded-full bg-[#C5A880] shrink-0" />
-                                        <span className="truncate">{subItem}</span>
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
-
-                            <div className="col-span-2 pt-3 mt-2 border-t border-[#F0ECE1] dark:border-[#27272A]">
-                              <Link
-                                to={item.link}
-                                className="text-xs font-bold text-[#A68962] dark:text-[#C5A880] hover:text-black dark:hover:text-white flex items-center space-x-1.5 uppercase tracking-wider"
-                              >
-                                <span>Explore All {item.fullLabel}</span>
-                                <ArrowRight className="w-3.5 h-3.5" />
-                              </Link>
-                            </div>
-                          </div>
-
-                          {/* Lookbook Campaign Card on Right */}
-                          <div className="col-span-2 bg-[#FAF9F6] dark:bg-[#1E1E24] border border-[#E5E0D6] dark:border-[#2A2A34] rounded-xl overflow-hidden flex flex-col justify-between">
-                            <div className="relative h-28 overflow-hidden bg-gray-200 dark:bg-gray-800">
-                              <img
-                                src={item.lookbookImage}
-                                alt={item.lookbookTitle}
-                                className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
-                              />
-                              <span className="absolute top-2 left-2 bg-[#1E1E1E] text-[#C5A880] text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-                                SS26 EDIT
-                              </span>
-                            </div>
-
-                            <div className="p-3.5 flex flex-col justify-between flex-1">
-                              <div>
-                                <h4 className="font-bold text-xs text-[#1E1E1E] dark:text-white leading-snug">
-                                  {item.lookbookTitle}
-                                </h4>
-                                <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
-                                  Handcrafted silhouettes cut from certified breathable fabrics.
-                                </p>
-                              </div>
-
-                              <Link
-                                to={item.link}
-                                className="mt-3 text-[11px] font-bold text-[#A68962] dark:text-[#C5A880] hover:text-black dark:hover:text-white flex items-center space-x-1"
-                              >
-                                <span>Explore Edit</span>
-                                <ArrowRight className="w-3 h-3" />
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    {/* AJIO-Style Bottom Underline Indicator */}
+                    {(isActive || isCurrentPath) && (
+                      <span className={`absolute bottom-0 inset-x-0 h-[2.5px] rounded-t-sm ${
+                        item.isSale ? 'bg-rose-600' : 'bg-[#2C4152] dark:bg-[#D5A249]'
+                      } animate-in fade-in duration-150`} />
                     )}
                   </div>
                 );
               })}
             </nav>
 
-            {/* Right Action Icons (shrink-0 ensures no wrapping) */}
-            <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
-              {/* Search Toggle */}
+            {/* Right: Search Input + Action Icons */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              
+              {/* Desktop Live Search Pill */}
+              <div ref={searchContainerRef} className="relative hidden md:block w-48 lg:w-64 xl:w-72">
+                <form onSubmit={handleSearchSubmit} className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setSearchFocused(true);
+                    }}
+                    onFocus={() => setSearchFocused(true)}
+                    placeholder="Search for brands, products, styles..."
+                    className="w-full pl-9 pr-7 py-2 text-xs bg-[#F5F5F5] dark:bg-[#1A232C] border border-gray-200 dark:border-gray-700 rounded-full text-[#2C4152] dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#2C4152] dark:focus:border-[#D5A249] focus:bg-white dark:focus:bg-[#121A21] transition-all"
+                  />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </form>
+
+                {/* Live Suggestions Dropdown */}
+                {searchFocused && searchQuery.trim() && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1A232C] border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                    <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100 dark:border-gray-800 flex justify-between">
+                      <span>Matching Styles</span>
+                      <span>{searchResults.length} found</span>
+                    </div>
+
+                    {searchResults.length > 0 ? (
+                      <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                        {searchResults.map((item) => (
+                          <Link
+                            key={item.id}
+                            to={`/product/${item.id}`}
+                            onClick={() => setSearchFocused(false)}
+                            className="flex items-center gap-3 p-2 hover:bg-[#F5F5F5] dark:hover:bg-[#121A21] rounded-lg transition-colors group"
+                          >
+                            <img
+                              src={item.images?.[0]}
+                              alt={item.name}
+                              className="w-10 h-12 object-cover rounded bg-gray-100"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <span className="text-[10px] uppercase font-bold text-[#D5A249] block truncate">
+                                {item.brand}
+                              </span>
+                              <h5 className="text-xs font-semibold text-[#2C4152] dark:text-gray-100 group-hover:text-[#D5A249] transition-colors truncate">
+                                {item.name}
+                              </h5>
+                              <div className="flex items-center gap-1.5 text-xs mt-0.5">
+                                <span className="font-bold text-[#2C4152] dark:text-white">
+                                  {formatPrice(item.sellingPrice ?? item.salePrice ?? item.price)}
+                                </span>
+                                {item.discountPercent > 0 && (
+                                  <span className="text-[10px] font-bold text-emerald-600">
+                                    {item.discountPercent}% OFF
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                        <Link
+                          to={`/products?search=${encodeURIComponent(searchQuery)}`}
+                          onClick={() => setSearchFocused(false)}
+                          className="block text-center py-2 text-xs font-bold uppercase tracking-wider text-[#2C4152] hover:text-[#D5A249] transition-colors"
+                        >
+                          View all results for "{searchQuery}"
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="p-4 text-center text-xs text-gray-500">
+                        No garments matched "{searchQuery}". Try "linen", "shirt", or "jacket".
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Search Toggle Icon */}
               <button
                 type="button"
-                onClick={() => setSearchOpen(!searchOpen)}
-                className="p-2 text-[#242321] dark:text-gray-200 hover:text-[#A68962] dark:hover:text-[#C5A880] transition cursor-pointer rounded-lg hover:bg-[#F0ECE1]/50 dark:hover:bg-[#202026]"
-                aria-label="Search menswear"
+                onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                className="md:hidden p-2 text-[#2C4152] dark:text-white hover:text-[#D5A249] rounded-full transition-colors cursor-pointer"
+                aria-label="Search"
               >
-                <Search className="w-5 h-5 stroke-[1.75]" />
+                <Search className="w-5 h-5" />
               </button>
 
-              {/* Wishlist */}
-              <Link
-                to="/wishlist"
-                className="p-2 text-[#242321] dark:text-gray-200 hover:text-rose-600 transition relative rounded-lg hover:bg-[#F0ECE1]/50 dark:hover:bg-[#202026]"
-                aria-label="Wishlist"
-              >
-                <Heart className="w-5 h-5 stroke-[1.75]" />
-                {wishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center">
-                    {wishlistCount}
-                  </span>
-                )}
-              </Link>
-
-              {/* Shopping Bag / Cart */}
-              <Link
-                to="/cart"
-                className="p-2 text-[#242321] dark:text-gray-200 hover:text-[#A68962] dark:hover:text-[#C5A880] transition relative rounded-lg hover:bg-[#F0ECE1]/50 dark:hover:bg-[#202026]"
-                aria-label="Shopping Cart"
-              >
-                <ShoppingBag className="w-5 h-5 stroke-[1.75]" />
-                {cartCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#1E1E1E] text-white text-[10px] font-bold flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-
-              {/* Profile / Account Dropdown with Hover & Click Popover (ADMIN ROUTE INTEGRATED HERE) */}
+              {/* Account Dropdown (Opens on Hover or Click) */}
               <div
                 ref={profileRef}
                 className="relative"
-                onMouseEnter={() => setProfileDropdownOpen(true)}
-                onMouseLeave={() => setProfileDropdownOpen(false)}
+                onMouseEnter={handleProfileMouseEnter}
+                onMouseLeave={handleProfileMouseLeave}
               >
                 <button
                   type="button"
-                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className={`p-2 rounded-xl transition flex items-center space-x-1 cursor-pointer ${
-                    profileDropdownOpen
-                      ? 'text-[#A68962] bg-[#F0ECE1] dark:bg-[#202026]'
-                      : 'text-[#242321] dark:text-gray-200 hover:text-[#A68962] dark:hover:text-[#C5A880] hover:bg-[#F0ECE1]/50 dark:hover:bg-[#202026]'
-                  }`}
-                  aria-label="Account and Admin Studio"
+                  onClick={() => setProfileDropdownOpen((prev) => !prev)}
+                  className="p-2 text-[#2C4152] dark:text-gray-200 hover:text-[#D5A249] rounded-full hover:bg-[#F5F5F5] dark:hover:bg-[#1A232C] transition-colors cursor-pointer flex items-center"
+                  aria-label="Account options"
                 >
-                  <User className="w-5 h-5 stroke-[1.75]" />
-                  <ChevronDown className={`w-3 h-3 text-gray-500 transition-transform duration-200 ${
-                    profileDropdownOpen ? 'rotate-180 text-[#A68962]' : ''
-                  }`} />
+                  <User className="w-5 h-5" />
                 </button>
 
-                {/* Profile Hover Popover */}
                 {profileDropdownOpen && (
-                  <div className="absolute right-0 top-full pt-2 w-72 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                    <div className="bg-white dark:bg-[#18181C] border border-[#E5E0D6] dark:border-[#2A2A34] rounded-2xl shadow-2xl p-4 text-[#242321] dark:text-[#F3EFE6] space-y-3">
-                      {/* Member Badge Header */}
-                      <div className="flex items-center space-x-3 pb-3 border-b border-[#E5E0D6] dark:border-[#27272A]">
-                        <div className="w-10 h-10 rounded-full bg-[#1E1E1E] text-[#C5A880] flex items-center justify-center font-bold text-sm shadow-sm">
-                          LE
+                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#1A232C] border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl p-2.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                    <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-800">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#D5A249]">
+                        Welcome to LEOVERSE
+                      </span>
+                      <p className="text-xs font-semibold text-[#2C4152] dark:text-white">
+                        Guest Shopper
+                      </p>
+                    </div>
+
+                    {/* Dark / Light Mode Switch in Profile Menu */}
+                    <div className="my-2 p-2.5 bg-[#F5F5F5] dark:bg-[#121A21] rounded-xl border border-gray-200 dark:border-gray-700/80 flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className={`p-1.5 rounded-lg ${isDark ? 'bg-[#D5A249]/20 text-[#D5A249]' : 'bg-amber-100 text-amber-600'}`}>
+                          {isDark ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
                         </div>
-                        <div className="flex-1 truncate">
-                          <p className="font-bold text-sm text-[#1E1E1E] dark:text-white truncate">LEOVERSE Member</p>
-                          <span className="text-[10px] text-[#A68962] font-semibold uppercase tracking-wider block">
-                            Luxury Atelier Privilege
+                        <div>
+                          <span className="text-[11px] font-bold text-[#2C4152] dark:text-white block leading-tight">
+                            {isDark ? 'Dark Mode' : 'Light Mode'}
+                          </span>
+                          <span className="text-[9px] text-gray-500 dark:text-gray-400">
+                            Tap switch to change theme
                           </span>
                         </div>
                       </div>
 
-                      {/* Admin Studio Access - Positioned cleanly inside Profile Hover */}
-                      <Link
-                        to="/admin"
-                        className="flex items-center justify-between p-3 bg-[#1E1E1E] hover:bg-black text-white rounded-xl transition shadow-md group cursor-pointer"
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleTheme();
+                        }}
+                        className={`relative inline-flex h-6 w-11 shrink-0 p-0.5 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none ${
+                          isDark ? 'bg-[#D5A249]' : 'bg-gray-300 dark:bg-gray-700'
+                        }`}
+                        aria-label="Toggle dark and light theme"
                       >
-                        <div className="flex items-center space-x-2.5">
-                          <div className="p-1.5 rounded-lg bg-[#C5A880]/20 text-[#C5A880]">
-                            <ShieldCheck className="w-4 h-4" />
-                          </div>
-                          <div className="text-left">
-                            <p className="font-bold text-xs uppercase tracking-wider text-white">Admin Panel</p>
-                            <p className="text-[10px] text-gray-300">Catalog, Orders & Analytics</p>
-                          </div>
-                        </div>
-                        <ArrowRight className="w-3.5 h-3.5 text-[#C5A880] transform group-hover:translate-x-1 transition" />
+                        <span
+                          className={`inline-flex h-5 w-5 transform items-center justify-center rounded-full bg-white shadow-xs transition duration-200 ease-in-out ${
+                            isDark ? 'translate-x-5' : 'translate-x-0'
+                          }`}
+                        >
+                          {isDark ? (
+                            <Moon className="w-3 h-3 text-[#2C4152]" strokeWidth={2.2} />
+                          ) : (
+                            <Sun className="w-3 h-3 text-amber-500" strokeWidth={2.2} />
+                          )}
+                        </span>
+                      </button>
+                    </div>
+
+                    <div className="py-1 space-y-0.5">
+                      <Link
+                        to="/account"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#2C4152] dark:text-gray-200 hover:bg-[#F5F5F5] dark:hover:bg-[#121A21] rounded-lg transition-colors"
+                      >
+                        <User className="w-4 h-4 text-[#D5A249]" />
+                        <span>My Account Profile</span>
                       </Link>
 
-                      {/* Customer Account Navigation Links */}
-                      <div className="space-y-0.5 pt-1 text-xs">
-                        <Link
-                          to="/account"
-                          className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-[#FAF9F6] dark:hover:bg-[#202026] font-medium transition"
-                        >
-                          <User className="w-4 h-4 text-gray-400" />
-                          <span>My Account & Profile</span>
-                        </Link>
+                      <Link
+                        to="/account/orders"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#2C4152] dark:text-gray-200 hover:bg-[#F5F5F5] dark:hover:bg-[#121A21] rounded-lg transition-colors"
+                      >
+                        <Package className="w-4 h-4 text-[#D5A249]" />
+                        <span>Orders & Tracking</span>
+                      </Link>
 
-                        <Link
-                          to="/order-tracking"
-                          className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-[#FAF9F6] dark:hover:bg-[#202026] font-medium transition"
-                        >
-                          <Package className="w-4 h-4 text-gray-400" />
-                          <span>Track Orders & Shipments</span>
-                        </Link>
+                      <Link
+                        to="/account/addresses"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#2C4152] dark:text-gray-200 hover:bg-[#F5F5F5] dark:hover:bg-[#121A21] rounded-lg transition-colors"
+                      >
+                        <MapPin className="w-4 h-4 text-[#D5A249]" />
+                        <span>Saved Addresses</span>
+                      </Link>
 
-                        <Link
-                          to="/wishlist"
-                          className="flex items-center justify-between px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-[#FAF9F6] dark:hover:bg-[#202026] font-medium transition"
-                        >
-                          <div className="flex items-center space-x-2.5">
-                            <Heart className="w-4 h-4 text-gray-400" />
-                            <span>Saved Wishlist</span>
-                          </div>
-                          {wishlistCount > 0 && (
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-bold">
-                              {wishlistCount}
-                            </span>
-                          )}
-                        </Link>
-
-                        <Link
-                          to="/cart"
-                          className="flex items-center justify-between px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-[#FAF9F6] dark:hover:bg-[#202026] font-medium transition"
-                        >
-                          <div className="flex items-center space-x-2.5">
-                            <ShoppingBag className="w-4 h-4 text-gray-400" />
-                            <span>Shopping Bag</span>
-                          </div>
-                          {cartCount > 0 && (
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#1E1E1E] text-white font-bold">
-                              {cartCount}
-                            </span>
-                          )}
-                        </Link>
-
-                        {/* Theme Toggle row inside Customer Profile Popover */}
-                        <button
-                          type="button"
-                          onClick={toggleTheme}
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-[#FAF9F6] dark:hover:bg-[#202026] font-medium transition cursor-pointer"
-                        >
-                          <div className="flex items-center space-x-2.5">
-                            {isDark ? <Sun className="w-4 h-4 text-[#C5A880]" /> : <Moon className="w-4 h-4 text-gray-400" />}
-                            <span>Theme Appearance</span>
-                          </div>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-[#FAF9F6] dark:bg-[#202026] border border-[#E5E0D6] dark:border-[#2E2E36] text-[#A68962]">
-                            {isDark ? "DARK" : "LIGHT"}
+                      <Link
+                        to="/wishlist"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center justify-between px-3 py-2 text-xs font-medium text-[#2C4152] dark:text-gray-200 hover:bg-[#F5F5F5] dark:hover:bg-[#121A21] rounded-lg transition-colors"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Heart className="w-4 h-4 text-rose-600" />
+                          <span>Wishlist</span>
+                        </div>
+                        {wishlistCount > 0 && (
+                          <span className="px-1.5 py-0.2 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold">
+                            {wishlistCount}
                           </span>
-                        </button>
-                      </div>
+                        )}
+                      </Link>
 
-                      {/* Footer Concierge & Switch Links */}
-                      <div className="pt-2 border-t border-[#E5E0D6] dark:border-[#27272A] flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400">
-                        <Link to="/contact" className="hover:text-black dark:hover:text-white transition">Atelier Concierge</Link>
-                        <Link to="/login" className="text-[#A68962] font-bold hover:underline">Sign In / Switch</Link>
-                      </div>
+                      {/* Studio Admin Portal Entry */}
+                      <a
+                        href="http://localhost:5174"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center justify-between px-3 py-2 text-xs font-bold text-[#2C4152] dark:text-white bg-[#D5A249]/15 hover:bg-[#D5A249]/25 rounded-lg transition-colors border border-[#D5A249]/30 mt-1"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-[#D5A249] animate-pulse" />
+                          <span>Admin Studio Portal</span>
+                        </div>
+                        <ExternalLink className="w-3.5 h-3.5 text-[#D5A249]" />
+                      </a>
+                    </div>
+
+                    <div className="pt-2 border-t border-gray-100 dark:border-gray-800 mt-1 flex gap-2">
+                      <Link
+                        to="/login"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex-1 text-center py-2 bg-[#2C4152] dark:bg-white text-white dark:text-[#2C4152] font-bold text-xs uppercase tracking-wider rounded-lg transition hover:opacity-90"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        to="/register"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex-1 text-center py-2 bg-[#F5F5F5] dark:bg-[#1A232C] text-[#2C4152] dark:text-white border border-gray-200 dark:border-gray-700 font-bold text-xs uppercase tracking-wider rounded-lg transition hover:border-[#D5A249]"
+                      >
+                        Register
+                      </Link>
                     </div>
                   </div>
                 )}
               </div>
+
+              {/* Wishlist Icon with live counter */}
+              <Link
+                to="/wishlist"
+                className="relative p-2 text-[#2C4152] dark:text-gray-200 hover:text-[#D5A249] rounded-full hover:bg-[#F5F5F5] dark:hover:bg-[#1A232C] transition-colors"
+                aria-label="Wishlist"
+              >
+                <Heart className={`w-5 h-5 transition-transform ${wishlistNotification ? 'scale-125 text-rose-600' : ''}`} />
+                {wishlistCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-rose-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center animate-in zoom-in duration-200">
+                    {wishlistCount > 9 ? '9+' : wishlistCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Shopping Bag Icon with live counter */}
+              <Link
+                to="/cart"
+                className="relative p-2 text-[#2C4152] dark:text-gray-200 hover:text-[#D5A249] rounded-full hover:bg-[#F5F5F5] dark:hover:bg-[#1A232C] transition-colors"
+                aria-label="Shopping Cart"
+              >
+                <ShoppingBag className={`w-5 h-5 transition-transform ${cartNotification ? 'scale-125 text-[#D5A249]' : ''}`} />
+                {cartCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-[#2C4152] text-white rounded-full text-[10px] font-bold flex items-center justify-center animate-in zoom-in duration-200">
+                    {cartCount > 9 ? '9+' : cartCount}
+                  </span>
+                )}
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* 3. Live Search Drawer */}
-        {searchOpen && (
-          <div className="border-t border-[#E5E0D6] dark:border-[#27272A] bg-white dark:bg-[#18181C] shadow-xl px-4 py-4 sm:py-6 animate-in slide-in-from-top-2 duration-150">
-            <div className="max-w-3xl mx-auto">
-              <form onSubmit={handleSearchSubmit} className="relative">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder="Search for linen shirts, virgin wool blazers, pleated trousers, kurtas, loafers..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                  className="w-full pl-11 pr-10 py-3.5 bg-[#FAF9F6] dark:bg-[#202026] border border-[#DCD5C9] dark:border-[#2E2E36] rounded-xl text-sm text-[#1E1E1E] dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#A68962]"
-                />
-                <Search className="w-5 h-5 text-gray-400 absolute left-3.5 top-4" />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-3.5 top-4 text-gray-400 hover:text-black dark:hover:text-white"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </form>
-
-              {/* Live search results */}
-              {searchResults.length > 0 && (
-                <div className="mt-3 bg-white dark:bg-[#18181C] border border-[#E5E0D6] dark:border-[#2A2A34] rounded-xl shadow-lg divide-y divide-gray-100 dark:divide-[#27272A] overflow-hidden">
-                  {searchResults.map((prod) => (
-                    <Link
-                      key={prod.id}
-                      to={`/product/${prod.id}`}
-                      className="p-3 hover:bg-[#FAF9F6] dark:hover:bg-[#202026] flex items-center justify-between transition"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={prod.images?.[0] || 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=100&q=80'}
-                          alt={prod.name}
-                          className="w-10 h-12 object-cover rounded"
-                        />
-                        <div>
-                          <p className="text-xs font-semibold text-gray-900 dark:text-white">{prod.name}</p>
-                          <span className="text-[10px] text-gray-500 dark:text-gray-400">{prod.department} • {prod.category}</span>
-                        </div>
-                      </div>
-                      <span className="text-xs font-bold text-[#A68962]">₹{prod.sellingPrice?.toLocaleString()}</span>
-                    </Link>
-                  ))}
-                  <div className="p-2 text-center bg-[#FAF9F6] dark:bg-[#1E1E24]">
-                    <button
-                      onClick={handleSearchSubmit}
-                      className="text-xs font-bold text-[#A68962] hover:underline cursor-pointer"
-                    >
-                      View all results for "{searchQuery}" →
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </header>
-
-      {/* 4. Mobile Drawer Navigation */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden flex">
-          <div className="w-4/5 max-w-sm bg-[#FAF9F6] dark:bg-[#18181C] text-[#242321] dark:text-[#F3EFE6] h-full shadow-2xl flex flex-col justify-between p-6 overflow-y-auto">
-            <div>
-              <div className="flex items-center justify-between pb-4 border-b border-[#E5E0D6] dark:border-[#27272A]">
-                <div>
-                  <span className="text-lg font-serif font-extrabold tracking-widest text-[#1E1E1E] dark:text-white">LEOVERSE</span>
-                  <p className="text-[9px] uppercase tracking-wider text-[#A68962] font-semibold">Menswear Atelier</p>
-                </div>
-                <button onClick={() => setMobileMenuOpen(false)} className="p-1">
-                  <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-                </button>
-              </div>
-
-              <div className="py-4 space-y-4">
-                {/* Admin button inside mobile drawer */}
-                <Link
-                  to="/admin"
-                  className="w-full py-2.5 px-4 bg-[#1E1E1E] text-white rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 shadow-sm"
-                >
-                  <ShieldCheck className="w-4 h-4 text-[#C5A880]" />
-                  <span>Admin Panel</span>
-                </Link>
-
-                {/* Theme toggle inside mobile drawer */}
+        {/* Mobile Search Input Drawer (slides down when toggled) */}
+        {mobileSearchOpen && (
+          <div className="md:hidden px-4 py-3 bg-[#F5F5F5] dark:bg-[#121A21] border-t border-gray-200 dark:border-gray-800 animate-in slide-in-from-top duration-200">
+            <form onSubmit={handleSearchSubmit} className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search garments, linen, formal suits..."
+                className="w-full pl-10 pr-10 py-2 bg-white dark:bg-[#1A232C] border border-gray-300 dark:border-gray-700 rounded-full text-xs text-[#2C4152] dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#2C4152]"
+                autoFocus
+              />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              {searchQuery && (
                 <button
                   type="button"
-                  onClick={toggleTheme}
-                  className="w-full py-2.5 px-4 bg-white dark:bg-[#202026] border border-[#E5E0D6] dark:border-[#2A2A34] rounded-xl font-bold text-xs flex items-center justify-between text-gray-800 dark:text-gray-200"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-black"
                 >
-                  <div className="flex items-center space-x-2">
-                    {isDark ? <Sun className="w-4 h-4 text-[#C5A880]" /> : <Moon className="w-4 h-4" />}
-                    <span>Theme: {isDark ? "Dark Mode" : "Light Mode"}</span>
-                  </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-[#FAF9F6] dark:bg-[#18181C] text-[#A68962]">
-                    SWITCH
-                  </span>
+                  <X className="w-3.5 h-3.5" />
                 </button>
-
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block px-3 pt-2">
-                    Menswear Ateliers
-                  </span>
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.id}
-                      to={item.link}
-                      className={`block px-3 py-2 text-sm font-semibold hover:text-[#A68962] ${
-                        item.isSale ? 'text-rose-600' : 'text-gray-800 dark:text-gray-200'
-                      }`}
-                    >
-                      {item.fullLabel || item.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-[#E5E0D6] dark:border-[#27272A] space-y-2 text-xs">
-              <Link to="/account" className="block text-gray-600 dark:text-gray-400 py-1">Customer Account</Link>
-              <Link to="/order-tracking" className="block text-gray-600 dark:text-gray-400 py-1">Order Tracking</Link>
-              <Link to="/contact" className="block text-gray-600 dark:text-gray-400 py-1">Atelier Concierge</Link>
-            </div>
+              )}
+            </form>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Mega Menu Overlay */}
+        <MegaMenu
+          activeCategory={activeMegaCategory}
+          onClose={() => setActiveMegaCategory(null)}
+        />
+      </header>
+
+      {/* Mobile Drawer Navigation */}
+      <MobileMenu
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+      />
     </>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { getProducts } from '../../services/api';
+import { subscribeCatalogUpdates } from '../../services/productService';
 import ProductGrid from '../products/ProductGrid';
 
 const FILTER_TABS = [
@@ -17,11 +18,17 @@ export const NewArrivals = () => {
   const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
-    getProducts({ sort: 'newest' })
-      .then((data) => {
-        setAllProducts(data);
-      })
-      .catch(() => {});
+    const fetchNew = () => {
+      getProducts({ sort: 'newest' })
+        .then((data) => {
+          setAllProducts(data);
+        })
+        .catch(() => {});
+    };
+
+    fetchNew();
+    const unsub = subscribeCatalogUpdates(fetchNew);
+    return () => unsub();
   }, []);
 
   const displayedProducts = allProducts.filter((p) => {

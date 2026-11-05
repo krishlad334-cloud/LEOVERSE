@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import productsData from '../data/products';
+import { getProductByIdOrSlug } from '../services/productService';
 
 const WishlistContext = createContext(null);
 const STORAGE_KEY = 'leoverse_wishlist';
@@ -62,9 +62,9 @@ export const WishlistProvider = ({ children }) => {
     }
   };
 
-  // Hydrate full product objects for the wishlist page safely
+  // Hydrate full product objects for the wishlist page safely from master catalog
   const wishlistProducts = safeIds
-    .map((id) => (Array.isArray(productsData) ? productsData : []).find((p) => p.id === id))
+    .map((id) => getProductByIdOrSlug(id))
     .filter(Boolean);
 
   return (
@@ -93,4 +93,4 @@ export const useWishlist = () => {
   return context;
 };
 
-export default WishlistProvider;
+export default WishlistContext;

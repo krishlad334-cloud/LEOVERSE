@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Tag, Check, X, Shield, Truck, ArrowRight, ShoppingBag } from 'lucide-react';
+import { Tag, X, Shield, Truck, ArrowRight } from 'lucide-react';
 import { formatPrice } from '../../utils/formatPrice';
 
 export const CartSummary = ({
@@ -14,7 +14,6 @@ export const CartSummary = ({
   onRemoveCoupon,
   grandTotal,
   showCheckoutButton = true,
-  cartItems = [],
 }) => {
   const [couponCode, setCouponCode] = useState('');
   const [couponError, setCouponError] = useState('');
