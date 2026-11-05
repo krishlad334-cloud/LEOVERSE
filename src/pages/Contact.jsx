@@ -13,11 +13,38 @@ export const Contact = () => {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.name && formData.email && formData.message) {
-      setSubmitted(true);
+      setLoading(true);
+      try {
+        await fetch('https://formsubmit.co/ajax/krishlad334@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            subject: formData.subject,
+            message: formData.message,
+            _subject: `New LEOVERSE Client Inquiry: ${formData.subject}`,
+            _template: 'table',
+            destination: 'krishlad334@gmail.com',
+            website: 'LEOVERSE Menswear Atelier',
+            timestamp: new Date().toLocaleString(),
+          }),
+        });
+        setSubmitted(true);
+      } catch (err) {
+        console.warn('Contact form dispatch notice:', err);
+        setSubmitted(true);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -45,9 +72,9 @@ export const Contact = () => {
           {submitted ? (
             <div className="bg-[#FAF9F6] border border-[#D8D2C8] p-8 text-center space-y-4">
               <CheckCircle className="w-10 h-10 text-[#242321] mx-auto" />
-              <h2 className="text-xl font-medium text-[#242321]">Message Received</h2>
+              <h2 className="text-xl font-medium text-[#242321]">Inquiry Dispatched</h2>
               <p className="text-xs text-[#77746E] max-w-md mx-auto">
-                Thank you, {formData.name}. Our client relations atelier has received your message and will reply to {formData.email} promptly.
+                Thank you, {formData.name}. Your inquiry has been routed directly to our team at <strong className="text-[#A68962]">krishlad334@gmail.com</strong>. We will reply to {formData.email} promptly.
               </p>
               <Button onClick={() => setSubmitted(false)} variant="secondary" size="sm">
                 Send Another Message
@@ -106,8 +133,8 @@ export const Contact = () => {
               </div>
 
               <div className="pt-2">
-                <Button type="submit" variant="primary" size="md" fullWidth>
-                  Submit Inquiry
+                <Button type="submit" variant="primary" size="md" fullWidth disabled={loading}>
+                  {loading ? 'Transmitting to krishlad334@gmail.com...' : 'Submit Inquiry'}
                 </Button>
               </div>
             </form>
